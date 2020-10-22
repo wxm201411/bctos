@@ -1,0 +1,159 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    tbody td { overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}   
+    .search-input.date {  height: 30px; }   
+    #contents {  padding-top: .1px;}
+    .cascader-model { z-index: 999999;left: 25em !important; position: fixed;}
+</style>
+<div class="page_message">
+    <section>
+        {include file="common@base/_nav" /}
+        <div class="layui-col-lg5">
+            <div class="tab-content">
+                <!-- 表单 -->
+                <form id="form" action="{:U('edit')}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+                    <div class="form-group row">
+                        <label class="col-sm-2"><span class="need_flag">*</span>名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="text input-large" name="title" value="{$data['title']|default=''}">
+                        </div>
+                    </div>
+                    <!--todo shop-edit-->
+                    <!--<div class="form-group row">-->
+                        <!--<label class="col-sm-2">网址标识</label>-->
+
+                        <!--<div class="col-sm-10">-->
+                            <!--<input type="text" class="text input-large" name="slug" value="{$data['slug']|default=''}">-->
+                            <!--<span class="form-text text-muted input-large">（分类在URL里传递时友好SEO，网址URL通过这个标识来识别要访问哪个标识，通常使用小写的，只包含字母、数字和连字符）</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <div class="form-group row" style="display: {php} if(isset($fields['pid']['show']) && $fields['pid']['show']==0 ) echo 'none'; {/php}">
+                        <label class="col-sm-2">上级</label>
+                        <div class="col-sm-10">
+                            <div class="input-large">
+                            {php}isset($data['pid']) || $data['pid'] = 0;$exclude = isset($data['id']) ? $data['id']: 0;{/php}
+                            {:W('common/cascade/cascade', array('name'=>'pid','value'=>$data['pid'],'extra'=>'max_level=1&clicklast=false&table=common_category&wpid=[wpid]&value_field=id&custom_field=id,title,pid,sort&custom_pid=0&exclude='.$exclude))}
+
+                            </div><span class="form-text text-muted input-large">（不选择时表示要增加一级数据）</span>
+                        </div>
+                    </div>
+                    <!--<div class="form-group row">-->
+                        <!--<label class="col-sm-2">描述</label>-->
+
+                        <!--<div class="col-sm-10">-->
+                            <!--<label class="textarea input-large">-->
+                                <!--<textarea name="description" style="min-width:390px;">{$data['description']|default=''}</textarea>-->
+                            <!--</label>-->
+                            <!--<span class="form-text text-muted input-large">（默认情况下，描述并显示在网页中；但是，某些主题可能会使用它）</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="form-group row">
+                        <label class="col-sm-2">排序号</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="text input-large" name="sort" value="{$data['sort']|default=0}">
+                            <span class="form-text text-muted input-large">（值越小越靠前）</span>
+                        </div>
+                    </div>
+                    {include file="common@base/_category_form" /}
+
+
+                    <div class="form-group row form_bh">
+                        <div class="offset-sm-2">
+                            {notempty name="data.id"} <input type="hidden" name="id" value="{$data.id}">{/notempty}
+                            <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">{$submit_name|default='保 存'}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+            <div class="layui-col-lg7" style="background-color: #fff; margin-top: 5px;">
+        <div class="table-bar">
+            <div class="fl">
+                <div class="tools" style="margin-bottom: 10px">
+                    {php} isset($del_url) || $del_url = U('del?model='.$model['id'],$get_param);{/php}
+                    <button class="btn ajax-post confirm" target-form="ids" url="{$del_url}">批量删除</button>
+
+                    {if condition="isset($data['id']) && $data['id']>0"}
+                    <a class="btn" href="{:U('lists')}">新 增</a>
+                    {/if}
+                </div>
+            </div>
+            <!-- 高级搜索 -->
+            <div class="search-form fr cf">
+                <div class="sleft">
+                    {php}empty($search_key) && $search_key=$model['search_key'];empty($search_key) && $search_key='title';unset($get_param[$search_key]);empty($placeholder) && $placeholder='请输入内容搜索';{/php} {php} isset($model['name']) && $get_param['model']=$model['name'];
+                    isset($search_url) || $search_url = U(MODULE_NAME.'/'.CONTROLLER_NAME.'/lists', $get_param);{/php}
+                    <input type="text" name="{$search_key}" class="search-input" value="{:input($search_key)}" placeholder="{$placeholder}">
+                    <a class="sch-btn" href="javascript:;" id="search" url="{$search_url}"><i class="btn-search"></i></a> </div>
+            </div>
+        </div>
+
+        <!-- 数据列表 -->
+        {php}$now_by = I('by','asc'); if($now_by=='asc'){ $next_by = 'desc'; $by_icon = '<i class="sort_up"></i>'; } else { $next_by = 'asc'; $by_icon = '<i class="sort_down"></i>'; }{/php}
+        <div class="data-table">
+            <div class="table-striped">
+                <table cellspacing="1" style="table-layout: fixed">
+                    <!-- 表头 -->
+                    <thead>
+                        <tr>
+                            {if condition="$check_all"}
+                            <th style="width: 40px" class="row-selected row-selected"> <input autocomplete="off" type="checkbox" id="checkAll" class="check-all regular-checkbox"><label for="checkAll"></label></th>{/if} {notempty name="$list_grids"} {volist name="list_grids" id="field"}
+                            <th {php} if(isset($field['width']) && !empty($field['width'])) { is_numeric($field['width']) && $field['width'] .= '%'; echo 'width="'.$field['width'].'"'; } {/php}>
+                                {notempty name="field.is_sort"} {php} $get_param['order'] = $field['name']; $get_param['by'] = $next_by; $show_by = ''; $now_order = I('order'); if($now_order==$field['name']){ $show_by = $by_icon; } $order_url = U(MODULE_NAME.'/'.CONTROLLER_NAME.'/'.ACTION_NAME,
+                                $get_param); {/php}
+                                <a href="{$order_url}" class="desc">{$field.title} {$show_by|raw}</a> {else /} {$field.title} {/notempty}
+                            </th>
+                            {/volist}{/notempty}
+                        </tr>
+                    </thead>
+
+                    <!-- 列表 -->
+                    <tbody class="needdragsort">
+                        {notempty name="$list_data"} {volist name="list_data" id="data"}
+                        <tr>
+                            {if condition="$check_all"}
+                            <td><input name="sort[]" type="hidden" value="{$key}">
+                                <input autocomplete="off" class="ids regular-checkbox" type="checkbox" value="{$data['id']}" name="ids[]" id="check_{$data['id']}"><label for="check_{$data['id']}"></label></td>{/if} {volist name="list_grids" id="grid"}
+                            {if condition="(isset($grid.raw) && $grid.raw == 1) OR (isset($grid.come_from) && $grid.come_from == 1)" }
+                            <td style="overflow: auto;white-space: normal ">{$data[$key]|raw}</td>{else /}
+                            <td>{$data[$key]|raw}</td>{/if} {/volist}
+                        </tr>
+                        {/volist}{/notempty}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="page"> {$_page|raw|default=''} </div>
+        </div>
+    </section>
+</div>
+
+{/block} {block name="script"}
+<script type="text/javascript">
+    $(function() {
+        //搜索功能
+        $("#search").click(function() {
+            var url = $(this).attr('url');
+            var str = $('.search-input').val()
+            var query = $('.search-input').attr('name') + '=' + str.replace(/(^\s*)|(\s*$)/g, "");
+
+            if (url.indexOf('?') > 0) {
+                url += '&' + query;
+            } else {
+                url += '?' + query;
+            }
+
+            url = change_search_url(url);
+            window.location.href = url;
+        });
+
+        //回车自动提交
+        $('.search-form').find('input').keyup(function(event) {
+            if (event.keyCode === 13) {
+                $("#search").click();
+            }
+        });
+    })
+</script>
+{/block}

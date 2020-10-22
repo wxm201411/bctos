@@ -1,0 +1,197 @@
+<style type="text/css">
+    .category-select {
+        position: relative;
+        padding-right: 80px;
+    }
+
+    .category-select .category-title {
+        height: 36px;
+        line-height: 36px;
+        border: 1px solid #e6e6e6;
+        padding: 0 10px;
+        background: #fff;
+    }
+
+    .category-select .category-title i {
+        font-style: normal;
+        margin: 0 2px 0 4px;
+    }
+
+    .category-select .category-select-btn {
+
+        width: 80px;
+        height: 100%;
+
+        top: 0;
+        padding: 0;
+        text-align: center;
+        border-radius: 0 2px 2px 0;
+    }
+
+    .category-select .category-select-options {
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 37px;
+        width: 100%;
+        background: #fff;
+        border: 1px solid #D2D2D2;
+        border-radius: 0 0 2px 2px;
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        height: auto;
+    }
+
+    .category-select .category-select-options .menu_option {
+        margin: 10px 10px;
+        border: 1px solid #1E9FFF;
+        padding: 4px 4px;
+        border-radius: 2px;
+    }
+
+    .category-select .category-select-options .menu_option a {
+        margin: 4px 4px;
+        display: inline-block;
+        height: 26px;
+        line-height: 26px;
+        padding: 0 8px;
+        border-radius: 2px;
+        border: 1px solid #ddd;
+        background-color: rgba(0, 0, 0, 0.01);
+        -webkit-transition: .3s all ease;
+        transition: .3s all ease;
+    }
+
+    .category-select .category-select-options .menu_option a.same, .category-select .category-select-options .menu_option a:hover {
+        background: #FF5722;
+        color: #fff;
+        border-color: #FF5722;
+    }
+
+    .category-select-block {
+        display: none;
+    }
+</style>
+<div class="category-select">
+    <input type="hidden" name="category_id" value="{$value}" id="categoryId">
+    <div class="category-title">{$titles}</div>
+    <a href="javascript:void(0);" class="category-select-btn layui-btn  layui-btn-normal">重新选取</a>
+</div>
+<div class="category-select-block layui-form">
+    <div class="data-table">
+        <div class="table-striped" lay-filter="category">
+            <table cellspacing="1" style="table-layout: fixed">
+                <!-- 列表 -->
+                <tbody class="needdragsort">
+                {notempty name='cate_data'} {volist name="cate_data" id="data"}
+                <tr>
+                    <td>
+                        <input type="checkbox" lay-filter="cate" name="ids" title="{$data.title|raw}" value="{$data.id}"
+                               data-pid="{$data.pid}" lay-skin="primary" autocomplete="off" {in name="data.id"
+                               value="$value" }checked{/in} />
+                    </td>
+                </tr>
+                {/volist}
+                {else /}
+                <tr>
+                    <td>还没有栏目数据，请先增加栏目</td>
+                </tr>
+                {/notempty}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var categoryIdArr = []
+    var categoryTitleArr = []
+    $(function () {
+        var ids = $('#categoryId').val()
+        if (ids) {
+            categoryIdArr = ids.split(',')
+        }
+
+        var titles = $('.category-title').text()
+        if (titles) {
+            categoryTitleArr = titles.split(',')
+        }
+    })
+
+    $('.category-title,.category-select-btn').click(function () {
+        layer.open({
+            type: 1,
+            title: false,
+            content: $('.category-select-block')
+        });
+    });
+
+    function checkParents(id) {
+        var pid = $("input[name='ids'][value='" + id + "']").data('pid')
+        if (pid == 0) return true;
+
+        var obj = $("input[name='ids'][value='" + pid + "']")
+        if (!obj.is(':checked')) {
+            console.log('设置已勾选: '+ obj.attr('title'))
+            obj.prop('checked', true);
+            addArr(obj.val(), obj.attr('title'))
+        }
+
+        return checkParents(pid)
+    }
+
+    function checkChild(id) {
+        $("input[name='ids'][data-pid='" + id + "']").each(function () {
+            var obj = $(this)
+            if (obj.is(':checked')) {
+                $(this).prop('checked', false);
+
+                var id = $(this).val()
+                delArr(id)
+                checkChild(id)
+            }
+        })
+        return true;
+    }
+
+    function delArr(id) {
+        for (var i = 0; i < categoryIdArr.length; i++) {
+            if (categoryIdArr[i] == id) {
+                categoryIdArr.splice(i, 1)
+                categoryTitleArr.splice(i, 1)
+            }
+        }
+    }
+    function addArr(id, title){
+        categoryIdArr.push(id)
+
+        title = title.replace('├──', '').replace(new RegExp('───', 'g'), '');
+        categoryTitleArr.push(title)
+    }
+
+    layui.use('form', function () {
+        var tree_form = layui.form;
+
+        tree_form.on('checkbox(cate)', function (data) {
+            console.log('checkbox', data); //得到checkbox原始DOM对象
+            if (data.elem.name == 'ids') {
+                var checked = data.elem.checked
+                var id = data.value
+                if (checked) { //增加
+                    addArr(id, data.elem.title)
+
+                    //判断上级是否已经勾选，如果没勾选要勾上
+                    checkParents(id)
+                } else { //取消
+                    delArr(id)
+
+                    //判断下级是否已经勾选，如果没勾选要勾上
+                    checkChild(id)
+                }
+                tree_form.render()
+                console.log('执行完render了')
+                $('#categoryId').val(categoryIdArr.join(','))
+                $('.category-title').html(categoryTitleArr.join(', '))
+            }
+        });
+    });
+</script>
+

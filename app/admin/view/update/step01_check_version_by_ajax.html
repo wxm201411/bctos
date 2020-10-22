@@ -1,0 +1,37 @@
+  <!-- 数据列表 -->
+  <div class="data-table" id="data-table">
+    <div style="margin: 10px;"><span>检测到有以下 {$count} 个新的版本可以升级</span>
+      {if condition="$count"}
+      <span style="float: right"><button class="btn btn01" onclick="do_update()">一键升级</button></span>
+      {/if}
+    </div>
+
+    <div class="data-table table-striped">
+      <table>
+        <thead>
+          <tr>
+            <th>版本号</th>
+            <th>描述</th>
+            <th>发布时间</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody>
+            {notempty name="_list"}
+          
+          {volist name="_list" id="vo"}
+            <tr>
+              <td>{$vo.version} </td>
+              <td>{$vo.desc}</td>
+              <td>{$vo.time}</td>
+              <td>{$vo.status|raw}</td>
+            </tr>
+          {/volist}
+          {else/}
+        <td colspan="5" class="text-center"> aOh! 你目前的版本已经是最新的! </td>
+            {/notempty}
+            </tbody>
+      </table>
+    </div>
+  </div>
+

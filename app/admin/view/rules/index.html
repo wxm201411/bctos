@@ -1,0 +1,48 @@
+{extend name="common@base/common" /}
+{block name="body"}
+    <div class="tools auth-botton">
+        <a id="add-group" class="btn" href="{:U('createTag')}">新 增</a>
+        <!-- a url="{:U('changestatus?method=resumerule')}" class="btn ajax-post" target-form="ids" >启 用</a>
+        <a url="{:U('changestatus?method=forbidrule')}" class="btn ajax-post" target-form="ids" >禁 用</a-->
+        <a url="{:U('deleteTag')}" class="btn ajax-post confirm" target-form="ids" >删 除</a>
+    </div>
+	<!-- 数据列表 -->
+	<div class="data-table table-striped">
+	<table>
+    <thead>
+        <tr>
+		<th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+		<th>角色名称</th>
+        <th>状态</th>
+		<th>操作</th>
+		</tr>
+    </thead>
+    <tbody>
+		{notempty name="_list"}
+		{volist name="_list" id="vo"}
+		<tr>
+            <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+			<td><a href="{:U('Rule/editRule?id='.$vo['id'])}">{$vo.title}</a> </td>
+			<td><a href="{:U('set_status?id='.$vo['id'].'&status='.$vo['status'])}">{empty name="vo.status"}禁用{else /}正常{/empty}</a></td>
+			<td>
+
+				<a href="{:U('rules',array('id'=>$vo['id']))}">路由权限</a>
+				<a href="{:U('menu',array('id'=>$vo['id']))}">菜单权限</a>
+				{if $vo['id']>3}
+				<a href="{:U('editTag',array('id'=>$vo['id']))}">编辑</a>
+				<a href="{:U('deleteTag',array('ids'=>$vo['id']))}" class="confirm">删除</a>
+				{/if}
+             </td>
+		</tr>
+		{/volist}
+		{else/}
+		<td colspan="7" class="text-center"> aOh! 暂时还没有内容! </td>
+		{/notempty}
+	</tbody>
+    </table>
+
+	</div>
+    <div class="page">
+        {$_page|raw}
+    </div>
+{/block}

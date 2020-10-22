@@ -1,0 +1,76 @@
+<!-- 用户绑定页面 -->
+{include file="common@base/mobile_head"/}
+<link href="{:ADDON_PUBLIC_PATH}/userCenter1.css?v={:SITE_VERSION}" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
+<body>
+<div id="container" class="container body user_bind_page"> 
+  
+  <!-- 表单 -->
+  <form id="form" action="{$post_url}" method="post" class="bind_form form-horizontal layui-form" lay-filter="xw-form">
+    <div class="head_wrap"> <img class="headface" src="{$public_info.headface_url|get_cover_url}"/> <span>{$public_info.public_name}</span> <br/>
+    </div>
+    <div class="tips">绑定信息仅用于领取奖品，不做其他用途，请放心填写</div>
+    {include file="common@base/_form" /}
+    <div id="top-alert" class="fixed alert alert-error" style="display: none;">
+      <button class="close fixed" style="margin-top: 4px;">&times;</button>
+      <div class="alert-content"></div>
+    </div>
+    <div class="form-item cf">
+      {if condition="$meta_title=='用户编辑'"}
+        <input type="hidden" name="uid" value="{$data.id|default=0}">
+      {/if}
+      <button class="home_btn submit-btn" id="submit" type="button" target-form="form-horizontal">提交</button>
+    </div>
+  </form>
+</div>
+{block name="script"}
+<script type="text/javascript">
+$('#submit').click(function(){
+   // $('#form').submit();
+   //判断
+   if($('input[name="nickname"]').length>0 && ( $('input[name="nickname"]').val().length<2 || !(/^[\u4e00-\u9fa5]+$/.test($('input[name="nickname"]').val())))){
+   		 $.Dialog.fail("名字限2个以上的中文字符!");
+		 return;
+   }
+//   if($('input[name="mobile"]').length>0 && $('input[name="mobile"]').val().length!=11){
+//   		 $.Dialog.fail("请填写正确的手机号码!");
+//		 return;
+//   }
+//   if($('input[name="identity"]').length>0 && $('input[name="identity"]').val().length<18){
+//   		 $.Dialog.fail("请填写正确的身份证!");
+//		 return;
+//   }
+   
+   $.Dialog.loading();
+   $.ajax({
+	   url:'{$post_url}',
+	   type:'post',
+	   data:$('#form').serializeArray(),
+	   dataType:'json',
+	   success:function(json){
+		   console.log(json);
+		    //$.Dialog.close();
+			if(json.status==1){
+			   		
+			   		$.Dialog.success(json.info);
+					//alert('2');
+			   }else{
+				   	$.Dialog.fail(json.info);
+					//alert('3');
+				   }
+		   if(json.url!=""){
+			   setTimeout(function(){
+				   window.location.href=json.url;
+				   },2000);
+			   }
+   		},
+		error:function(){
+				$.Dialog.close();
+			 //$.Dialog.fail();
+			}
+	   });
+});
+</script> 
+{include file="common@base/mobile_foot"/}
+</body>
+</html>

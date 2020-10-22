@@ -1,0 +1,121 @@
+{extend name="common@base/common" /}
+
+{block name="body"}
+	<!-- 标签页导航 -->
+	<div class="wrap">
+		<div class="tab-content">
+			<!-- 表单 -->
+			<form id="form" action="{:U('update')}" method="post" class="form-horizontal doc-modal-form">
+				<!-- 基础 -->
+				<div id="tab1" class="tab-pane in tab1">
+					<div class="layui-form-item">
+						<label class="item-label">模型标识<span class="check-tips">（请输入模型标识，全部小写，可以用下划线）</span></label>
+						<div class="controls">
+							<input type="text" class="text input-large" name="name" value="">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="item-label">模型名称<span class="check-tips">（请输入模型的中文名称）</span></label>
+						<div class="controls">
+							<input type="text" class="text input-large" name="title" value="">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="item-label">引擎类型</label>
+						<div class="controls">
+							<select name="engine_type">
+								<option value="InnoDB">InnoDB</option>
+								<option value="MyISAM">MyISAM</option>
+							</select>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="item-label">是否需要主键<span class="check-tips">（选“是”则会新建默认的id字段作为主键）</span></label>
+						<div class="controls">
+							<select name="need_pk">
+								<option value="1" selected="selected">是</option>
+								<option value="0">否</option>
+							</select>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="item-label">所属应用</label>
+						<div class="controls">
+							<select name="addon">
+								<option value="">无</option>
+                                {volist name="list" id="m"}
+								<option value="{$key}">{$m}</option>
+                                {/volist}
+							</select>
+						</div>
+					</div>
+				<div class="layui-form-item">
+					<label class="item-label">继承模型</label>
+					<div class="controls">
+						<select name="inherit">
+							<option value="">无</option>
+							{volist name="inherit_list" id="m"}
+							<option value="{$key}">{$m}</option>
+							{/volist}
+						</select>
+					</div>
+				</div>
+
+				<!-- 按钮 -->
+				<div class="layui-form-item">
+					<label class="item-label"></label>
+					<div class="controls edit_sort_btn">
+						<button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">确 定</button>
+						<button class="btn btn-return">返 回</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/jquery.dragsort-0.5.2.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    $(function(){
+    	showTab();
+    })
+//拖曳应用初始化
+$(function(){
+	$(".dragsort").dragsort({
+	     dragSelector:'li',
+	     placeHolderTemplate: '<li class="draging-place">&nbsp;</li>',
+	     dragBetween:true,	//允许拖动到任意地方
+	     dragEnd:function(){
+	     	updateVal();
+	     }
+	 });
+
+	$('#sortUl li b').click(function(){
+		$(this).parent().remove();
+		updateVal();
+	});
+
+	// 更新排序后的隐藏域的值
+	function updateVal() {
+		var sortVal = [];
+		var i = 1;
+		var val = '';
+	   	$('#base li').each(function(){
+	   		sortVal[i++] = $(this).find('em').text();
+	   	});
+	   	i = -1;
+	   	$('#extend li').each(function(){
+	   		sortVal[i--] = $(this).find('em').text();
+	   	});
+	   	//将排序数组拼接成json格式字符串
+	   	val += "[";
+	   	for (k in sortVal){
+	   		val += "\"" + sortVal[k] + "\"" + ":" + k + ",";
+	   	}
+	   	val = val.substr(0,val.length - 1) + "]";
+	    $("input[name='fields']").val(val);
+	}
+})
+</script>
+{/block}
+

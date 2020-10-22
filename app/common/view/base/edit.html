@@ -1,0 +1,30 @@
+{extend name="common@base/common" /}
+{block name="body"}
+<style>
+    .form-group select{
+        margin-left: 0;
+    }
+</style>
+  <!-- 标签页导航 -->
+  <div class="page_message">
+    <section id="contents">
+      {include file="common@base/_nav" /}
+      <div class="tab-content"> 
+        <!-- 表单 -->
+        {php} isset($post_url) || $post_url = U('edit?model='.$model['id'], $get_param);{/php}
+        <form id="form" action="{$post_url}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+            {include file="common@base/_form" /}
+
+
+        <div class="form-group row form_bh">
+           <div class="offset-sm-2">
+              {notempty name="data.id"} <input type="hidden" name="id" value="{$data.id}">{/notempty}
+               &nbsp;
+            <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">{$submit_name|default='确 定'}</button>
+           </div>
+          </div>
+      </form>
+      </div>
+    </section>
+  </div>
+{/block}

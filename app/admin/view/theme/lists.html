@@ -1,0 +1,192 @@
+{extend name="common@base/common" /}
+
+{block name="body"}
+<style>
+    .app-text { color: #dddddd;  float: right; }
+     .layui-card-body{display: inline-block;}
+     .layui-card-body01{top: 50px;    overflow: auto; height: 82%;}
+    .layui-layer-page{width: 80% !important; top: 10%!important; left: 15%!important; height: 80%!important;    position: fixed;}
+    @media screen and (min-width: 1200px){.layui-col-lg10 { width: 100%!important;  height: 100%;}}  
+    @media screen and (min-width: 1200px){.layui-col-lg6 { padding: 1%;}}
+    @media screen and (min-width: 768px){.layui-col-sm2 { width: 4%; text-align: center;} .layui-col-sm2:hover{ background-color: #eee;}}
+    .layui-card-header01{position: absolute; bottom: 0;width: 100%; padding:12px 0;box-sizing: border-box; background-color: #f5f5f5; height: 64px;}
+    .layui-card-header01 a{width: 10%; margin: 0 3%;}
+    .notice-warning{ background-color: #fff8e5;    padding: 15px; margin-bottom: 20px;     border-left:3px solid #ffb900;}
+    .notice-warning h3{ padding-bottom: 10px;}
+    .notice-warning p a{ color: #007AFF;}
+    .layui-layer-page .layui-layer-content{ height: 100%;}
+    .layui-card-header02{ position: absolute; width: 100%; top:0;box-sizing: border-box}
+    .layui-fluid{padding-top:0; margin-left: 0;}
+.layui-card-header03 a{ width: 26%; padding: 0;margin: 0 3.5%;}
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card ">
+
+                <div class="search-form fr cf">
+                    <div class="sleft" style="margin-right:10px;">
+                        <select name="app" style="border:none; padding:4px; margin:0;">
+                            <option value="{:U ( 'lists')}">请选择所属应用</option>
+                            {volist name="apps" id="vo"}
+                            <option value="{:U ( 'lists',array('app'=>$vo['name']))}" {eq name="vo['name']" value="$app"}selected{/eq} >{$vo.title}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="sleft">
+                        <input type="text" placeholder="请输入主题搜索" value="{:input('key')}"  class="search-input layui-input" name="key">
+                        <a id="search" href="javascript:;" class="sch-btn"><i class="btn-search"></i></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space15 ">
+        {volist name="theme_lists" id="vo"}
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header"><span class="layui-col-md8">{$vo.Name}</span><span
+                        class="layui-col-md4 app-text">{$vo.AppTitle}</span></div>
+                <div class="layui-card-body">
+                    <img src="{$vo.ScreenShot}">
+                </div>
+                <div class="layui-card-header layui-card-header03" style="height: 50px;">
+                    {if condition="isset($apps[$vo['AppName']]['theme']) &&
+                    $vo['Theme']==$apps[$vo['AppName']]['theme']"}
+                    <i class="layui-col-md4 text-center layui-icon layui-icon-auz"
+                       style="font-size: 26px; color: #2d7200;"></i>
+                    {else /}
+                    <a class=" layui-col-md4 text-center layui-btn layui-btn-primary" href="javascript:;"
+                       onclick="doUse('{$vo.Theme}','{$vo.AppName}')">使用主题</a>
+                    {/if}
+                    <a class="layui-col-md4 text-center layui-btn layui-btn-primary" href="">预览主题</a>
+                    <a class="layui-col-md4 text-center layui-btn layui-btn-primary" onclick="info('{$vo.Theme}','{$vo.AppName}')">查看介绍</a>
+                </div>
+            </div>
+            <div class="theme-info" style="display: none" id="theme-info-{$vo.Theme}-{$vo.AppName}">
+                <div class="layui-card layui-col-lg10">
+                    <div class="layui-card-header layui-card-header02">
+                        <div class="layui-col-sm2"><i class="text-center layui-icon layui-icon-left"></i></div>
+                        <div class="layui-col-sm2"><i class="text-center layui-icon layui-icon-right"></i></div>
+                    </div>
+                    <div class="layui-card-body layui-card-body01">
+                        <div class="layui-col-lg6">
+                            <img src="{$vo.ScreenShot}">
+                        </div>
+                        <div class="layui-col-lg6">
+                            {if condition="isset($apps[$vo['AppName']]['theme']) &&
+                            $vo['Theme']==$apps[$vo['AppName']]['theme']"}
+                            <div><i class="layui-col-md4 text-center layui-icon layui-icon-auz"
+                                    style="font-size: 26px; color: #2d7200;"></i>当前应用使用的主题
+                            </div>
+                            {/if}
+                            <div style="padding-bottom: 15px;"><span style="font-size:24px; padding: 0 10px 0 2px; color: #159604;">{$vo.Name}</span><span>版本号: {$vo.Version}</span></div>
+                            <div style="padding-bottom: 20px;">作者：<a href="{$vo.AuthorURI}" target="_blank" style="color: #05aeea;">{$vo.Author}</a></div>
+                            <div class="notice-warning">
+					            <h3 class="notice-title">更新可用</h3>
+					            <p><strong>有一个新的版本,请点击查看。 
+					            	<a href="#" style="color: #01AAED;" aria-label="查看1.2.4版本的详细信息">查看1.2.4版本的详细信息</a> /
+					            	<a href="#" aria-label="现在更新" >现在更新</a>.</strong>
+					            </p>
+				            </div>
+                            <div style="text-indent:2em; padding-bottom: 15px; border-bottom: 1px solid #eee; margin-bottom: 20px;">{$vo.Description}</div>
+                             
+                            <div>标签：<span style="color: #888;">{$vo.Tags}</span></div>
+                        </div>
+                    </div>
+                    <div class="layui-card-header layui-card-header01">
+                        {if condition="isset($apps[$vo['AppName']]['theme']) &&
+                        $vo['Name']==$apps[$vo['AppName']]['theme']"}
+                        <i class="layui-col-md4 text-center layui-icon layui-icon-auz"
+                           style="font-size: 26px; color: #2d7200;"></i>
+                        {else /}
+                        <a class=" layui-col-md4 text-center layui-btn" style="margin-left: 35%;" href="javascript:;"
+                           onclick="doUse('{$vo.Theme}','{$vo.AppName}')">使用主题</a>
+                        {/if}
+                        <a class="layui-col-md4 text-center layui-btn layui-btn-normal" href="">预览主题</a>
+                        <a class="layui-col-md4 text-center layui-btn layui-btn-primary"  style=" position: absolute; right: 0;" onclick="del('{$vo.Theme}','{$vo.AppName}')">删除主题</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {/volist}
+
+    </div>
+</div>
+
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    $(function () {
+        //search_type搜索功能
+        $("#search").click(function () {
+            {empty name="app"}
+                var url = "{:U ( 'lists',['key'=>'s_key'])}";
+            {else/}
+                var url = "{:U ( 'lists',['key'=>'s_key','app'=>$app])}";
+            {/empty}
+            var key = $('[name="key"]').val();
+            url = url.replace('s_key', key);
+
+            url = url.replace(/[?&=]/g, '/');
+            window.location.href = url;
+        });
+
+        $(".search_duo").click(function () {
+            var url = "{:U ( 'lists',['app'=>'s_app'])}";
+            var app = "{:input('app')}";
+
+            if (app == '') {
+                url = url.replace('/app/s_app', '');
+            } else {
+                url = url.replace('s_app', app);
+            }
+
+            url = url.replace(/[?&=]/g, '/');
+            window.location.href = url;
+        });
+
+        //回车自动提交
+        $('.search-form').find('input').keyup(function (event) {
+            if (event.keyCode === 13) {
+                $("#search").click();
+            }
+        });
+        $('select[name=app]').change(function () {
+            location.href = this.value;
+        });
+    })
+
+    function info(theme, app) {
+        var html = $('#theme-info-' + theme + '-' + app).html()
+        layer.open({
+            title: false,
+            type: 1,
+            content: html
+        });
+    }
+
+    function doUse(theme, app) {
+        layer.confirm('确认要切换到该主题吗？', function (index) {
+            layer.close(index);
+
+            $.post("{:U('doUser')}", {theme, app}, function (res) {
+                layer.msg(res.msg);
+                window.location.href = window.location.href;
+            })
+        })
+    }
+
+    function del(theme, app) {
+        layer.confirm('确认要删除该主题吗？', function (index) {
+            layer.close(index);
+
+            $.post("{:U('del')}", {theme, app}, function (res) {
+                layer.msg(res.msg);
+                window.location.href = window.location.href;
+            })
+        })
+    }
+</script>
+{/block}

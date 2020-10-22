@@ -1,0 +1,52 @@
+{extend name="store/storebase" /}
+
+{block name="body"}
+  <div>
+    <p>在应用商店里安装新应用的方法两种：</p>
+    <p>&nbsp;</p>
+    <p><strong>一、一键安装
+    </strong></p>
+    <div><br/>
+  </div>
+    <div>由于一键安装就是程序帮你自动下载应用，自动解压，自动部署代码，自动执行安装操作的一个过程，因此首先要确保程序对Addons目录有可写可读的权限. 否则只能使用下面第二种手工安装的方法</div>
+    <div><br/>
+    </div>
+    <div>在后台的应用商店里找到需要安装的应用后，直接点击&ldquo;一键安装&rdquo;的按钮进行安装就行，包括插件也是自动下载，自动安装，自动导数据入数据库的，不需要用户再操作就可以直接使用</div>
+    <div><br/>
+    </div>
+    <div></div>
+    <div><br/>
+    </div>
+    <div><br/>
+    </div>
+    <div>
+      <p>&nbsp;</p>
+      <p><strong>二、下载手工安装</strong></p>
+    </div>
+    <div><br/>
+    </div>
+    <div>1、微信插件安装的方法</div>
+    <div><br/>
+    </div>
+    <div>在应用商店或者官方论坛上下载微信插件zip压缩文件，把文件解压后放到网站根目录下的<span style="color: #F00">Addons/</span>目录下（如果是用FTP上传到远程的服务器上，请注意使用二进制的方式进行上传），然后进入系统后台，在：插件管理 》微信插件 列表里找到刚放置的插件，点击右边的安装链接 即可完成安装</div>
+    <div><br/>
+    </div>
+    <div>2、微站模板安装的方法</div>
+    <div><br/>
+    </div>
+    <div>在应用商店或者官方论坛上下载微信插件zip压缩文件，把文件解压后放到网站根目录下的<span style="color: #F00">Addons/WeiSite/View/default/</span>目录下（如果是用FTP上传到远程的服务器上，请注意使用二进制的方式进行上传）即可完成安装</div>
+    <div><br/>
+    </div>
+    <div>3、素材图标安装的方法</div>
+    <div><br/>
+    </div>
+    <div>在应用商店或者官方论坛上下载微信插件zip压缩文件，把文件解压后放到网站根目录下的<span style="color: #F00">Uploads/Material/</span>目录下（如果是用FTP上传到远程的服务器上，请注意使用二进制的方式进行上传）即可完成安装</div>
+    <div><br/>
+    </div>
+    <div>4、万能页面功能块安装的方法</div>
+    <div><br/>
+    </div>
+    <div>在应用商店或者官方论坛上下载微信插件zip压缩文件，把文件解压后放到网站根目录下的<span style="color: #F00">Addons/Diy/Widget/</span>目录下（如果是用FTP上传到远程的服务器上，请注意使用二进制的方式进行上传）即可完成安装</div>
+    <br/>
+  </div>
+{/block}

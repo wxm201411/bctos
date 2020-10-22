@@ -1,0 +1,77 @@
+{extend name="common@base/common" /}
+
+{block name="body"}
+<div class="page_message">
+    <section id="contents">
+        {include file="common@base/_nav" /}
+        <div class="layui-row" style="padding: 20px;">
+            <form class="layui-form">
+                <div class="layui-form-item layui-col-md12">
+
+                    <div class="layui-inline">
+                        <div class="layui-form-mid">从源数据库：</div>
+                        <div class="layui-input-inline" style="width: 400px;">
+                            <input type="text" name="db1" placeholder="" class="layui-input" value="{$db1}"/>
+                        </div>
+                        <div class="layui-form-mid"> 更新到目标数据库：</div>
+                        <div class="layui-input-inline" style="width: 400px;">
+                            <input type="text" name="db2" placeholder="127.0.0.1;3306;bctos;root;123456"
+                                   class="layui-input" value="{$db2}"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit lay-filter="diff">对比一下</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-col-md12" id="phinx-content">
+                </div>
+
+                <div class="layui-form-item" id="build-btn" style="display: none;">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="buildFile">生成升级文件</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+</div>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    layui.use('form', function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(diff)', function (data) {
+            var index = layer.load();
+            data.field.build = 0
+            $.post("{:U('mysqlDiff')}", data.field, function (res) {
+                layer.close(index);
+                $('#phinx-content').html(res)
+                if (res != '') {
+                    $('#build-btn').show()
+                } else {
+                    layer.msg('没有需要升级的内容');
+                }
+            })
+            return false;
+        });
+        form.on('submit(buildFile)', function (data) {
+            var index = layer.load();
+            data.field.build = 1
+            $.post("{:U('mysqlDiff')}", data.field, function (res) {
+                layer.close(index);
+                layer.alert(res);
+            })
+            return false;
+        });
+    });
+
+</script>
+{/block}

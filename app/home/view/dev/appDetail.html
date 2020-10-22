@@ -1,0 +1,33 @@
+{extend name="common@base/common" /}
+{block name="body"}
+<div class="dev_container">
+    <div class="dev_body wrap">
+        {include file="dev/_head" /}
+        <div class="dev_content app_detail">
+            <div class="d_head">
+                <img src="{$data.logo_db|get_cover_url}" width="60" height="60"/>
+                <div class="desc">
+                    <h4>{$data.title}</h4>
+                    <p><span class="less">类型：</span>{$data.type}</p>
+                    <p><span class="less">开发者：</span>{$data.uid|get_nickname}</p>
+                    <p><span class="less">更新时间：</span>{$data.update_at}</p>
+                </div>
+                <a href="{:U('home/dev/download','id='.$data['id'].'&attach='.$data['attach_db'])}"  class="btn small-btn d_download">下载</a>
+            </div>
+            <div class="detail">
+                <h5>应用描述</h5>
+                <p>{$data.content|raw}</p>
+
+                <div class="plus_shot">
+                    <h5>应用截图</h5>
+                    {php}$data['img'] = explode(',', $data['img']);{/php}
+                    {volist name='data.img' id='img'}
+                    <a href="{$img|get_cover_url}" target="_blank"><img src="{$img|get_cover_url}"/></a><br/>
+                    {/volist}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

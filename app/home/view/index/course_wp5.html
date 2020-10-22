@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta content="{$info.keyword},{$info.teacher}" name="keywords"/>
+    <meta content="{$info.desc}" name="description"/>
+    <link rel="shortcut icon" href="{:SITE_URL}/favicon.ico">
+    <title>{$info.title}-weiphp提供的培训帮助课程</title>
+    <link type="text/css" rel="stylesheet" href="__CSS__/oweb.css?v={:SITE_VERSION}"/>
+    <link href="__STATIC__/font-awesome/css/font-awesome.min.css?v={:SITE_VERSION}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <link href="__CSS__/base.css?v={:SITE_VERSION}" rel="stylesheet">
+    <link href="__JS__/video/video-js.min.css" rel="stylesheet">
+
+    <style lang="">
+        *{
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        .mr20{margin-right: 20px;}
+        body{background: #eee;}
+        h2{font-size: 24px; font-weight: 400; margin-bottom: 5px;}
+        .c_s{box-shadow: 0 0 3px #ccc; }
+        .read_num{color: #999;}
+        .course_top,.course_main{font-size:16px; padding: 20px; margin-bottom: 20px;background: #fff;overflow: hidden;position: relative; }
+        .course_top .section_contont{margin-left: 25px; float: left;}
+        .course_price{font-size: 25px;color: #FF3C00;margin-top: 40px;}
+        .course_pay_btn{ padding: 8px 18px;background:#FF8100;color: #fff; position: absolute;bottom: 20px; width: 50%; text-align: center;}
+        .course_pay_btn:hover{background:#FF3C00; }
+        .course_main_nav{padding: 20px 0;    background-color: #fff;}
+        .course_main_nav a{padding: 4px 16px; color: #444}
+        .course_main_nav a.cur{color: #4097ce;background: #fff;}
+        .course_main .course_main_cont p{text-indent: 2em; line-height:25px}
+		.course_main .course_main_cont h3{ text-indent: 0.5em; margin:20px}
+		.course_main_cont a{ color:#F00}
+        .course_list .item{padding: 10px 0;}
+        .download-site{background-color: #f7b878;color: #fff;padding: 10px;line-height: 18px;}
+        #ewm{text-align: center}
+        #ewm p{font-size: 20px;}
+       
+    </style>
+<script type="text/javascript" src="__STATIC__/jquery-2.0.3.min.js"></script>
+
+<script type="text/javascript">
+var  IMG_PATH = "__IMG__";
+var  STATIC = "__STATIC__";
+var  ROOT = "__ROOT__";
+</script>
+</head>
+<body>
+{include file="index/_head" /}
+    <div class="body course_box">
+        <div class="course_top c_s container" style="margin-top:90px;">
+            <div class="section">
+                <img class="fl" src="__IMG__/oweb/course_wx3.jpg" alt="">
+                <div class="section_contont">
+                    <h2>weiphp5.0安装使用视频教程</h2>
+                    <div class="read_num fz12 mb_10">阅读&emsp;{$count}</div>
+                    <p class="fz12">讲师：weiphp的凡星</p>
+                    <p class="fz12">关键词：weiphp5, 公众号, 小程序, 手把手, 微信开发</p>
+                    <div class="course_price">大部分免费下载，高级教程：200元</div>
+                    {php}if(!$mid) { {/php}
+                    <div class="course_pay_btn" href="#ewm">请先在最下面扫码登录</div>
+                   {php} }elseif(!$is_pay) { {/php}
+                    <div class="course_pay_btn" href="#ewm">请先在最下面扫码付费学习</div>
+                    {php} } else { {/php} 
+                    <div class="course_pay_btn" href="###">已付费</div>
+                    {php} } {/php} 
+                </div>
+            </div>
+        </div>
+        <div class="course_main_nav container">
+            <a class="item cur" href="javascript:">介绍</a>
+            <a class="item" href="javascript:">目录</a>
+        </div>
+        <div class="course_main c_s container">
+            <div class="course_main_cont">
+                <p class="mb_10">具体的视频内容请查看目录内容，红色部分为付费教程，其它教程全部免费，为减少带宽资源，所有免费的视频请在百度云下载查看(强烈建议下载，在线查看会模糊)，只有付费的视频才能在线播放。</p>
+                <div class="download-site">             	
+                  <div class="mb_10">下载地址：
+                  	<div style="word-wrap:break-word ;">https://pan.baidu.com/s/1EzEa0M160ODVJ0lTguwpdg</div>
+                  </div>
+                  <div class="">提取码：1pma </div></div>
+                </div>
+            <div class="course_main_cont" style="display:none;">
+ 
+<h3>一、WeiPHP安装</h3><p>
+  1.1、window开发环境--基于xampp安装 </p><p>
+  1.2、window开发环境--基于phpStudy安装 </p><p>
+  1.3、liunx线上环境--基于oneinstack安装 </p><p>
+  1.4、liunx线上环境--基于宝塔安装 </p><p>
+  1.5、初始化数据库（安装weiphp） </p><p>
+1.6、增加定时任务 </p>
+<h3>二、HTTPS配置</h3><p>
+  2.1、liunx线上环境--基于oneinstack安装 </p><p>
+2.2、liunx线上环境--基于宝塔安装 </p>
+<h3>三、插件开发</h3><p>
+  3.1、weiphp二次开发介绍 </p><p>
+  3.2、创建插件 </p><p>
+  3.3、配置数据模型--字段管理 </p><p>
+  3.4、配置数据模型--列表管理 </p><p>
+  3.5、菜单配置 </p><p>
+  <a href="{:U('course_wp5',['id'=>1])}">3.6、插件高级功能开发---基础篇 </a></p><p>
+  <a href="{:U('course_wp5',['id'=>1])}">3.7、插件高级功能开发---配置篇 </a></p><p>
+  <a href="{:U('course_wp5',['id'=>1])}">3.8、插件高级功能开发---列表篇 </a></p><p>
+  <a href="{:U('course_wp5',['id'=>1])}">3.9、插件高级功能开发---表单篇 </a></p><p>
+  <a href="{:U('course_wp5',['id'=>1])}">3.10、插件高级功能开发---打包发布 </a></p><p>
+  3.11、插件下载安装 </p>
+<h3>四、公众号开发</h3><p>
+  4.1、公众号配置 </p><p>
+  4.2、素材管理 </p><p>
+  4.3、自定义菜单 </p><p>
+  4.4、欢迎语设置 </p><p>
+  4.5、自定义回复 </p><p>
+  4.6、未识别回复 </p><p>
+  4.7、用户分组 </p><p>
+  4.8、群发消息 </p><p>
+  4.9、粉丝列表 </p><p>
+  4.10、公众号H5开发--自动获取用户信息 </p><p>
+  4.11、公众号H5开发--公共资源介绍 </p><p>
+  4.12、公众号H5开发--JSSDK </p><p>
+  4.13、公众号支付---支付配置 </p><p>
+  <a href="{:U('course_wp5',['id'=>1])}">4.14、公众号支付---支付实现 </a></p><p>
+  <a href="{:U('course_wp5',['id'=>1])}">4.15、公众号支付---现金红包 </a></p>
+<h3>五、小程序开发</h3><p>
+  5.1、小程序配置 </p><p>
+  5.2、自动获取用户信息 </p><p>
+  5.3、短信验证码 </p><p>
+  5.4、上传图片 </p><p>
+  5.5、生成 事件二微码 </p><p>
+  5.6、小程序支付--支付配置 </p><p>
+  5.7、小程序支付--支付开发 </p><p>
+  5.8、小程序支付--异步接收支付结果 </p><p>
+  5.9、模板消息--模板配置 </p><p>
+  5.10、模板消息--支付发消息 </p><p>
+  5.11、模板消息--提供表单发消息 </p><p>
+  5.12、小程序客服 </p>
+<h3>六、MPVUE开发</h3><p>
+  6.1、项目打包 </p><p>
+  6.2、插件安装编译 </p>
+<h3>七、高级功能配置说明</h3><p>
+  <a href="{:U('course_wp5',['id'=>1])}">7.1、一键绑定公众号（或小程序） </a></p><p>
+  <a href="{:U('course_wp5',['id'=>1])}">7.2、扫码登录 </a></p><p>
+  <a href="{:U('course_wp5',['id'=>1])}">7.3、积分等级 </a></p><p>
+  <a href="{:U('course_wp5',['id'=>1])}">7.4、开发调试日志 </a></p><p>
+  <a href="{:U('course_wp5',['id'=>1])}">7.5、常见问题调试方法 </a></p>
+            </div>
+        </div>
+        {php}if(!$mid) { {/php}
+        
+        <div id="ewm" class="course_main c_s container">
+            <img width="300" height="300" src="{$qr_code}" alt="登录二维码">
+            <p>请用微信扫码并关注小韦云公众号完成登录</p>
+        </div>
+        {php} }elseif(!$is_pay) { {/php}
+      
+       <div id="ewm" class="course_main c_s">
+            <script type="text/javascript" src="__STATIC__/qrcode/qrcode.js"></script>
+<script type="text/javascript" src="__STATIC__/qrcode/jquery.qrcode.js"></script>
+<div id="qrCode"></div>
+<script type="text/javascript">
+         var textLink = "{$pay_code}";
+         $('#qrCode').qrcode({width:150,height:150,text:textLink}); 
+ </script>
+            <p>请用微信扫码完成支付</p>
+        </div>   
+         {php} }else { {/php}
+<!--        <video id="my-video" class="video-js vjs-big-play-centered" preload="auto" width="1200" height="640"  controls>
+            <source src="{:SITE_URL}/Uploads/{$file_name}.mp4" type="video/mp4">
+        </video>-->
+        <div class="course_main c_s">
+            该节课程请使用百度云下载观看    
+        </div>         
+        {php} } {/php}
+
+    </div>
+<script type="text/javascript" src="__JS__/video/video.min.js"></script>
+<script>
+    $('.course_main_nav .item').click(function(){
+        var index = $(this).index()
+        $('.course_main_nav .item').removeClass('cur')
+        $('.course_main_cont').hide()
+        $(this).addClass('cur')
+        $('.course_main_cont').eq(index).show()
+    })
+{php}if(!$mid) { {/php}
+var interval = setInterval(function(){
+		$.post("{:U('check_course_login')}",{},function(res){
+			console.log(res)
+			if(res=='1'){
+				clearInterval(interval);
+				//console.log('11111')
+                alert('登录成功（未支付）')
+				window.location.href = window.location.href;
+			}else if(res=='2'){
+				clearInterval(interval);
+				//console.log('222')
+                alert('登录成功（已支付）')
+				window.location.href = window.location.href;
+                
+			}
+		});
+	},3000);
+{php} }elseif(!$is_pay) { {/php}
+var interval = setInterval(function(){
+	$.post("{:U('check_course_pay')}",{},function(res){
+		if(res=='1'){
+			clearInterval(interval);
+            alert('支付成功')
+			window.location.href = window.location.href;
+		}
+	});
+},3000);
+{php} }else{ {/php}
+$('#my-video').bind('contextmenu',function() { return false; }); 
+    var myPlayer = videojs('my-video');
+    myPlayer.ready(function(){
+       this.play()
+    });
+
+{php} } {/php}
+</script>
+
+</body>
+</html>

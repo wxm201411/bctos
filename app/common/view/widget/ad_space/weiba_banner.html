@@ -1,0 +1,31 @@
+{volist name="data" id="vo"}
+	{php}if($vo['display_type'] == 3):{/php}
+    <div id="ad_{$vo.ad_id}" class="banner-container">
+        <div class="swiper-wrapper">
+        	{volist name="vo.content" id="v"}
+            	<div class="swiper-slide"><a href="{$v.bannerurl}"><img src="{$v.bannerpic}" /></a></div>
+            {/volist}
+        </div>
+        {php}if(count($vo['content']) >= 1):{/php}
+            <div class="banner-pagination"></div>
+            <script type="text/javascript">
+			(function(){
+				var w = $(window).width();
+				var h = w*374/730;
+				$('#ad_{$vo.ad_id}').width(w).height(h);
+				var swiper = new Swiper('#ad_{$vo.ad_id}', {
+					pagination: '.banner-pagination',
+					slidesPerView: 1,
+					paginationClickable: true,
+					loop: true,
+					autoplay:3000
+				});
+			})();
+			
+            </script>
+		{php}endif;{/php}
+        
+    </div>
+	{php}endif;{/php}
+{/volist}
+

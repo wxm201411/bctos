@@ -1,0 +1,37 @@
+{extend name="common@base/common" /} {block name="body"}
+
+<div class="page_message">
+    <section id="contents">
+        {include file="common@base/_nav" /}
+        <div class="tab-content">
+            
+            <form action="{:U('config')}" class="form-horizontal form-center layui-form" lay-filter="xw-form" method="post">
+                {empty name="custom_config"} {include file="common@base/_form" /} {else/} {present name="custom_config"} {$custom_config} {/present} {/empty}
+                <div class="row">
+                    <div class="offset-sm-2 col-sm-4" style="padding-left: 0">
+                        <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal" >确 定</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+{/block} {block name="script"}
+<script type="text/javascript" charset="utf-8">
+function playSound(id,obj){
+    var audio = document.getElementById(id);
+    if(audio.paused){
+        audio.play();
+        $(obj).find('img').attr('src','__STATIC__/base/images/icon_sound_play.gif');
+        audio.addEventListener('ended', function () {
+// 			alert('over');
+            $(obj).find('img').attr('src','__STATIC__/base/images/icon_sound.png');
+        }, false);
+        return;
+    }else{
+        audio.pause();
+        $(obj).find('img').attr('src','__STATIC__/base/images/icon_sound.png');
+    }
+}
+</script>
+{/block}

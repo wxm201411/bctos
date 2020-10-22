@@ -1,0 +1,50 @@
+{extend name="common@base/common" /}
+{block name="body"}
+<!-- 标题栏 -->
+
+<div class="main-title">
+    <h2 class="zaixian-shenji"><i class="layui-icon layui-icon-rate-half" style="font-size: 24px; color: #1E9FFF;"></i>
+        在线升级</h2>
+    <hr class="layui-bg-green">
+</div>
+<div class="shenji-chanzuo">
+    <p>升级过程会先备份代码和数据库SQL到/root 目录下，请放心升级</p>
+    <p>升级过程需要下载文件，请确保服务器能访问外网</p>
+    <p>升级完成会清空runtime目录下所有缓存文件</p>
+</div>
+<div style="height: 10px; width: 100%; display: inline-block;"></div>
+
+<div class="shenji-chanzuo" id="showInfomation" style="margin-top: 15px;"></div>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    function showMsg(msg) {
+        $('#data-table').hide();
+        $('#showInfomation').html('<div id="listInfo"><div class="content"><h3 class="center"><img src="__PUBLIC__/admin/images/loading_icon.gif" class="mr10"/>' + msg + '...</h3></div></div>');
+    }
+
+    function checkVersion() {
+        showMsg('更新版本查询中');
+        var postURL = "{:U('admin/Update/step01_checkVersionByAjax')}";
+        $.post(postURL, {id: 1}, function (res) {
+            $('#showInfomation').html(res);
+        });
+    }
+
+    function do_update() {
+        layer.open({
+            type: 2,
+            title: '更新进度',
+            area: ['700px', '700px'],
+            content: "{:U('sshUpdate')}",
+            cancel: function (index, layero) {
+                window.location.href = window.location.href
+            }
+        });
+    }
+
+    $(function () {
+        checkVersion();
+    })
+</script>
+{/block}

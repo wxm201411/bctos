@@ -1,0 +1,57 @@
+{extend name="common@base/common" /}
+
+{block name="body"}
+<form action="{:U()}" method="post" class="layui-form" lay-filter="xw-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">[{$title}] 应用显示位置</label>
+        <div class="layui-input-block">
+            <select name="type" lay-filter="menu">
+                <option value="1">顶部一级菜单</option>
+                <option value="2">侧栏二级菜单</option>
+                <option value="0">隐藏</option>
+            </select>
+            <div style="display: none;" id="top_menu">
+                <select name="pid" lay-filter="top_menu">
+                    <option value="0">==请选择==</option>
+                    {volist name="menu_list" id="vo"}
+                    <option value="{$vo.id}">{$vo.title}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">显示权限</label>
+        <div class="layui-input-block">{:W('common/dynamic_checkbox/dynamic_checkbox',
+            array('name'=>'rule','value'=>$rule,'extra'=>'table=auth_group&type=0'))}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <input type="hidden" name="id" value="{$id}"/>
+        <div class="layui-input-block">
+            <button class="btn submit-btn ajax-post" target-form="layui-form" type="submit">确 定 </button>
+            <button class="btn btn-return">返 回</button>
+        </div>
+    </div>
+</form>
+{/block}
+
+{block name="script"}
+<style>
+    .layui-form-label{
+        width: auto;
+    }
+</style>
+<script type="text/javascript">
+    function layui_funs(form) {
+        form.render();
+        form.on('select(menu)', function (data) {
+            if (data.value == 2) {
+                $('#top_menu').show();
+            } else {
+                $('#top_menu').hide();
+            }
+        });
+    }
+</script>
+{/block}

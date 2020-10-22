@@ -1,0 +1,28 @@
+{extend name="common@base/common" /}
+
+{block name="body"}
+    <form action="{:U('index')}" method="post" class="form-horizontal layui-form" lay-filter="xw-form">
+        <div class="form-item">
+            <label class="item-label">请选择一个认证的服务号<span class="check-tips">还没有服务号？请先到<a href="{:U('home/publics/lists')}" target="_blank">运营管理界面增加</a></span></label>
+            <div class="controls mt30 mb30">
+                <div id='dynamic_select_wp_id'></div>
+                <select name="wp_id" lay-filter="wp_id">
+    <option value="0">请选择</option>
+    {php}$list = dynamic_data(['name'=>'wp_id', 'extra'=>'&table=apps&type=3&app_type=0&value_field=id&title_field=public_name&order=id desc']);{/php}
+    {volist name="list" id="vo"}
+    <option value="{$key}" {eq name="wp_id" value="$key"}selected{/eq}>{$vo}</option>
+    {/volist}
+</select>
+            </div>
+        </div>
+        
+        <div class="form-item">
+        {empty name="status"}
+            <input type="hidden" name="status" value="1">
+            <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确认开启</button>
+        {else /}
+            <input type="hidden" name="status" value="0">
+            <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">关 闭</button>        
+        {/empty}</div>
+    </form>
+{/block}

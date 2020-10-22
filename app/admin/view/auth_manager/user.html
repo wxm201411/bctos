@@ -1,0 +1,57 @@
+<!-- 成员授权编辑页面 -->
+{extend name="common@base/common" /}
+{block name="body"}
+<div class="wrap">
+    <ul class="tab-nav nav">
+        <li><a href="{:U('AuthManager/access',array('group_name'=>I('group_name') ,'group_id'=> I('group_id')))}">权限配置</a></li>
+		<li class="current"><a href="javascript:;">成员管理</a></li>
+	    <li class="fr">
+		    <select name="group">
+			    {volist name="auth_group" id="vo"}
+				    <option value="{:U('AuthManager/user',array('group_id'=>$vo['id'],'group_name'=>$vo['title']))}" {eq name="vo['id']" value="$this_group['id']"}selected{/eq} >{$vo.title}</option>
+			    {/volist}
+		    </select>
+	    </li>
+    </ul>
+    <!-- 数据列表 -->
+    <div class="data-table table-striped">
+	<table>
+    <thead>
+        <tr>
+		<th>UID</th>
+		<th>昵称</th>
+		<th>最后登录时间</th>
+		<th>最后登录IP</th>
+		<th>状态</th>
+		<th>操作</th>
+		</tr>
+    </thead>
+    <tbody>
+		{volist name="_list" id="vo"}
+		<tr>
+			<td>{$vo.uid} </td>
+			<td>{$vo.nickname}</td>
+			<td><span>{$vo.last_login_time|time_format}</span></td>
+			<td><span>{$vo.last_login_ip|intval|long2ip}</span></td>
+			<td>{$vo.status_text}</td>
+			<td><a href="{:U('AuthManager/removeFromGroup?uid='.$vo['uid'].'&group_id='.I('group_id'))}" class="ajax-get">解除授权</a>
+
+                </td>
+		</tr>
+		{/volist}
+	</tbody>
+    </table>
+
+
+    </div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript" charset="utf-8">
+	$('select[name=group]').change(function(){
+		location.href = this.value;
+	});
+</script>
+{/block}

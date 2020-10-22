@@ -1,0 +1,210 @@
+{extend name="store/storebase" /}
+
+{block name="body"}
+	<!-- 标题栏
+	<div class="main-title">
+		<h2>应用商店</h2>
+	</div>
+     -->
+    <div class="app-content">
+      <div class="app-l left" id="page_container">
+        <div class="app-lists mar bor-b">
+          {notempty  name="data.hot_0"}        
+          <div class="app-list  line-d">
+            <div class="page_tit">
+              <h3>热门应用</h3>
+            </div>
+            <ul rel="fav_plugin_ul">
+              {volist name="data.hot_0" id="vo"}
+                <li>
+                  <div class="icon"><a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}"><img src="__IMG__/no_pic.png" width="64" height="64" /></a></div>
+                  <div class="info mar">
+                    <h4>{$vo.title}</h4>
+                    <p>
+                      {empty name="vo.price"}<span class="free">免费</span>
+                        {else /}
+                        <span class="price">价格：{$vo.price|intval} 元</span>{/empty}</p>
+                    <p class="mt10">
+                	{empty name="vo.need_buy"}
+                           <a class="install" href="javascript:;" onclick="autoInstall({$vo.id})">一键安装</a>
+                           <a class="download" href="{:U('admin/Store/download', array('id'=>$vo['id']))}">下载</a>
+                    {else /}
+                            <a class="buy" href="{:U('admin/Store/payment', array('id'=>$vo['id']))}">购买</a> {/empty}
+                    </p>
+                  </div>
+                  <a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}" class="detail">查看详情>></a> </li>
+              {/volist}
+            </ul>
+          </div>
+          {/notempty}
+          {notempty  name="data.new_0"}          
+          <div class="app-list  line-d">
+            <div class="page_tit">
+              <h3>最新上传应用</h3>
+            </div>
+            <ul rel="fav_plugin_ul">
+              {volist name="data.new_0" id="vo"}
+                <li>
+                  <div class="icon"><a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}"><img src="__IMG__/no_pic.png" width="64" height="64" /></a></div>
+                  <div class="info mar">
+                    <h4>{$vo.title}</h4>
+                     <p>
+                      {empty name="vo.price"}<span class="free">免费</span>
+                        {else /}
+                        <span class="price">价格：{$vo.price|intval} 元</span>{/empty}</p>
+                    <p class="mt10">
+                	{empty name="vo.need_buy"}
+                           <a class="install" href="javascript:;" onclick="autoInstall({$vo.id})">一键安装</a>
+                           <a class="download" href="{:U('admin/Store/download', array('id'=>$vo['id']))}">下载</a>
+                    {else /}
+                            <a class="buy" href="{:U('admin/Store/payment', array('id'=>$vo['id']))}">购买</a> {/empty}
+                    </p>
+                  </div>
+                  <a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}" class="detail">查看详情>></a> </li>
+              {/volist}
+            </ul>
+          </div>
+        </div>
+          {/notempty}
+          {notempty  name="data.hot_1"}        
+        <div class="app-lists mar bor-b">
+          <div class="app-list  line-d">
+            <div class="page_tit">
+              <h3>热门插件</h3>
+            </div>
+            <ul rel="fav_plugin_ul">
+              {volist name="data.hot_1" id="vo"}
+                <li>
+                  <div class="icon"><a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}"><img src="__IMG__/no_pic.png" width="64" height="64" /></a></div>
+                  <div class="info mar">
+                    <h4>{$vo.title}</h4>
+                     <p>
+                      {empty name="vo.price"}<span class="free">免费</span>
+                        {else /}
+                        <span class="price">价格：{$vo.price|intval} 元</span>{/empty}</p>
+                    <p class="mt10">
+                	{empty name="vo.need_buy"}
+                           <a class="install" href="javascript:;" onclick="autoInstall({$vo.id})">一键安装</a>
+                           <a class="download" href="{:U('admin/Store/download', array('id'=>$vo['id']))}">下载</a>
+                    {else /}
+                            <a class="buy" href="{:U('admin/Store/payment', array('id'=>$vo['id']))}">购买</a> {/empty}
+                    </p>
+                  </div>
+                  <a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}" class="detail">查看详情>></a> </li>
+              {/volist}
+            </ul>
+          </div>
+          {/notempty}
+          {notempty  name="data.new_1"}          
+          <div class="app-list  line-d">
+            <div class="page_tit">
+              <h3>最新上传插件</h3>
+            </div>
+            <ul rel="fav_plugin_ul">
+              {volist name="data.new_1" id="vo"}
+                <li>
+                  <div class="icon"><a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}"><img src="__IMG__/no_pic.png" width="64" height="64" /></a></div>
+                  <div class="info mar">
+                    <h4>{$vo.title}</h4>
+                    <p>
+                      {empty name="vo.price"}<span class="free">免费</span>
+                        {else /}
+                        <span class="price">价格：{$vo.price|intval} 元</span>{/empty}</p>
+                    <p class="mt10">
+                	{empty name="vo.need_buy"}
+                           <a class="install" href="javascript:;" onclick="autoInstall({$vo.id})">一键安装</a>
+                           <a class="download" href="{:U('admin/Store/download', array('id'=>$vo['id']))}">下载</a>
+                    {else /}
+                            <a class="buy" href="{:U('admin/Store/payment', array('id'=>$vo['id']))}">购买</a> {/empty}
+                    </p>
+                  </div>
+                  <a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}" class="detail">查看详情>></a> </li>
+              {/volist}
+            </ul>
+          </div>
+        </div>
+          {/notempty}
+          {notempty  name="data.hot_2"}        
+        <div class="app-lists mar bor-b">
+          <div class="app-list  line-d">
+            <div class="page_tit">
+              <h3>热门模板皮肤</h3>
+            </div>
+            <ul rel="fav_plugin_ul">
+              {volist name="data.hot_2" id="vo"}
+                <li>
+                  <div class="icon"><a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}"><img src="__IMG__/no_pic.png" width="64" height="64" /></a></div>
+                  <div class="info mar">
+                    <h4>{$vo.title}</h4>
+                    <p>
+                      {empty name="vo.price"}<span class="free">免费</span>
+                        {else /}
+                        <span class="price">价格：{$vo.price|intval} 元</span>{/empty}</p>
+                    <p class="mt10">
+                	{empty name="vo.need_buy"}
+                           <a class="install" href="javascript:;" onclick="autoInstall({$vo.id})">一键安装</a>
+                           <a class="download" href="{:U('admin/Store/download', array('id'=>$vo['id']))}">下载</a>
+                    {else /}
+                            <a class="buy" href="{:U('admin/Store/payment', array('id'=>$vo['id']))}">购买</a> {/empty}
+                    </p>
+                  </div>
+                  <a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}" class="detail">查看详情>></a> </li>
+              {/volist}
+            </ul>
+          </div>
+          {/notempty}
+          {notempty  name="data.new_2"}          
+          <div class="app-list  line-d">
+            <div class="page_tit">
+              <h3>最新上传模板皮肤</h3>
+            </div>
+            <ul rel="fav_plugin_ul">
+              {volist name="data.new_2" id="vo"}
+                <li>
+                  <div class="icon"><a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}"><img src="__IMG__/no_pic.png" width="64" height="64" /></a></div>
+                  <div class="info mar">
+                    <h4>{$vo.title}</h4>
+                    <p>
+                      {empty name="vo.price"}<span class="free">免费</span>
+                        {else /}
+                        <span class="price">价格：{$vo.price|intval} 元</span>{/empty}</p>
+                   <p class="mt10">
+                	{empty name="vo.need_buy"}
+                           <a class="install" href="javascript:;" onclick="autoInstall({$vo.id})">一键安装</a>
+                           <a class="download" href="{:U('admin/Store/download', array('id'=>$vo['id']))}">下载</a>
+                    {else /}
+                            <a class="buy" href="{:U('admin/Store/payment', array('id'=>$vo['id']))}">购买</a> {/empty}
+                    </p>
+                  </div>
+                  <a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}" class="detail">查看详情>></a> </li>
+              {/volist}
+            </ul>
+          </div>
+        </div>
+          {/notempty}
+        </div>
+      </div>
+    </div>
+<script type="text/javascript">
+function autoInstall(id){
+	updateAlert('安装中，请等待...','alert-success');
+	
+	$.post("{:U('check_pay_by_ajax')}",{id:id},function(res){
+		if(res==1){
+			var host = "{$host_url}"; //本地安装地址
+			host = host.replace('http://', '');
+		
+			location.href = 'http://' + host + '/index.php?s=/admin/update/downloadAndInstall&id=' + id;			
+		}else{
+			$('#top-alert').find('button').click();
+			updateAlert('该收费应用还没有付款', 'alert-error');
+			setTimeout(function(){
+                $('#top-alert').find('button').click();
+            },3000);
+		}
+	});
+	
+
+}
+</script>    
+{/block}

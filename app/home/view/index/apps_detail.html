@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <meta content="{$info.title}" name="keywords"/>
+    <meta content="小韦云科技提供weiphp周边扩展的插件，实现各行各业的实际软件需求" name="description"/>
+    <link rel="shortcut icon" href="{:SITE_URL}/favicon.ico">
+    <title>{$info.title}-weiphp插件详情</title>
+    <link type="text/css" rel="stylesheet" href="__CSS__/oweb.css?v={:SITE_VERSION}" />
+    <link type="text/css" rel="stylesheet" href="__CSS__/fullpage.css?v={:SITE_VERSION}" />
+    <link href="__STATIC__/font-awesome/css/font-awesome.min.css?v={:SITE_VERSION}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css"></head>
+    <script type="text/javascript" src="__STATIC__/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/fullpage.js"></script>
+    <script type="text/javascript" src="__STATIC__/fullpage.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+{include file="index/_head" /}
+<div class="body" style="margin:70px 0 0;padding:20px 0;background: rgb(250, 247, 250);">
+    <div class="apps_detail">
+        <h3 class="apps_name">{$info.title}</h3>
+        <div class='card'>{$info.content|raw}</div>
+        <div class="buttons">
+            {if condition="$info['sale_price']!='0.00'"}
+            <button class="btn" data-toggle="modal" data-target="#myModal">联系购买</button>
+            <a class="btn" href="https://www.bctos.cn/doc/payment_plug_in_installation.html" target="_blank">安装教程</a>
+            {else /}
+            <a class="btn" href="{$info.down_url}">免费下载</a>
+            <a class="btn" href="https://www.bctos.cn/doc/free_plug_in_installation.html" target="_blank">安装教程</a>
+            {/if}
+        </div>
+        <div class="apps_price"><span>{if condition="$info['sale_price']!='0.00'"}{$info.sale_price}元</span>/<del>{$info.market_price}元</del>{/if}</div>
+        <div class="clear:both"></div>
+    </div>
+</div>
+{include file="index/_footer" /}
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="contact getqrcode">
+            <img src="__IMG__/oweb/code.jpg">
+            <span>扫码联系购买</span>
+        </div>
+    </div><!-- /.modal -->
+</div>
+
+<script>
+    $(document).ready(function(){
+        var width = $(window).width();
+        var docwidth = $(document).width();
+        var height = width;
+        $(".body").css({'width' : width});
+        $(".head").css('width',width);
+        $(".foot").css('width',width);
+        $(window).resize(function () {
+            var width = $(window).width();
+            var height = width;
+            $(".body").css({'width' : width});
+            $(".head").css('width',width);
+            $(".foot").css('width',width,);
+        })
+    })
+</script>
+</body>
+</html>

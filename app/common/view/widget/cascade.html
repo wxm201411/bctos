@@ -1,0 +1,58 @@
+<cascader id="cascade_{$name}"></cascader>
+<input type="hidden" name="{$name}" id="data_{$name}" value="{$default_value|raw}"/>
+
+<script>
+    layui.config({
+        base: '__STATIC__/layui/vendor/ajaxCascader/'
+        , version: '1.6'
+    });
+    layui.use(['ajaxCascader'], function () {
+        var cascader = layui.ajaxCascader;
+
+        let codeData = JSON.parse('{$json|raw}')
+        if(codeData.length==0){
+            codeData = {}
+        }
+        let defaultValue = $('#data_{$name}').val()
+        if (defaultValue) {
+            defaultValue = defaultValue.split(',')
+        } else {
+            defaultValue = []
+        }
+        //console.log(defaultValue)
+        //defaultValue = []
+        //console.log('codeData',codeData)
+        // 直接赋值模式
+        cascader.load({
+            elem: '#cascade_{$name}',
+            data: codeData,
+            showlast: false,
+            clicklast: {$clicklast},
+            width: '75%',
+            height: 50,
+            placeholder: '请选择',
+            chooseData: defaultValue
+        });
+
+
+        // 其他可选参数
+        // width:250  //input框宽度
+        // height:50  //input框高度
+        // placeholder // input框提示词
+        // prop:{
+        //     value:"value",     // 选择器要获取的字段名称
+        //     label:"label",     // 显示时的名称
+        //     children:'children' // 子集的名称定义
+        // }
+        // time:250    // 下拉菜单显示出来的时间
+        // showlast:false  // 是否只显示选中的最后一级
+        // clicklast:false // 是否最后一级才可点击
+        // checkData:['100','200'] // 回显数据
+
+        // 选择器点击事件的监听
+        cascader.on('click', '#cascade_{$name}', function () {
+            var val = cascader.getChooseData('#cascade_{$name}').join(',')
+            $('#data_{$name}').val(val)
+        });
+    });
+</script>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{$meta_title}|小韦云管理平台</title>
+    <!--<link href="__ROOT__/favicon.ico" type="image/x-icon" rel="shortcut icon">-->
+    <link rel="stylesheet" type="text/css" href="__CSS__/base.css?v={:SITE_VERSION}" media="all">
+    <link rel="stylesheet" type="text/css" href="__CSS__/common.css?v={:SITE_VERSION}" media="all">
+    <link rel="stylesheet" type="text/css" href="__CSS__/module.css?v={:SITE_VERSION}" />
+    <link rel="stylesheet" type="text/css" href="__CSS__/style.css?v={:SITE_VERSION}" media="all">
+    <link rel="stylesheet" type="text/css" href="__CSS__/store.css?v={:SITE_VERSION}" media="all">
+     <!--[if lt IE 9]>
+    <script type="text/javascript" src="__STATIC__/jquery-1.10.2.min.js"></script>
+    <![endif]--><!--[if gte IE 9]><!-->
+    <script type="text/javascript" src="__STATIC__/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="__JS__/jquery.mousewheel.js?v={:SITE_VERSION}"></script>
+    <!--<![endif]-->
+    <link rel="stylesheet" type="text/css" href="__STATIC__/layui/css/layui.css?v={:SITE_VERSION}" media="all"></link>
+    <script type="text/javascript" src="__STATIC__/layui/layui.all.js"></script>
+    {block name="style"}{/block}
+</head>
+<body style="padding-left:0;">
+    <!-- 内容区 -->
+    <div id="main-content">
+        <div id="top-alert" class="fixed alert alert-error" style="display: none;">
+            <button class="close fixed" style="margin-top: 4px;">&times;</button>
+            <div class="alert-content"></div>
+        </div>
+        
+        <div id="main" class="main">
+            {block name="nav"}
+            <!-- nav -->
+            {notempty name="_show_nav"}
+            <div class="breadcrumb">
+                <span>您的位置:</span>
+                <assign name="i" value="1" />
+                {foreach name="_nav" item="v" key="k"}
+                    {if condition="$i eq count($_nav)"}
+                    <span>{$v}</span>
+                    {else/}
+                    <span><a href="{$k}">{$v}</a>&gt;</span>
+                    {/if}
+                    <assign name="i" value="$i+1" />
+                {/foreach}
+            </div>
+            {/notempty}
+            <!-- nav -->
+            {/block}
+
+            {block name="body"} {/block}
+        </div>
+    </div>
+    <!-- /内容区 -->
+    <script type="text/javascript">
+	var  IMG_PATH = "__IMG__";
+	var  STATIC = "__STATIC__";
+	var  ROOT = "__ROOT__";
+	var  UPLOAD_PICTURE = "{:U('home/File/upload_picture',array('session_id'=>session_id()))}";
+	var  UPLOAD_FILE = "{:U('home/File/upload',array('session_id'=>session_id()))}";
+    </script>
+    <script type="text/javascript" src="__STATIC__/jquery.dragsort-0.5.2.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/base/js/admin_common.js?v={:SITE_VERSION}"></script>
+    <script type="text/javascript">
+        +function(){
+            var $window = $(window), $subnav = $("#subnav"), url;
+            $window.resize(function(){
+                $("#main").css("min-height", $window.height() - 130);
+            }).resize();
+
+	        /* 表单获取焦点变色 */
+	        $("form").on("focus", "input", function(){
+		        $(this).addClass('focus');
+	        }).on("blur","input",function(){
+				        $(this).removeClass('focus');
+			        });
+		    $("form").on("focus", "textarea", function(){
+			    $(this).closest('label').addClass('focus');
+		    }).on("blur","textarea",function(){
+			    $(this).closest('label').removeClass('focus');
+		    });
+        }();
+    </script>
+    {block name="script"}{/block}
+</body>
+</html>
+{include file="common@base/_auto_check" /}

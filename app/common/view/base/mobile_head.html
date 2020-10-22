@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+    <title>{$page_title|default='weiphp'}</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+	<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="application/xhtml+xml;charset=UTF-8" http-equiv="Content-Type">
+    <meta content="no-cache,must-revalidate" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="pragma">
+    <meta content="0" http-equiv="expires">
+    <meta content="telephone=no, address=no" name="format-detection">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="__STATIC__/default/lib/jquery-weui/weui.min.css">
+        <link rel="stylesheet" href="__STATIC__/default/lib/jquery-weui/jquery-weui.min.css">
+    <link rel="stylesheet" type="text/css" href="__ROOT__/home/css/mobile_module.css?v={:SITE_VERSION}" media="all">
+    <script type="text/javascript">
+		//静态变量
+		var SITE_URL = "{:SITE_URL}";
+		var IMG_PATH = "__IMG__";
+		var STATIC_PATH = "__STATIC__";
+		var WX_APPID = '{notempty name="jsapiParams.appId"}{$jsapiParams.appId}{/notempty}';
+		var	WXJS_TIMESTAMP='{notempty name="jsapiParams.timestamp"}{$jsapiParams.timestamp}{/notempty}'; 
+		var NONCESTR= '{notempty name="jsapiParams.nonceStr"}{$jsapiParams.nonceStr}{/notempty}'; 
+		var SIGNATURE= '{notempty name="jsapiParams.signature"}{$jsapiParams.signature}{/notempty}';
+		var PUBLIC_TYPE = "{:config('app.PUBLIC_TYPE')}";
+	</script>
+	
+	    <script src="__STATIC__/default/lib/jquery-3.3.1.min.js"></script>
+    <script src="__STATIC__/default/lib/swiper/swiper-4.3.3.min.js"></script>  
+    
+    <script src="__STATIC__/default/lib/jweixin-1.0.0.js"></script>   
+<!--     <script src="__STATIC__/base/js/dialog.js"></script> -->
+    <script src="__STATIC__/flipsnap.min.js"></script>
+    <script src="__STATIC__/mobile_module.js"></script>     
+
+    
+    <script src="__STATIC__/default/lib/weui/weui.min.js"></script>
+    <script src="__STATIC__/default/lib/jquery-weui/jquery-weui.min.js"></script>
+    
+    
+    
+<!--     <script type="text/javascript" src="__STATIC__/jquery-2.0.3.min.js"></script> -->
+<!--     <script type="text/javascript" src="__STATIC__/mobile_module.js"></script> -->
+<!--     <script type="text/javascript" src="__STATIC__/base/js/dialog.js"></script> -->
+<!-- 	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script> -->
+<!-- 	<script type="text/javascript" src="__ROOT__/minify.php?f=mobile_head&v={:SITE_VERSION}"></script> -->
+	
+	 <script src="__STATIC__/default/lib/jquery-weui/fastclick.js"></script>
+    <script src="__STATIC__/default/lib/lazyload.min.js"></script>  
+    <script src="__STATIC__/default/js/function.js"></script>
+    {include file="common@base/_auto_check" /}
+</head>

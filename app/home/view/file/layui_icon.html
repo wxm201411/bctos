@@ -1,0 +1,513 @@
+{include file="common@base/head"/}
+<body style="background:#fff;">
+<style>
+    .content-1{margin-bottom: 10px;}
+    .content-1 li{display: inline-block;vertical-align: middle;width: 110px;height: 80px;line-height: 25px;padding: 20px 0; margin-right: -4px;margin-bottom: -1px;border: 1px solid #e2e2e2;
+        font-size: 14px;text-align: center;color: #666;transition: all .3s;-webkit-transition: all .3s;}
+    .content-1 .layui-icon{display: inline-block;font-size: 36px;}
+    .content-1  li .doc-icon-fontclass {height: 40px;line-height: 20px;padding: 0 5px;font-size: 13px;color: #333;}
+    .doc-icon-name{ padding-top: 10px;}
+    .site-doc-icon{padding-bottom:22px;}
+    .upload-pre-item22{ position: relative;}
+</style>
+  <section id="upload_dialogContent">
+      <div class="content">
+          <div class="content-1 an-style1">
+        <ul class="site-doc-icon">
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-rate-half"></i>
+                <div class="doc-icon-name">半星</div>
+            <span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-rate"></i>
+                <div class="doc-icon-name">星星-空心</div>
+            <span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-rate-solid"></i>
+                <div class="doc-icon-name">星星-实心</div>
+            <span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-cellphone"></i>
+                <div class="doc-icon-name">手机</div>
+            <span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-vercode"></i>
+                <div class="doc-icon-name">验证码</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-login-wechat"></i>
+                <div class="doc-icon-name">微信</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-login-qq"></i>
+                <div class="doc-icon-name">QQ</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-login-weibo"></i>
+                <div class="doc-icon-name">微博</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-password"></i>
+                <div class="doc-icon-name">密码</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-username"></i>
+                <div class="doc-icon-name">用户名</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-refresh-3"></i>
+                <div class="doc-icon-name">刷新-粗</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-auz"></i>
+                <div class="doc-icon-name">授权</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-spread-left"></i>
+                <div class="doc-icon-name">左向右伸缩菜单</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-shrink-right"></i>
+                <div class="doc-icon-name">右向左伸缩菜单</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-snowflake"></i>
+                <div class="doc-icon-name">雪花</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-tips"></i>
+                <div class="doc-icon-name">提示说明</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-note"></i>
+                <div class="doc-icon-name">便签</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-home"></i>
+                <div class="doc-icon-name">主页</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-senior"></i>
+                <div class="doc-icon-name">高级</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-refresh"></i>
+                <div class="doc-icon-name">刷新</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-refresh-1"></i>
+                <div class="doc-icon-name">刷新</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-flag"></i>
+                <div class="doc-icon-name">旗帜</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-theme"></i>
+                <div class="doc-icon-name">主题</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-notice"></i>
+                <div class="doc-icon-name">消息-通知</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-website"></i>
+                <div class="doc-icon-name">网站</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-console"></i>
+                <div class="doc-icon-name">控制台</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-face-surprised"></i>
+                <div class="doc-icon-name">表情-惊讶</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-set"></i>
+                <div class="doc-icon-name">设置-空心</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-template-1"></i>
+                <div class="doc-icon-name">模板</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-app"></i>
+                <div class="doc-icon-name">应用</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-template"></i>
+                <div class="doc-icon-name">模板</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-praise"></i>
+                <div class="doc-icon-name">赞</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-tread"></i>
+                <div class="doc-icon-name">踩</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-male"></i>
+                <div class="doc-icon-name">男</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-female"></i>
+                <div class="doc-icon-name">女</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-camera"></i>
+                <div class="doc-icon-name">相机-空心</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-camera-fill"></i>
+                <div class="doc-icon-name">相机-实心</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-more"></i>
+                <div class="doc-icon-name">菜单-水平</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-more-vertical"></i>
+                <div class="doc-icon-name">菜单-垂直</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-rmb"></i>
+                <div class="doc-icon-name">金额-人民币</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-dollar"></i>
+                <div class="doc-icon-name">金额-美元</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-diamond"></i>
+                <div class="doc-icon-name">钻石-等级</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-fire"></i>
+                <div class="doc-icon-name">火</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-return"></i>
+                <div class="doc-icon-name">返回</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-location"></i>
+                <div class="doc-icon-name">位置-地图</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-read"></i>
+                <div class="doc-icon-name">办公-阅读</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-survey"></i>
+                <div class="doc-icon-name">调查</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-face-smile"></i>
+                <div class="doc-icon-name">表情-微笑</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-face-cry"></i>
+                <div class="doc-icon-name">表情-哭泣</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-cart-simple"></i>
+                <div class="doc-icon-name">购物车</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-cart"></i>
+                <div class="doc-icon-name">购物车</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-next"></i>
+                <div class="doc-icon-name">下一页</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-prev"></i>
+                <div class="doc-icon-name">上一页</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-upload-drag"></i>
+                <div class="doc-icon-name">上传-空心-拖拽</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-upload"></i>
+                <div class="doc-icon-name">上传-实心</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-download-circle"></i>
+                <div class="doc-icon-name">下载-圆圈</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-component"></i>
+                <div class="doc-icon-name">组件</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-file-b"></i>
+                <div class="doc-icon-name">文件-粗</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-user"></i>
+                <div class="doc-icon-name">用户</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-find-fill"></i>
+                <div class="doc-icon-name">发现-实心</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i>
+                <div class="doc-icon-name">loading</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-loading-1 layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i>
+                <div class="doc-icon-name">loading</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-add-1"></i>
+                <div class="doc-icon-name">添加</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-play"></i>
+                <div class="doc-icon-name">播放</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-pause"></i>
+                <div class="doc-icon-name">暂停</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-headset"></i>
+                <div class="doc-icon-name">音频-耳机</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-video"></i>
+                <div class="doc-icon-name">视频</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-voice"></i>
+                <div class="doc-icon-name">语音-声音</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-speaker"></i>
+                <div class="doc-icon-name">消息-通知-喇叭</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-fonts-del"></i>
+                <div class="doc-icon-name">删除线</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-fonts-code"></i>
+                <div class="doc-icon-name">代码</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-fonts-html"></i>
+                <div class="doc-icon-name">HTML</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-fonts-strong"></i>
+                <div class="doc-icon-name">字体加粗</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-unlink"></i>
+                <div class="doc-icon-name">删除链接</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-picture"></i>
+                <div class="doc-icon-name">图片</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-link"></i>
+                <div class="doc-icon-name">链接</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-face-smile-b"></i>
+                <div class="doc-icon-name">表情-笑-粗</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-align-left"></i>
+                <div class="doc-icon-name">左对齐</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-align-right"></i>
+                <div class="doc-icon-name">右对齐</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-align-center"></i>
+                <div class="doc-icon-name">居中对齐</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-fonts-u"></i>
+                <div class="doc-icon-name">字体-下划线</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-fonts-i"></i>
+                <div class="doc-icon-name">字体-斜体</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-tabs"></i>
+                <div class="doc-icon-name">Tabs 选项卡</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-radio"></i>
+                <div class="doc-icon-name">单选框-选中</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-circle"></i>
+                <div class="doc-icon-name">单选框-候选</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-edit"></i>
+                <div class="doc-icon-name">编辑</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-share"></i>
+                <div class="doc-icon-name">分享</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-delete"></i>
+                <div class="doc-icon-name">删除</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-form"></i>
+                <div class="doc-icon-name">表单</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-cellphone-fine"></i>
+                <div class="doc-icon-name">手机-细体</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-dialogue"></i>
+                <div class="doc-icon-name">聊天 对话 沟通</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-fonts-clear"></i>
+                <div class="doc-icon-name">文字格式化</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-layer"></i>
+                <div class="doc-icon-name">窗口</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-date"></i>
+                <div class="doc-icon-name">日期</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-water"></i>
+                <div class="doc-icon-name">水 下雨</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-code-circle"></i>
+                <div class="doc-icon-name">代码-圆圈</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-carousel"></i>
+                <div class="doc-icon-name">轮播组图</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-prev-circle"></i>
+                <div class="doc-icon-name">翻页</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-layouts"></i>
+                <div class="doc-icon-name">布局</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-util"></i>
+                <div class="doc-icon-name">工具</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-templeate-1"></i>
+                <div class="doc-icon-name">选择模板</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-upload-circle"></i>
+                <div class="doc-icon-name">上传-圆圈</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-tree"></i>
+                <div class="doc-icon-name">树</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-table"></i>
+                <div class="doc-icon-name">表格</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-chart"></i>
+                <div class="doc-icon-name">图表</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-chart-screen"></i>
+                <div class="doc-icon-name">图标 报表 屏幕</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-engine"></i>
+                <div class="doc-icon-name">引擎</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-triangle-d"></i>
+                <div class="doc-icon-name">下三角</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-triangle-r"></i>
+                <div class="doc-icon-name">右三角</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-file"></i>
+                <div class="doc-icon-name">文件</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-set-sm"></i>
+                <div class="doc-icon-name">设置-小型</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-add-circle"></i>
+                <div class="doc-icon-name">添加-圆圈</div><span class="ck-ico"></span></li>
+
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-404"></i>
+                <div class="doc-icon-name">404</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-about"></i>
+                <div class="doc-icon-name">关于</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-up"></i>
+                <div class="doc-icon-name">箭头 向上</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-down"></i>
+                <div class="doc-icon-name">箭头 向下</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-left"></i>
+                <div class="doc-icon-name">箭头 向左</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-right"></i>
+                <div class="doc-icon-name">箭头 向右</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-circle-dot"></i>
+                <div class="doc-icon-name">圆点</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-search"></i>
+                <div class="doc-icon-name">搜索</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-set-fill"></i>
+                <div class="doc-icon-name">设置-实心</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-group"></i>
+                <div class="doc-icon-name">群组</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-friends"></i>
+                <div class="doc-icon-name">好友</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-reply-fill"></i>
+                <div class="doc-icon-name">回复 评论 实心</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-menu-fill"></i>
+                <div class="doc-icon-name">菜单 隐身 实心</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-log"></i>
+                <div class="doc-icon-name">记录</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-picture-fine"></i>
+                <div class="doc-icon-name">图片-细体</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-face-smile-fine"></i>
+                <div class="doc-icon-name">表情-笑-细体</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-list"></i>
+                <div class="doc-icon-name">列表</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-release"></i>
+                <div class="doc-icon-name">发布 纸飞机</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-ok"></i>
+                <div class="doc-icon-name">对 OK</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-help"></i>
+                <div class="doc-icon-name">帮助</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-chat"></i>
+                <div class="doc-icon-name">客服</div><span class="ck-ico"></span></li>
+
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-top"></i>
+                <div class="doc-icon-name">top 置顶</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-star"></i>
+                <div class="doc-icon-name">收藏-空心</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-star-fill"></i>
+                <div class="doc-icon-name">收藏-实心</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-close-fill"></i>
+                <div class="doc-icon-name">关闭-实心</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-close"></i>
+                <div class="doc-icon-name">关闭-空心</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-ok-circle"></i>
+                <div class="doc-icon-name">正确</div><span class="ck-ico"></span></li>
+            <li class="upload-pre-item22">
+                <i class="layui-icon layui-icon-add-circle-fine"></i>
+                <div class="doc-icon-name">添加-圆圈-细体</div><span class="ck-ico"></span></li>
+        </ul>
+
+          </div>
+      </div>
+  </section>
+  <div class="upload_dialog_bar"><a id="conBtn" class="btn" href="javascript:;" onClick="confirmImage();">确定</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="border-btn" href="javascript:;" onClick="window.parent.$.Dialog.close();">取消</a></div>
+</body>
+<script type="text/javascript">
+    var fieldName =  "{:I('field')}";
+    $(function () {
+        $('li').click(function () {
+            toggleCheck(this)
+        })
+    })
+//选中图片
+function toggleCheck(obj){
+		if(!$(obj).hasClass('check')){
+			$(obj).addClass('check').siblings().removeClass('check');
+		}
+}
+function confirmImage(){
+	var curItems = $('.check');
+	var checkCount = curItems.length;
+	if(checkCount==0){
+		swal(
+		  '错误',
+		  '请选择图标！',
+		  'error'
+		)
+		return;
+	}
+
+	curItems.each(function(index, element) {
+		var cla = $(element).find('i').attr('class');
+        console.log(cla)
+		console.log('#cover_id_'+fieldName);
+			window.parent.$('#cover_id_'+fieldName).parent().find('.upload-img-box').html(
+				'<div class="upload-pre-item2"><i class="'+cla+'" style="font-size: 90px;"></i></div><em class="edit_img_icon">&nbsp;</em>'
+			).show();
+
+			window.parent.$('#cover_id_'+fieldName).val(cla);
+			var callback = window.parent.$('#cover_id_'+fieldName).data('callback');
+
+			if(callback){
+				eval('window.parent.'+callback+'("'+fieldName+'",'+picId+',"'+src+'")');
+			}
+	});
+	window.parent.$.Dialog.close();
+}
+
+
+</script>
+</html>

@@ -1,0 +1,19 @@
+{extend name="common@base/common" /}
+<!-- 管理员用户组新增和编辑页面 -->
+
+{block name="body"}
+  <form action="" enctype="application/x-www-form-urlencoded" method="POST"  class="form-horizontal layui-form" lay-filter="xw-form">
+    <div class="form-item">
+      <label for="auth-name" class="item-label">角色名</label>
+      <div class="controls">
+        <input id="auth-name" type="text" name="title" class="text input-large" value="{$tagInfo['title']?$tagInfo['title']:''}"/>
+      </div>
+    </div>
+
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$id?$id:''}" />
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return">返 回</button>
+    </div>
+  </form>
+{/block}

@@ -1,0 +1,35 @@
+{extend name="common@base/common" /}
+{block name="body"}
+<div class="dev_container">
+    <div class="dev_body wrap">
+        {include file="dev/_head" /}
+        <div class="dev_content">
+            <!-- //已登录开发者-->
+            <div class="submit_app">
+                <div class="step step_1"></div>
+            </div>
+            <div class="submit_form">
+                <div class="tab-content">
+                    <!-- 表单 -->
+                    {php} $post_url || $post_url = U('edit?model='.$model['id']);{/php}
+                    <form id="form" action="{:$post_url}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+                        <!-- 基础文档模型 -->
+                        {include file="common@base/_form" /}
+
+                        <div class="form-group row form_bh">
+                            <div class="offset-sm-2">
+                                {notempty name="data.id"} <input type="hidden" name="id" value="{$data.id}">{/notempty}
+                                &nbsp;
+                                <button class="btn submit-btn ajax-post" id="submit" type="submit"
+                                        target-form="form-horizontal">{$submit_name|default='提 交'}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{/block}

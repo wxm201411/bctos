@@ -1,0 +1,25 @@
+
+{extend name="store/storebase" /}
+
+{block name="body"}
+<div class="web_info">
+<p><span class="label">网站名：</span><span class="right">{$web_info.title}</span></p>
+<p><span class="label">网站地址：</span><span class="right">{$web_info.url}</span></p>
+<p><span class="label">网站LOGO：</span><span class="right"><img class="logo" src="{$web_info.logo|get_cover_url}" width="100" height="100"></span></p>
+<p><span class="label">账号余额：</span><span class="right">{$web_info.wealth|intval}元 【<a href="{:U('online_recharge')}">在线充值</a>】</span></p>
+
+<p><span class="label">授权许可证：</span><span class="right">{$web_info.web_key} <br/><span class="less_tips">（许可证与网站地址中的域名或者IP绑定，如有变化请同步更新到 系统》基本配置 里的许可证）</span></span></p>
+
+<p>&nbsp;</p>  
+<a class="btn" href="{:U('app_shop_web', array('id'=>$web_info['id']))}">更新网站信息</a>
+</div>
+<script>
+var url = "{$web_info.url}/index.php?s=/admin/update/save_store_license&license={$web_info.web_key}";
+$.ajax({
+	type : "get",
+	async:false,
+	url : url,
+	dataType : "jsonp",
+});
+</script>
+{/block} 

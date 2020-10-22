@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  {include file="common@base/head"/}
+    {block name="style"}{/block}
+</head>
+<body id="login-admin">
+
+  <!-- 主体 -->
+    <div id="main-container" class="container" style="position:relative">
+     
+
+        <div class="no_side_main_body">
+              <div class="top_content">
+                  <div class="log_wrap">
+                      <section class="login_box" style="width:520px;">
+                          <div class=login_code style="text-align: center;">
+                          	<p style="color: #0a8cd2">扫码支付下面金额才可继续使用</p>
+            				<p style="color: red;font-size: 24px;font-weight: bold; margin-top: 15px;">￥ {$money|default=0}</p>
+            				
+            				<script type="text/javascript" src="__STATIC__/qrcode/qrcode.js"></script>
+							<script type="text/javascript" src="__STATIC__/qrcode/jquery.qrcode.js"></script>
+							<div id="qrCode"></div>
+							<script type="text/javascript">
+							         var textLink = "{$pay_code}";
+							         $('#qrCode').qrcode({width:150,height:150,text:textLink}); 
+							 </script>
+            				<p>请用微信扫码完成支付</p>
+                          </div>
+                        </section>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+  <!-- /主体 -->
+
+  <!-- 底部 -->
+  {include file="common@base/footer"/}
+
+    
+    {block name="script"}
+        <script type="text/javascript">
+        var upid="{$upid|intval}";
+        var interval = setInterval(function(){
+        	$.post("{:U('userPayStatus')}",{'upid':upid},function(res){
+        		if(res=='1'){
+        			clearInterval(interval);
+                    alert('支付成功')
+        			window.location.href = window.location.href;
+        		}
+        	});
+        },3000);
+
+        </script>
+    {/block} <!-- 用于加载js代码 -->
+    <div class="hidden"><!-- 用于加载统计代码等隐藏元素 -->
+        {block name="hidden"}{/block}
+    </div>    
+  <!-- /底部 -->
+</body>
+</html>
+

@@ -1,0 +1,275 @@
+<style>
+    .edit-icon-parent {
+        position: relative;
+    }
+
+    .edit-icon {
+        /* float: contour; */
+        left: 50%;
+        top: -5px;
+        width: 100px;
+        display: block;
+        position: absolute;
+        border: 2px dashed #1E9FFF;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 900;
+    }
+
+    .layui-input-block {
+        margin: 10px;
+    }
+
+    .layui-icon-set {
+        font-size: 26px;
+        color: #1E9FFF;
+    }
+</style>
+<div id="edit-block-form" style="display: none;">
+    <form id="form" method="post" class="form-horizontal form-center layui-form" lay-filter="page-edit-form">
+
+        <div id="form-content"></div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="hidden" name="block_id" id="block-id" value="">
+                <input type="hidden" name="page" id="block-page" value="">
+                <button class="btn submit-btn layui-btn" lay-submit lay-filter="layer_form">提交</button>
+                <a class="btn" onclick="recovery()">恢复默认</a>
+            </div>
+        </div>
+    </form>
+</div>
+{php}$GLOBALS['editor_load_count'] = isset($GLOBALS['editor_load_count']) ? $GLOBALS['editor_load_count']:0;{/php}
+{if condition="$GLOBALS['editor_load_count'] eq 0"}
+{php} $GLOBALS['editor_load_count'] = 1;{/php}
+<script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js?v={:SITE_VERSION}"></script>
+<script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.js?v={:SITE_VERSION}"></script>
+<script type="text/javascript" src="__STATIC__/ueditor/lang/zh-cn/zh-cn.js?v={:SITE_VERSION}"></script>
+{/if}
+<script type="text/javascript">
+    window.UEDITOR_HOME_URL = "__STATIC__/ueditor";
+    window.UEDITOR_CONFIG.initialFrameHeight = 100;
+    window.UEDITOR_CONFIG.scaleEnabled = true;
+    window.UEDITOR_CONFIG.imageUrl = '{:U("home/uploads/ue_upimg")}';
+    window.UEDITOR_CONFIG.imagePath = '';
+    window.UEDITOR_CONFIG.imageFieldName = 'imgFile';
+    //在这里扫描图片
+    window.UEDITOR_CONFIG.imageManagerUrl = '{:U("home/uploads/ue_mgimg")}'; //图片在线管理的处理地址
+    window.UEDITOR_CONFIG.imageManagerPath = '';
+
+    function loadjscssfile(filename) {
+        var fileref = document.createElement('script') //创建标签
+        fileref.setAttribute("type", "text/javascript") //定义属性type的值为text/javascript
+        fileref.setAttribute("src", filename) //文件的地址
+        document.getElementsByTagName("head")[0].appendChild(fileref)
+    }
+
+    var edit_html = '<div class="edit-icon" type="text"><i class="layui-icon layui-icon-set"></i></div>'
+
+    function addHtmlToForm(name, type, valObj) {
+        if (type == 'text') {
+            var value = valObj.text().trim();
+            heigth = 70;
+            html = '<div class="layui-form-item"><div class="layui-input-block"><input type="text" class="layui-input" name="' +
+                name + '" value="' + value + '"/></div></div>';
+            $('#form-content').append(html)
+        } else if (type == 'textarea') {
+            var value = valObj.html().replace('type="' + type + '"', 'type="text"').replace(edit_html, '').trim()
+            heigth = 120;
+            html = '<div class="layui-form-item"><div class="layui-input-block"><textarea name="' + name +
+                '" class="layui-textarea">' + value + '</textarea></div></div>';
+            $('#form-content').append(html)
+        } else if (type == 'picture') {
+            heigth = 140;
+            var value = valObj.attr('src').trim();
+            console.log('value', value)
+            html = '<div class="layui-form-item"><div class="layui-input-block"><div class="upload_file">' +
+                '<div class="uploadrow2" data-max="1" title="点击修改图片" rel="' + name + '">' +
+                '<input type="file" id="upload_picture_' + name + '"/> <input type="hidden" name="' + name + '" id="cover_id_' +
+                name + '" value="' + value + '"/>' +
+                '<div class="upload-img-box" style="position:absolute;"> <div class="upload-pre-item2"><img width="100" height="100" src="' +
+                value + '"/></div> <em class="edit_img_icon">&nbsp;</em>' +
+                '</div></div></div></div></div>';
+            $('#form-content').append(html)
+            initUploadImg();
+        } else if (type == 'editor') {
+            heigth = 510;
+            //width = 800;
+            console.log('valObj.html()', valObj.html())
+            var value = valObj.html().replace('type="' + type + '"', 'type="text"').replace(edit_html, '').trim()
+            html = '<div class="layui-form-item"><div class="layui-input-block"><label class="textarea"><textarea name="' + name +
+                '" style="width:100%;height:100px;" id="editor_id_' + name + '" class="editor-textarea">' + value +
+                '</textarea></div></div>';
+            $('#form-content').append(html)
+            var imageEditor = UE.getEditor('editor_id_' + name, {
+                toolbars: [
+                    ['fullscreen', 'source', 'bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'forecolor', 'backcolor',
+                        'insertorderedlist', 'insertunorderedlist', 'lineheight',
+                        'fontfamily', 'fontsize', 'indent', 'justifyleft', 'justifycenter', 'justifyright', 'insertimage', 'wordimage',
+                        'emotion', 'map'
+                    ]
+                ],
+                autoHeightEnabled: false,
+                autoFloatEnabled: true,
+                initialFrameHeight: 300,
+                catchRemoteImageEnable: false
+            });
+        } else if (type == 'link') {
+            var value = valObj.text().trim();
+
+            heigth = 140;
+            html = '<div class="layui-form-item"><div class="layui-input-block"><input type="text" class="layui-input" name="' +
+                name + '" value="' + value + '"/></div></div>';
+
+            var attr = valObj.attr('ele-attr')
+            if (!attr) attr = 'href'
+            value = valObj.attr(attr)
+            html += '<div class="layui-form-item"><div class="layui-input-block"><input type="text" class="layui-input" name="' +
+                name + '_url" value="' + value + '"/></div></div>';
+            $('#form-content').append(html)
+        }
+        return heigth;
+    }
+
+    function getType(that) {
+        var tag = that.prop("tagName");
+        if (tag == 'IMG') {
+            var type = 'picture';
+        } else {
+            var type = that.attr('ele-type');
+        }
+        if (type == undefined) type = 'text';
+
+        return type;
+    }
+
+    var pointX, pointY
+
+    function showEditBtn(that) {
+        return true;
+        that.bind("mouseover", function (e) {
+            pointX = e.clientX
+            pointY = e.clientY
+            that.find('.edit-icon').show()
+        }).bind("mouseout", function (e) {
+            setTimeout(function () {
+                that.find('.edit-icon').hide();
+            }, 3000);
+        })
+    }
+
+    function recovery() {
+        if(confirm('恢复后当前配置内容将删除，确定恢复吗?')){
+            var post = form.val("page-edit-form");
+            console.log('post', post)
+            $.post("{:U('home/block/recovery')}", post, function () {
+                window.location.href = window.location.href;
+            });
+        };
+
+        return false;
+    }
+
+    $(function () {
+        $('.block-edit').each(function () {
+            $(this).append(edit_html)
+            showEditBtn($(this));
+            $(this).parent().addClass('edit-icon-parent')
+        })
+
+        $('[ele-name]').each(function () {
+            var that = $(this)
+
+            var type = getType(that);
+            var html = edit_html.replace('text', type)
+            if (type == 'picture') {
+                that.parent().append(html)
+            } else {
+                that.append(html)
+            }
+            showEditBtn(that);
+            that.parent().addClass('edit-icon-parent')
+        })
+        $('.edit-icon').click(function () {
+            $('#form-content').html('')
+            var heigth = 160;
+            var width = 500;
+            var that = $(this)
+
+            var type = that.attr('type');
+            if (type == 'picture') {
+                var obj = that.prev();
+            } else {
+                var obj = that.parent();
+            }
+            var name = obj.attr('ele-name');
+
+            if (name != undefined) {
+                $('#block-id').val(-1)
+                heigth += addHtmlToForm(name, type, obj)
+                var page = that.attr('page')
+            } else {
+                var block = that.parents('.block-edit');
+                var page = block.attr('page')
+                var id = block.attr('block-id')
+
+                $('#block-id').val(id)
+                block.find('[block-name]').each(function () {
+                    var type = getType($(this))
+                    var name = $(this).attr('block-name')
+                    heigth += addHtmlToForm(name, type, $(this))
+                })
+            }
+            //设置page
+            if (page) {
+                $('#block-page').val(page)
+            } else {
+                $('#block-page').val("{php}echo isset($page) ? $page: MODULE_NAME.'/'.CONTROLLER_NAME.'/'.ACTION_NAME;{/php}")
+            }
+
+            var wHeight = $(window).height() - 100;
+            if (wHeight < heigth) heigth = wHeight;
+            layer.open({
+                type: 1,
+                title: '内容编辑',
+                shade: false,
+                offset: [pointY + 'px', pointX + 'px'],
+                area: [width + 'px', heigth + 'px'],
+                content: $('#edit-block-form'),
+                zIndex: 999
+            });
+        })
+        form.on('submit(layer_form)', function (data) {
+            var post = data.field
+            var jumpVal = new Array();
+            for (var n in post) {
+                if (n == 'block_id' || n == 'page' || $.inArray(n, jumpVal) != -1) continue;
+
+                var blockEle = post.block_id == -1 ? $('[ele-name="' + n + '"]') : $('[block-id="' + post.block_id + '"]').find(
+                    '[block-name="' + n + '"]');
+                var type = getType(blockEle)
+                if (type == 'picture') {
+                    blockEle.attr('src', post[n])
+                } else if (type == 'link') {
+                    var attr = blockEle.attr('ele-attr')
+                    if (!attr) attr = 'href'
+
+                    blockEle.attr(attr, post[n + '_url'])
+                    blockEle.html(post[n])
+                    jumpVal.push(n + '_url')
+                } else {
+                    if (type == 'editor') {
+                        UE.delEditor('editor_id_' + n)
+                    }
+                    blockEle.html(post[n])
+                }
+            }
+
+            layer.closeAll();
+
+            $.post("{:U('home/block/saveData')}", post);
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+    })
+</script>

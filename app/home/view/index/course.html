@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <meta content="小程序开发教程，公众号开发教程，weiphp使用教程，微信商城配置教程" name="keywords"/>
+    <meta content="由weiphp独家录制制作视频或图文教程，解决大家在使用和开发上的问题" name="description"/>
+    <link rel="shortcut icon" href="{:SITE_URL}/favicon.ico">
+    <title>weiphp提供的培训帮助课程</title>
+    <link type="text/css" rel="stylesheet" href="__CSS__/oweb.css?v={:SITE_VERSION}"/>
+    <link href="__STATIC__/font-awesome/css/font-awesome.min.css?v={:SITE_VERSION}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <script type="text/javascript" src="__STATIC__/jquery-2.0.3.min.js"></script>
+       <!-- <link type="text/css" rel="stylesheet" href="__CSS__/fullpage.css?v={:SITE_VERSION}" />-->
+</head>
+<body>
+{include file="index/_head" /}
+
+<div class="body">
+    <!--<div class="course one">
+        <div class="offer_course">
+            <h1>为你提供更专业的培训</h1>
+            <span>班主任授课、小班制教学、升学、挂行业，满足你的技术需求
+                资深大牛为你辅导，全程跟踪你的学习进度，更有实战任务来检验你的学习成果
+            </span>
+        </div>
+        <div class="contact_headmaster">
+            <img src="__IMG__/oweb/code.jpg"><br>
+            <span>马上联系班主任</span>
+        </div>
+    </div>-->
+	<div class="gaungao">	
+		<a href="https://cloud.tencent.com/redirect.php?redirect=1039&cps_key=ba30d9ee0a69062213a9428d477dafb3&from=console"><img src="__IMG__/tenxunyue.jpg"/></a>
+		<a href="https://www.aliyun.com/acts/hi-group-buying?userCode=76gbucyz"><img src="__IMG__/aly.jpg"/></a>
+	</div>
+    <div class="course two">
+        <div class="open_class">
+            <span>课程列表</span>
+            <!--<a class="show_more" href="">查看更多</a>-->
+        </div>
+        <div class="open_class">
+            <div class="card-group">
+            {volist name="lists" id="vo"}
+                <a class="card" href="{$vo.url}" target="_blank">
+                    <div class="card-border">
+                    <div class="card-body  card-body-img">
+                        <img class="card-img course_img1" src="{$vo.cover}">
+                        <div class="card-content">
+                            <div>
+                                <span class="card-title">{$vo.title}</span><br>
+                                <span class="course_time">主讲：{$vo.teacher}</span>
+                            </div>
+                            
+                        </div>
+                        <p class="card-text">{$vo.desc_index}</p>
+                        
+                    </div>
+                    </div>
+                </a>   
+                {/volist}  
+                   <a class="card" target="_blank" href="https://www.kancloud.cn/yuanmengyun/news_weiapp">
+                    <div class="card-border">
+                    <div class="card-body card-body-img">
+                        <img class="card-img course_img1" src="__IMG__/oweb/course1.jpg">
+                        <div class="card-content">
+                            <div>
+                                <span class="card-title">新闻小程序开发教程(第二版)</span><br>
+                                <span class="course_time">主讲：weiphp的凡星</span>
+                            </div>
+                            
+                        </div>
+                        <p class="card-text">图文教程，基于WeiPHP4.0开发；零基础入门，手把手一步一步教你开发新闻小程序，功能有：分类，内容管理，推荐，统计分析，收藏，广告管理等等
+</p>
+                        
+                    </div>
+                    </div>
+                </a>                
+            </div>
+<div class="card-group">
+                <a class="card" target="_blank"  href="http://bbs.bctos.cn">
+                    <div class="card-border">
+                    <div class="card-body card-body-img">
+                        <img class="card-img course_img1" src="__IMG__/oweb/course2.jpg">
+                        <div class="card-content">
+                            <div>
+                                <span class="card-title">从入门到精通的微信小程序开发教程(第一版)</span><br>
+                                <span class="course_time">主讲：weiphp的凡星</span>
+                            </div>
+                            
+                        </div>
+                        <p class="card-text">视频教程，基于WeiPHP3.0开发；从实践中学习是开发者最好最快的学习方法。本教程将和大家从零开始
+一步一步搭建微信小程序CMS系统，每个章节都会涉及到不同的知识点，
+等教程学习完你不但掌握了小程序开发全部知识，同时还拥有一个完整作品
+的开发经验！ ----weiphp的凡星
+</p>
+                        
+                    </div>
+                    </div>
+                </a>
+                <a class="card" target="_blank" href="https://edu.csdn.net/course/detail/5331">
+                    <div class="card-border">
+                    <div class="card-body card-body-img">
+                        <img class="card-img course_img1" src="__IMG__/oweb/course_card.jpg">
+                        <div class="card-content">
+                            <div>
+                                <span class="card-title">小程序卡券开发教程</span><br>
+                                <span class="course_time">主讲：weiphp工程师</span>
+                            </div>
+                            
+                        </div>
+                        <p class="card-text">之所以出此视频教程，主要是小程序的卡券开发比较麻烦，相关的文档资料又少而且还有问题，因此我们专门非常仔细的，一步一步地手把手通过视频教大家开发卡券功能。同时也把容易出现的问题和各种坑给大家讲解下，让大家顺利完成开发，如果您在开发过程出现其它问题，也可以在课后留言，我们会给大家解答</p>
+                        
+                    </div>
+                    </div>
+                </a>
+                <a class="card" target="_blank" href="http://v.qq.com/vplus/6ea5afa98685158967d5bd9617482a49">
+                    <div class="card-border">
+                    <div class="card-body card-body-img">
+                        <img class="card-img course_img1" src="__IMG__/oweb/course1.jpg">
+                        <div class="card-content">
+                            <div>
+                                <span class="card-title">WeiPHP3.0使用教程</span><br>
+                                <span class="course_time">主讲：weiphp的凡星</span>
+                            </div>
+                            
+                        </div>
+                        <p class="card-text">老版的系统安装视频教程</p>
+                        
+                    </div>
+                    </div>
+                </a>
+
+            </div>            
+        </div>
+    </div>
+
+    <!--<div class="course three">
+        <div class="history_course">
+            <span>历史课程</span>
+        </div>
+        <div class="history_course">
+            <div class="card-group">
+                <div class="card" target="_blank" >
+                    <div class="card-body">
+                        <img class="card-img history_course_img1" src="__IMG__/oweb/history_course.jpg"/>
+                        <h5 class="card-title">历史课程1</h5>
+                        <button class="btn study_now">立即学习</button>
+                    </div>
+                </div>
+                <div class="card" target="_blank" >
+                    <div class="card-body">
+                        <img class="card-img history_course_img1" src="__IMG__/oweb/history_course.jpg"/>
+                        <h5 class="card-title">历史课程2</h5>
+                        <button class="btn study_now">立即学习</button>
+                    </div>
+                </div>
+                <div class="card" target="_blank" >
+                    <div class="card-body">
+                        <img class="card-img history_course_img1" src="__IMG__/oweb/history_course.jpg"/>
+                        <h5 class="card-title">历史课程3</h5>
+                        <button class="btn study_now">立即学习</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+    <!--<div class="course four">
+        <div class="lecturer">
+            <span>资深讲师</span>
+        </div>
+        <div class="lecturer">
+            <div class="card-group">
+                <div class="card" target="_blank" >
+                    <div class="card-border">
+                        <div class="card-body">
+                            <img class="card-img lecturer_img1" src="__IMG__/oweb/head_img.jpg"/><br>
+                            <h7 class="imformation">WeiPHP帮助你快捷搭建了微信运营平台， 原来发现一切是如此的简单而强大
+                            </h7>
+                            <h5 class="card-title">JACK CHEN</h5>
+                            <span class="position">公众号开发讲师</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" target="_blank" >
+                    <div class="card-border">
+                        <div class="card-body">
+                            <img class="card-img lecturer_img1" src="__IMG__/oweb/head_img.jpg"/><br>
+                            <h7 class="imformation">WeiPHP插件式的开发， 让很多功能可以轻松完成，而且别人开发的插件也可以快速接入到自己的平台
+                            </h7>
+                            <h5 class="card-title">苏丹尼</h5>
+                            <span class="position">小程序开发讲师</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" target="_blank" >
+                    <div class="card-border">
+                        <div class="card-body">
+                            <img class="card-img lecturer_img1" src="__IMG__/oweb/head_img.jpg"/><br>
+                            <h7 class="imformation">WeiPHP非常简洁，不管在界面和代码上，后台分块也很明了，不像其他的平台，太过复杂
+                            </h7>
+                            <h5 class="card-title">吴迪</h5>
+                            <span class="position">定制开发讲师</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+    <div class="course five">
+        <div class="communication">
+            <span>技术交流11</span>
+            <p>加入组织，让老司机带路。注意：如果你有什么问题，可加入官方QQ群进行交流</p>
+        </div>
+        <div class="communication">
+            <div class="group group1">
+                <p><span>451336116</span>【WeiPHP官方答疑协助群，高级付费群，直接一对一服务】</p>
+                <p><span>423746307</span>【WeiPHP官方交流5群，可闲聊】</p>
+                <p><span>329650736</span>【WeiPHP官方交流1群，可闲聊】</p>
+                <p><span>8322255</span>【WeiPHP官方交流2群，可闲聊】</p>
+            </div>
+            <div class="group group2">
+                <p><span>180569370</span>【WeiPHP官方交流5群，可闲聊】</p>
+                <p><span>245046321</span>【WeiPHP官方交流5群，可闲聊】</p>
+                <p><span>263460285</span>【WeiPHP内测技术群，可闲聊】</p>
+            </div>
+            <div class="group group-img">
+                <img  src="__IMG__/oweb/fsdfds.jpg" alt="" />
+            </div>
+        </div>
+    </div>
+
+</div>
+{include file="index/_footer" /}
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var width = $(window).width();
+        var docwidth = $(document).width();
+        var height = width;
+        $(".course").css({'width' : width});
+        $(".course.one").css({ 'height': height * 0.3});
+        $(".head").css('width',width);
+        $(".foot").css('width',width);
+        $(window).resize(function () {
+            var width = $(window).width();
+            var height = width;
+            $(".course").css({'width' : width, });
+            $(".course.one").css({ 'height': height * 0.3});
+            $(".head").css('width',width);
+            $(".foot").css('width',width);
+        })
+
+    })
+</script>
+</body>
+</html>

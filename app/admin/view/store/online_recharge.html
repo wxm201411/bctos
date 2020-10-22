@@ -1,0 +1,22 @@
+{extend name="store/storebase" /}
+
+{block name="body"}
+<div class="pay_container">
+    <h3><span class="icon">1</span>在线充值</h3>
+    <div class="pay_content">
+        <p>待开放中 </p>
+    </div>
+
+    <h3><span class="icon">2</span>人工充值</h3>
+    <div class="pay_content">
+        <p>在线充值功能正在内测中，目前可通过人工的方法进行充值（一个工作日内完成充值）： </p>
+        <p> 转账账号(支付宝)：<span class="p_count">wxm201411@163.com </span></p>
+        <p>捎句话：输入你的账号：<span class="p_count">{$myinfo.nickname} </span>（这个很重要，用于管理员确认给哪个账号充值）</p>
+
+    </div>
+
+    <p class="mt10">
+        <a class="btn" href="{:U('home')}">返回</a>
+    </p>
+</div>
+{/block}

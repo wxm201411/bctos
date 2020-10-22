@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta content="{$info.keyword},{$info.teacher}" name="keywords"/>
+    <meta content="{$info.desc}" name="description"/>
+     <meta name="viewport"   content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+    <link rel="shortcut icon" href="{:SITE_URL}/favicon.ico">
+    <title>{$info.title}-weiphp提供的培训帮助课程</title>
+    <link type="text/css" rel="stylesheet" href="__CSS__/oweb.css?v={:SITE_VERSION}"/>
+    <link href="__STATIC__/font-awesome/css/font-awesome.min.css?v={:SITE_VERSION}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <link href="__CSS__/base.css?v={:SITE_VERSION}" rel="stylesheet">
+    <link href="__JS__/video/video-js.min.css" rel="stylesheet">
+
+    <style lang="">
+        *{
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        .mr20{margin-right: 20px;}
+        body{background: #eee;}
+        h2{font-size: 24px; font-weight: 400; margin-bottom: 5px;}
+        .c_s{box-shadow: 0 0 3px #ccc; }
+        .read_num{color: #999;}
+        .course_top,.course_main{font-size:18px; padding: 20px; margin-bottom: 20px;background: #fff;overflow: hidden;position: relative; }
+        .course_top .section_contont{margin-left: 25px; float: left;}
+        .course_price{font-size: 25px;color: #FF3C00;margin-top: 40px;}
+        .course_pay_btn{ padding: 8px 18px;background:#FF8100;color: #fff; position: absolute;bottom: 20px; width: 50%; text-align: center;}
+        .course_pay_btn:hover{background:#FF3C00; }
+        .course_main_nav{padding: 20px 0;    background-color: #fff;}
+        .course_main_nav a{padding: 4px 16px; color: #444}
+        .course_main_nav a.cur{color: #4097ce;background: #fff;}
+        .course_main .course_main_cont p{text-indent: 2em; line-height:25px}
+		.course_main .course_main_cont h3{ text-indent: 0.5em; margin:20px}
+		.course_main_cont a{ color:#F00}
+        .course_list .item{padding: 10px 0;}
+        .download-site{background-color: #f7b878;color: #fff;padding: 10px;line-height: 18px;}
+        #ewm{text-align: center}
+        #ewm p{font-size: 20px;}
+        .video-css{ width: 50%; height: 100%; margin: 0 25%;}
+        .hint-guankan{ background-color: #FF8100; color: #fff; text-align: center; margin:0 20% 20px 20%; padding: 10px; font-size: 18px;}
+       video::-webkit-media-controls-enclosure { overflow:hidden; } video::-webkit-media-controls-panel { width: calc(100% + 30px); }
+	   del{ margin-left:20px; color:#999; font-size:16px}
+       
+    </style>
+<script type="text/javascript" src="__STATIC__/jquery-2.0.3.min.js"></script>
+
+<script type="text/javascript">
+var  IMG_PATH = "__IMG__";
+var  STATIC = "__STATIC__";
+var  ROOT = "__ROOT__";
+</script>
+    <link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.8.1/skins/default/aliplayer-min.css" />
+     <script charset="utf-8" type="text/javascript" src="https://g.alicdn.com/de/prismplayer/2.8.1/aliplayer-min.js"></script>
+   
+</head>
+<body>
+      {include file="index/_head" /}
+        <div class="course_top c_s container" style="margin-top:90px;">
+            <div class="section">
+                <img class="fl" src="{$info.cover|get_cover_url}" alt="">
+                <div class="section_contont">
+                    <h2>{$info.title}</h2>
+                    <div class="read_num fz12 mb_10">阅读&emsp;{$info.view_count} </div>
+                    <p class="fz12">讲师：{$info.teacher}</p>
+                    <p class="fz12">关键词：{$info.keyword}</p>
+                    <div class="course_price">费用：{$info.price}元{notempty name="info.market_price"}<del>原价：{$info.market_price}元</del>{/notempty}</div>
+                    {php}if(!$mid) { {/php}
+                    <div class="course_pay_btn" href="#ewm">请先在最下面扫码登录</div>
+                   {php} }elseif(!$is_pay) { {/php}
+                    <div class="course_pay_btn" href="#ewm">请先在最下面扫码付费学习</div>
+                    {php} } else { {/php} 
+                    <div class="course_pay_btn" href="###">已付费</div>
+                    {php} } {/php} 
+                </div>
+            </div>
+        </div>
+{php} if(!empty($video['url']) && ($video['need_pay'] == 0 || $is_pay)) { {/php}
+        <div  class="prism-player course_main_nav container" id="J_prismPlayer"></div>
+        <script>
+            var player = new Aliplayer({
+            id: 'J_prismPlayer',
+            width: '100%',
+			height:"800px",
+            autoplay: false,
+			definition:'OD',//FD（流畅）LD（标清）SD（高清）HD（超清）OD（原画）2K（2K）4K（4K）
+			defaultDefinition:'OD',
+            //播放方式二：点播用户推荐
+            vid : '{$VideoBase.VideoId}',
+            playauth : '{$PlayAuth}',
+            cover: '{$VideoBase.CoverURL}',            
+
+             region:'cn-shanghai',//eu-central-1,ap-southeast-1
+            },function(player){
+                console.log('播放器创建好了。')
+           });
+        </script>  
+        {php} } {/php}        
+        <div class="course_main_nav container">
+            <a class="item cur" href="javascript:">介绍</a>
+            <a class="item" href="javascript:">课程目录</a>
+        </div>
+        <div class="course_main c_s container course_main_dd">
+            <div class="course_main_cont">{$info.desc}</div>
+            <div class="course_main_cont" style="display:none;">
+ {volist name="chapters" id="chapter"}
+<h3>{$chapter.title}</h3>
+ {volist name="chapter.videos" id="vi"}
+ {notempty name="vi.url"}
+<p><a href="{:U('course_detail',['id'=>$info['id'],'video'=>$vi['identifier']])}">{$vi.title}</a> {empty name="vi.need_pay"}(免费){/empty}</p>
+{else /}
+<p>{$vi.title}</p>
+{/notempty}
+{/volist}{/volist}
+            </div>
+        </div>
+        {php}if(!$mid) { {/php}
+        
+        <div id="ewm" class="course_main c_s container">
+            <img width="300" height="300" src="{$qr_code}" alt="登录二维码">
+            <p>请用微信扫码并关注小韦云公众号完成登录</p>
+        </div>
+        {php} }elseif(!$is_pay) { {/php}
+      
+       <div id="ewm" class="course_main c_s container">
+            <script type="text/javascript" src="__STATIC__/qrcode/qrcode.js"></script>
+<script type="text/javascript" src="__STATIC__/qrcode/jquery.qrcode.js"></script>
+<div id="qrCode"></div>
+<script type="text/javascript">
+         var textLink = "{$pay_code}";
+         $('#qrCode').qrcode({width:150,height:150,text:textLink}); 
+ </script>
+            <p>请用微信扫码完成支付</p>
+        </div>   
+         {php} } {/php}
+         
+        {php} if(isset($video['url']) && !$video['url']) { {/php}
+       <div class="course_main_nav container"> <div class="course_main  hint-guankan">
+            该节课程请使用百度云下载观看    
+        </div>    </div>       
+        {php} } {/php}
+
+    </div>
+<script type="text/javascript" src="__JS__/video/video.min.js"></script>
+<script>
+var mid = "{$mid|intval}"
+var id = "{$info.id|intval}"
+    $('.course_main_nav .item').click(function(){
+        var index = $(this).index()
+        $('.course_main_nav .item').removeClass('cur')
+        $('.course_main_cont').hide()
+        $(this).addClass('cur')
+        $('.course_main_cont').eq(index).show()
+    })
+{php}if(!$mid) { {/php}
+var interval = setInterval(function(){
+		$.post("{:U('check_course_login')}",{id:id},function(res){
+			console.log(res)
+			if(res=='1'){
+				clearInterval(interval);
+				//console.log('11111')
+                alert('登录成功（未支付）')
+				window.location.href = window.location.href;
+			}else if(res=='2'){
+				clearInterval(interval);
+				//console.log('222')
+                alert('登录成功（已支付）')
+				window.location.href = window.location.href;
+                
+			}
+		});
+	},3000);
+{php} }elseif(!$is_pay) { {/php}
+var interval = setInterval(function(){
+	$.post("{:U('check_course_pay')}",{id:id},function(res){
+		if(res=='1' && mid>1){
+			clearInterval(interval);
+            alert('支付成功')
+			window.location.href = window.location.href;
+		}
+	});
+},3000);
+{php} } {/php}
+</script>
+
+</body>
+</html>

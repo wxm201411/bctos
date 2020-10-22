@@ -1,0 +1,65 @@
+{if condition = "$mid = 1 && $auto_check_open"}
+<script>
+    $(function () {
+        //自动遍历组件
+        console.log('====自动遍历组件=====')
+        var urlStr = localStorage.getItem("autoUrls");
+        if (urlStr == null) urlStr = '';
+
+        var allUrl = localStorage.getItem("allUrl");
+        if (allUrl == null) allUrl = '';
+
+        var old = urlStr;
+        var host = window.location.host;
+        $('a').each(function () {
+            var url = $(this).attr('href')
+            if (url && url.indexOf(host) != -1 && url.indexOf('logout') == -1 && url.indexOf('del') == -1 && url.indexOf('install') == -1) {
+                console.log('url', url)
+                if (allUrl.indexOf(url) == -1) {
+                    urlStr += ',' + url;
+                    allUrl += ',' + url;
+                }
+            }
+        })
+        if (old != urlStr) {
+            localStorage.setItem("autoUrls", urlStr);
+            localStorage.setItem("allUrl", allUrl);
+
+        }
+        localStorage.setItem("auto_lock", 0);
+
+        window.close();
+    })
+</script>
+{if condition = "input('?auto_check')"}
+<script>
+    $(function () {
+        //自动遍历组件
+        var host = window.location.host;
+        setInterval(function () {
+            var timestamp = new Date().getTime();
+            var auto_lock = localStorage.getItem("auto_lock");
+            if (auto_lock == 0 || (timestamp - auto_lock) > 3000) {
+                var urlStr = localStorage.getItem("autoUrls");
+                var urlArr = urlStr ? urlStr.split(',') : new Array();
+
+                if (urlArr.length > 0) {
+                    var url = urlArr.shift();
+                    localStorage.setItem("autoUrls", urlArr.join(','));
+                    localStorage.setItem("auto_lock", timestamp);
+                    if (url != '') {
+                        window.open(url)
+                    }
+                }
+            }
+        }, 500);
+    })
+</script>
+{/if}
+{else /}
+<script>
+    localStorage.setItem("auto_lock", 0)
+    localStorage.setItem("autoUrls", '');
+    localStorage.setItem("allUrl", '');
+</script>
+{/if}

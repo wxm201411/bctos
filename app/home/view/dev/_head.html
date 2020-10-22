@@ -1,0 +1,8 @@
+<link type="text/css" rel="stylesheet" href="__CSS__/dev.css?v={:SITE_VERSION}" />
+<div class="dev_head wrap">
+	<ul>
+    	<li><a {if condition="ACTION_NAME eq 'index' or ACTION_NAME eq 'appdetail'"}class="cur"{/if} href="{:U('home/dev/index')}">我的应用</a></li>
+        <li><a {if condition="ACTION_NAME eq 'submitapp'"}class="cur"{/if} href="{:U('home/dev/submitApp')}">提交应用</a></li>
+        <li><a href="https://www.bctos.cn/doc/1" target="_blank">二次开发手册</a></li>
+    </ul>
+</div>

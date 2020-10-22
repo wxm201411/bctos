@@ -1,0 +1,51 @@
+@charset "utf-8";
+/* 
+	CSS Document 
+  	@author jacy 
+  	mail:51daxigua@gmail.com 
+	use developer
+*/
+.btn{ padding:10px 20px; background-color:#1dbd03; color:#fff; font-size:14px;}
+.btn:hover{ color:#fff; background-color:#23dc05; text-decoration:none}
+.small-btn{ padding:5px 10px;}
+.less{ color:#999 }
+.dev_container{ background:#f3f3f3 url(../images/dev/header.jpg) no-repeat center top; min-height:400px;}
+.dev_body{padding-top:100px; overflow:hidden}
+.dev_content{ background-color:#fff; min-height:600px; border-right:1px solid #ddd; border-left:1px solid #ddd;border-bottom:1px solid #ddd; padding:20px; margin-bottom:50px;}
+.dev_content h4{ font-size:18px; line-height:40px;}
+.dev_head{ height:50px; background-color:#1dbd03}
+.dev_head ul li{ float:left;}
+.dev_head ul li a{ display:block; height:50px; padding:0 30px; font-size:16px; color:#fff; line-height:50px;}
+.dev_head ul li a:hover{ background-color:#1bad04; text-decoration:none}
+.dev_head ul li a.cur{ background-color:#19a203}
+.app_table{}
+.app_table thead td{ background-color:#eee; border:none}
+.app_table td{ padding:10px; border-bottom:dashed 1px #ddd;}
+.app_table td .app_icon{ float:left; margin-right:10px; width:60px; height:60px;}
+.app_table td .app_name a{ font-size:16px; font-weight:bold ; line-height:30px; color:#444; text-decoration:none}
+.app_table td a{ color:#090}
+
+.step{ height:95px; margin:20px 0 20px; background:url(../images/dev/dev_step.jpg) center 0 no-repeat;}
+.step_1{ background-position: center 0;}
+.step_2{ background-position: center -100px;}
+.step_3{ background-position: center -200px;}
+
+.unlogin{ text-align:center; margin-top:100px;}
+.unlogin p{ text-align:center; padding:20px 0;}
+.unlogin a{ margin:0 10px; color:#fff}
+.unlogin a:hover{ color:#fff}
+
+.d_head{ min-height:100px; position:relative; border-bottom:1px dashed #ddd; padding-bottom:20px; margin-bottom:20px;}
+.d_head img{ float:left; margin-right:10px;}
+.d_head .desc{ padding-left:70px;}
+.d_head .desc h4{ line-height:30px;}
+.d_head .desc p{ line-height:24px;}
+.d_head .d_download{ position:absolute; top:20px; right:100px;}
+.detail{ margin-bottom:20px; border-bottom:1px dashed #ddd; padding-bottom:20px;}
+.detail h5{ font-size:16px; font-weight:bold; line-height:60px;}
+.detail p,.detail .text{ line-height:24px; font-size:16px; color:#888; border:none; width:auto; height:auto;}
+.detail img{ max-width:100%; padding:10px 0;}
+
+.uploadfile .uploadify-button{ height:40px; width:200px; border:1px dashed #ccc; color:#888; text-align:center; background:none; text-indent:0; position:static}
+.uploadfile .upload-img-box{ position:static; width:200px; margin-top:10px; }
+.uploadfile .upload-img-box .upload-pre-file{background-color:#eee; width:200px;}

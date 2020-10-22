@@ -1,0 +1,60 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .layui-form{
+        padding: 20px 10px;
+    }
+    .layui-form-label{
+        width: 100px;
+    }
+</style>
+<div class="page_message">
+    <section id="contents">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">链码名称</label>
+                <div class="layui-input-block">
+                    <select name="chaincode" lay-verify="required">
+                        {volist name="codeList" id="vo"}
+                        <option value="{$vo}" {eq name="data.chaincode" value="$vo"}selected{/eq}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">查询类型</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="func" value="invoke" title="执行(invoke)" {eq name="data.func" value="invoke"}checked{/eq}>
+                    <input type="radio" name="func" value="query" title="查询(query)" {eq name="data.func" value="query"}checked{/eq}>
+                    <input type="radio" name="func" value="instantiate" title="初始化(instantiate)" {eq name="data.func" value="instantiate"}checked{/eq}>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">输入参数</label>
+                <div class="layui-input-block">
+                    <textarea name="param" placeholder='请输入' class="layui-textarea">{$data.param}</textarea>
+                    <div style="font-size: small;color: #999">参数由你的链码决定，不能使用单引号，如：{"function":"initLedger","Args":[]} 或 {"Args":["queryAllCars"]}</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                </div>
+            </div>
+        </form>
+        <textarea placeholder="返回结果" id="res" class="layui-textarea" disabled style="height: 300px; width: 95%; margin: 0 auto;"></textarea>
+        <script>
+            //Demo
+            layui.use('form', function(){
+                var form = layui.form;
+                form.on('submit(formDemo)', function(data){
+                    $.post("{:U('test')}", data.field, function (res) {
+                        $('#res').html(res.msg)
+                    })
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+            });
+        </script>
+    </section>
+</div>
+{/block}

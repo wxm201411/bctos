@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <title>小韦云科技</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/animate.min.css">
+    <link rel="stylesheet" href="__CSS__/style.css">
+    <link rel="stylesheet" href="__CSS__/iconfont.css">
+</head>
+
+<body id="moar">
+{include file="index/_head" /}
+
+<!--end-->
+<section class="about sx-jianju text-center" style="padding-bottom: 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-lg-offset-1 col-md-offset-1">
+                <form class="leave-message" method="post" action="{:U('ming')}">
+                    <h3>给我们留言</h3>
+                    <div class="flex-justify">
+                        <input placeholder="您的姓名" height="100%" name="cmd"/>
+                        <textarea class="dsfss" name="content" cols="30" rows="10" placeholder="请输入您的需求内容"></textarea>
+                    </div>
+                    <button class="submit ajax-post" id="submit" type="submit">提交信息</button>
+                </form>
+                <div id="show-list" class="install-database"></div>
+                <script type="text/javascript">
+                    var list = document.getElementById('show-list');
+
+                    function showmsg(msg, classname) {
+                        var li = document.createElement('p');
+                        li.innerHTML = msg;
+                        classname && li.setAttribute('class', classname);
+                        list.appendChild(li);
+                        document.scrollTop += 30;
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</section>
+<!--end-->
+
+{include file="index/_footer" /}
+</body>
+
+</html>
+<script type="text/javascript">
+    var falt = 0;
+    setInterval(function () {
+        $.post("{:U('ming')}", {falt}, function (res) {
+            if(res.content!=''){
+                showmsg(res.content, '');
+                falt += 1
+            }
+        })
+    }, 1000)
+</script>

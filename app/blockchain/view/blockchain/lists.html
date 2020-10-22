@@ -1,0 +1,199 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    tbody td {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .search-input.date {
+        height: 30px;
+    }
+
+    #contents {
+        padding-top: .1px;
+    }
+
+    .p-row {
+        width: 100%;
+        padding: 25px;
+        display: inline-block;
+    }
+
+    .p-row .p-row-01 {
+        float: left;
+        height: 100%;
+        padding: 25px 30px 20px 30px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        margin: 1.5%;
+    }
+
+    .p-row .p-row-01 h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .p-row-content {
+        height: 180px;
+        margin-bottom: 20px;
+        font-size: 15px;
+    }
+
+    .flex {
+        display: block;
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        text-align: center
+    }
+
+    .btn {
+        background-color: #fff;
+        color: #333;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        padding: 10px 25px;
+        margin-right: 25px;
+    }
+
+    .btn03 {
+        background-color: #46ce3d;
+        color: #fff;
+    }
+
+    .btn01 {
+        background-color: #08ade6;
+        color: #fff;
+    }
+
+    .btn02 {
+        background-color: #fd969d;
+        color: #fff;
+    }
+</style>
+<div class="page_message">
+    <section id="contents">
+        {include file="common@base/_nav" /}
+        <!-- 数据列表 -->
+        <div class="p-row">
+            <div class="p-row-01">
+                <h2>Hyperledger Fabric 2.x</h2>
+                <div class="p-row-content">Fabric是一个开源的企业级许可分布式账本技术平台，专为在企业环境中使用而设计。
+                    它具有高度模块化和可配置的架构，可为各行各业的业务提供创新性、多样性和优化，其中包括银行、金融、保险、医疗保健、人力资源、供应链等。
+                    它是第一个支持通用编程语言编写智能合约的分布式账本平台。这意味着大多数企业不需要额外的培训来学习新的语言或特定领域语言。
+                    它也可以在一个治理模式下运行，这个治理模式是建立在参与者之间确实存在的信任之上的，如处理纠纷的法律协议或框架。
+                </div>
+                <div class="flex">
+                    <div id="not_running" style="display: none">
+                        <div class="btn">已部署</div>
+                        <button class="btn btn03 block-up">一键启动</button>
+                    </div>
+                    <div id="not_install" style="display: none">
+                        <button class="btn btn01 block-install">一键部署</button>
+                    </div>
+                    <div id="is_running" style="display: none">
+                        <div class="btn">运行中</div>
+                        <button class="btn btn03 block-deploy">部署链码</button>
+                        <button class="btn btn03 block-test">测试链码</button>
+                        <button class="btn btn02 block-down">关闭网络</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{/block} {block name="script"}
+<script src='http://cdn.bootcss.com/socket.io/1.3.7/socket.io.js'></script>
+<script>
+    var layer_index = ''
+    // 连接服务端，workerman.net:2120换成实际部署web-msg-sender服务的域名或者ip
+    var socket = io('http://{:SSH_IP}:2120');
+    // uid可以是自己网站的用户id，以便针对uid推送以及统计在线人数
+    uid = 1;
+    // socket连接后以uid登录
+    socket.on('connect', function () {
+        socket.emit('login', uid);
+    });
+    var old_msg = ''
+    // 后端推送来消息时
+    socket.on('new_msg', function (msg) {
+        console.log("收到消息：" + msg);
+        msg = msg.trim()
+        if (old_msg != msg) {
+            old_msg = msg
+            if (msg == 'is running') {
+                $('#not_running').hide()
+                $('#is_running').show()
+                $('#not_install').hide();
+            } else if (msg == 'not running') {
+                $('#not_running').show()
+                $('#is_running').hide()
+                $('#not_install').hide();
+            } else {
+                $('#not_running').hide()
+                $('#is_running').hide()
+                $('#not_install').show();
+            }
+            if (layer_index != ''){
+                setTimeout(function () {
+                    layer.close(layer_index);
+                }, 3000);
+            }
+        }
+    });
+
+    var wSocket = new WebSocket("ws:{:SSH_IP}:2100");
+
+    function ConnectServer() {
+        wSocket.send(JSON.stringify({"auth": {}}));
+    }
+
+    wSocket.onopen = function (event) {
+        ConnectServer()
+        window.setInterval(function () {
+            wSocket.send(JSON.stringify({"get": "check_status"}));
+        }, 700);
+    };
+    wSocket.onerror = function (event) {
+        alert("Connection Closed");
+    }
+
+    $(function () {
+        $('.block-up').click(function () {
+            //$(this).text('启动中')
+            layer_index = layer.open({
+                type: 2,
+                title: '执行日志',
+                area: ['800px', '800px'],
+                content: "{:U('start')}"
+            });
+        })
+        $('.block-down').click(function () {
+            //$(this).text('关闭中')
+            layer_index = layer.open({
+                type: 2,
+                title: '执行日志',
+                area: ['800px', '800px'],
+                content: "{:U('stop')}"
+            });
+        })
+        $('.block-deploy').click(function () {
+            layer.open({
+                type: 2,
+                title: '部署链码',
+                area: ['800px', '800px'],
+                content: "{:U('deploy?only_body=1')}"
+            });
+        })
+        $('.block-test').click(function () {
+            layer.open({
+                type: 2,
+                title: '测试链码',
+                area: ['800px', '800px'],
+                content: "{:U('test?only_body=1')}"
+            });
+        })
+    })
+</script>
+{/block}

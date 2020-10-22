@@ -1,0 +1,46 @@
+{extend name="common@base/common" /}
+{block name="body"}
+<div class="dev_container">
+    <div class="dev_body wrap">
+        {include file="dev/_head" /}
+        <div class="dev_content">
+            {empty name="list_data"}
+            你还没上传过任何应用
+            {else/}
+
+            <table class="app_table" width="100%" cellpadding="0" cellspacing="0">
+                <thead>
+                <td width="30%">应用</td>
+                <td width="10%">类型</td>
+                <td width="10%">审核状态</td>
+                <td width="15%">下载次数</td>
+                <td width="15%">更新时间</td>
+                <td width="20%">操作</td>
+                </thead>
+                {volist name='list_data' id='vo'}
+                <tr>
+                    <td>
+                        <a href="{:U('appDetail', array('id'=>$vo['id']))}">
+                            {empty name="vo.logo" }
+                            <img class="app_icon" src="__IMG__/app_no_pic.png"/>
+                            {else/}
+                            <img class="app_icon" src="{$vo.logo_db|get_cover_url}"/>
+                            {/empty}
+                        </a>
+                        <p class="app_name">
+                            <a href="{:U('appDetail', array('id'=>$vo['id']))}">{$vo.title}</a></p>
+                    </td>
+                    <td>{$vo.type}</td>
+                    <td>{$vo.status|raw}</td>
+                    <td>{$vo.download_count|intval}</td>
+                    <td>{$vo.update_at}</td>
+                    <td><a href="{:U('submitApp', array('id'=>$vo['id']))}">更新</a> <a
+                            href="{:U('appDetail', array('id'=>$vo['id']))}">详情</a></td>
+                </tr>
+                {/volist}
+            </table>
+            {/empty}
+        </div>
+    </div>
+</div>
+{/block}

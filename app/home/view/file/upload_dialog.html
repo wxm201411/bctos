@@ -1,0 +1,262 @@
+{include file="common@base/head"/}
+<body style="background:#fff; padding:40px 0;">
+  <section id="upload_dialogContent">
+  	<div class="upload_img_tab">
+    	<a class="current" href="javascript:;" onClick="switchTab(this,1);">本地上传</a>
+        <a href="javascript:;" onClick="switchTab(this,2);">系统图标</a>
+        <a href="javascript:;" onClick="switchTab(this,3);">最近上传</a>
+    </div>
+    <div class="tab_content" id="tab1" style="padding:20px; display:block">
+        <div class="PhotoClip" style="display: none">
+            <div id="clipArea"></div>
+            <div class="" style="height:56px;line-height:36px;text-align: center;padding-top:8px;">
+                <button id="clipBtn" class="layui-btn layui-btn-normal" type='button'>保存封面</button>
+                <span>滚动鼠标滑轮可以缩放图片</span>
+            </div>
+        </div>
+      <form id="form"  method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form" enctype="multipart/form-data">
+        <div style="padding: 5px 5px 15px 5px;color: #aaaaaa;"><span>提示：图片大小不超过2M</span></div>
+        <div class="mult_imgs">
+                <div class="upload-img-view" id='mutl_picture'>
+                   
+                </div>
+               <!--  <div class="controls uploadrow2" data-max="9" title="点击上传图片">
+                  <input type="file"  id="upload_picture">
+                </div> -->
+
+                <div id="upload_picture" class="controls uploadrow2" data-max="9" title="点击上传图片">
+                </div>
+            </div>    
+      </form>
+	</div>
+    <div class="tab_content load_piclist_box" id="tab2" style="padding:20px;"></div>
+      <div class="tab_content load_piclist_box" id="tab4" style="padding:20px;"></div>
+	<div class="tab_content load_piclist_box" id="tab3" style="padding:20px;"></div>
+  </section>
+  <div class="upload_dialog_bar"><a id="conBtn" class="btn" href="javascript:;" onClick="confirmImage();">确定</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="border-btn" href="javascript:;" onClick="window.parent.$.Dialog.close();">取消</a></div>
+</body>
+<script src="__STATIC__/layui/layui.js"></script>
+<script src="__STATIC__/layui/js/vue/vue.min.js"></script>
+<script src="__STATIC__/layui/js/vue/index.js"></script>
+<script src="__STATIC__/layui/js/photoClip/all.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+var maxCount = parseInt("{:I('max')}");
+var fieldName =  "{:I('field')}";
+var uploader = WebUploader.create({
+	
+	fileSingleSizeLimit: 2097152,//限制上传单个文件大小
+
+	// 设置文件上传域的name
+	fileVal:'download',
+
+    // 选完文件后，是否自动上传。
+    auto: true,
+
+    // swf文件路径
+    swf: STATIC+"/webuploader-0.1.5/Uploader.swf",
+
+    // 文件接收服务端。
+    server: UPLOAD_PICTURE,
+
+    // 选择文件的按钮。可选。
+    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+    pick: '#upload_picture',
+
+    // 只允许选择图片文件。
+    accept: {
+        title: 'Images',
+        extensions: 'gif,jpg,jpeg,png,bmp',
+        mimeTypes: 'image/*'
+	},
+	//不压缩
+	compress: false
+});
+var uploadImgWidth = $('#upload_picture').width()
+$('.webuploader-pick').height(uploadImgWidth).width(uploadImgWidth);
+
+// 文件上传成功，给item添加成功class, 用样式标记上传成功。
+uploader.on( 'uploadSuccess', function( file,res ) {
+	var src = res.url || ROOT + res.path;
+	var $li = $(
+            '<div id="'+file.id+'" class="upload-pre-item22 check" onclick="toggleCheck(this);"><img width="100" height="100" src="'+src+'"/>'
+				+'<input type="hidden" name="picId[]" value="'+res.id+'"/><span class="ck-ico"></span></div>'
+            ),
+        $img = $li.find('img');
+
+     var $list = $('#upload_picture').siblings('.upload-img-view');
+
+	 if(res.status){
+
+		$list.append( $li );
+		if(maxCount==1){
+				$("#mutl_picture .upload-pre-item22").each(function(index, element) {
+					$(element).removeClass('check');
+				});
+				$li.addClass('check');
+			}
+	 } else {
+			window.parent.updateAlert(res.info);
+			setTimeout(function(){
+				window.parent.$('#top-alert').find('button').click();
+			},1500);
+		}
+    // $list为容器jQuery实例
+	console.log(res)
+    $( '#'+file.id ).addClass('upload-state-done');
+});
+// 文件上传过程中创建进度条实时显示。
+uploader.on( 'uploadProgress', function( file, percentage ) {
+    var $li = $( '<div class="upload_loading" style="width:100px;height:100px;float:right;text-align:center"><img src="'+IMG_PATH+'/loading.gif"/></div>'),
+        $percent = $('.upload-img-view').find('.upload_loading');
+
+		if ( !$percent.length ) {
+				$percent = $('#upload_picture').siblings('.upload-img-view').append( $li );
+			}
+});
+// 完成上传完了，成功或者失败，先删除进度条。
+uploader.on( 'uploadComplete', function( file ) {
+     $('.upload-img-view').find('.upload_loading').remove();
+});
+// 文件上传失败，显示上传出错。
+uploader.on( 'uploadError', function( file ) {
+    window.parent.updateAlert('上传失败');
+});
+
+/**
+ * 验证文件格式以及文件大小
+ */
+uploader.on("error", function (type) {
+	console.log(type)
+    if (type == "Q_TYPE_DENIED") {
+    	window.parent.updateAlert("请上传gif,jpg,jpeg,png,bmp格式文件");
+    } else if (type == "F_EXCEED_SIZE") {
+    	window.parent.updateAlert("图片大小不能超过2M");
+    } else if (type == "F_DUPLICATE") {
+    	window.parent.updateAlert("请不要选择上传相同的图片");
+    } else {
+    	window.parent.updateAlert("上传出错！请检查后重新上传！错误代码"+type);
+    }
+
+});
+function switchTab(obj,index){
+	$('#tab'+index).show().siblings('.tab_content').hide();
+	$(obj).addClass('current').siblings().removeClass('current');
+	if(index!=1 && !$(obj).hasClass('loaded')){
+		if(index==2){
+			//加载系统
+			var url = "{:U('home/File/system_pics',array('dir'=>I('dir')))}";
+		}else if(index==3){
+			//加载最近
+            var url = "{:U('home/File/user_pics')}";
+        }
+        $(obj).addClass('loaded');
+        $('#tab'+index).load(url);
+	}
+}
+//切换图标分类
+function switchPicCate(obj,tabIndex){
+	$('#tab'+tabIndex).empty();
+	$('#tab'+tabIndex).load($(obj).data('href'));
+}
+//选中图片
+function toggleCheck(obj){
+	var curItems = $('.tab_content:visible .check');
+	var checkCount = curItems.length;
+	if(maxCount>1){
+		if(checkCount==maxCount && !$(obj).hasClass('check')){
+			window.parent.updateAlert('图片不能超过'+maxCount+'张!');
+			return;
+		}
+		$(obj).toggleClass('check');
+	}else{
+		if(!$(obj).hasClass('check')){
+			$(obj).addClass('check').siblings().removeClass('check');
+		}
+	}
+}
+function confirmImage(){
+    var curItems = $('.tab_content:visible .check');
+	var checkCount = curItems.length;
+	if(checkCount==0){
+		swal(
+		  '错误',
+		  '请选择上传图片！',
+		  'error'
+		)
+		return;
+	}
+	if(checkCount>9) {
+		swal(
+		  '错误',
+		  '总图片不可超过9张哦！',
+		  'error'
+		)
+		return;
+	}
+
+	curItems.each(function(index, element) {
+
+		var picId = $(element).find('input[type="hidden"]').val();
+		var src = $(element).find('img').attr('src');
+
+        if(maxCount>1){
+			$addImg = $('<div class="upload-pre-item22"><img width="100" height="100" src="' + src + '"/>'
+				+'<input type="hidden" name="'+fieldName+'[]" value="'+src+'"/><em onClick="if(confirm(\'确认删除？\')){$(this).parent().remove();}">&nbsp;</em></div>');
+			window.parent.$("#mutl_picture_"+fieldName).append($addImg);
+
+			window.parent.$("#mutl_picture_"+fieldName).dragsort('destroy');
+			window.parent.$("#mutl_picture_"+fieldName).dragsort({
+			    itemSelector: ".upload-pre-item22", dragSelector: ".upload-pre-item22", dragBetween: false, placeHolderTemplate: "<div class='upload-pre-item22'></div>",dragSelectorExclude:'em',dragEnd: function() {$(".upload-pre-item22").attr('style','')}
+		    });
+		}else{
+			window.parent.$('#cover_id_'+fieldName).parent().find('.upload-img-box').html(
+				'<div class="upload-pre-item2" style="width:100%;height:100px;max-height:100px"><img width="100%" height="100" src="' + src + '"/></div><em class="edit_img_icon">&nbsp;</em>'
+			).show();
+
+			window.parent.$('#cover_id_'+fieldName).val(src);
+			window.parent.$('.weixin-cover-pic').attr('src',src);
+			var callback = window.parent.$('#cover_id_'+fieldName).data('callback');
+			
+			if(callback){
+				eval('window.parent.'+callback+'("'+fieldName+'",'+picId+',"'+src+'")');
+			}
+		}
+	});
+	window.parent.$.Dialog.close();
+}
+if(maxCount==1 && false){ //TODO 待完成
+    //单图时有截取功能
+    var baseImg; //base64图片编码
+    var baseImgNone; //base64图片编码
+    var token;
+    var clipArea = new bjj.PhotoClip("#clipArea", {
+        size: [500, 281],// 截取框的宽和高组成的数组。默认值为[260,260]
+        outputSize: [500, 281], // 输出图像的宽和高组成的数组。默认值为[0,0]，表示输出图像原始大小
+        //outputType: "jpg", // 指定输出图片的类型，可选 "jpg" 和 "png" 两种种类型，默认为 "jpg"
+        file: "#file", // 上传图片的<input type="file">控件的选择器或者DOM对象
+        view: "#view", // 显示截取后图像的容器的选择器或者DOM对象
+        ok: "#clipBtn", // 确认截图按钮的选择器或者DOM对象
+        outputQuality: .6, //输出质量，取值 0 - 1，默认为0.8
+        loadStart: function () {
+            // 开始加载的回调函数。this指向 fileReader 对象，并将正在加载的 file 对象作为参数传入
+            $('.cover-wrap').fadeIn();
+            console.log("照片读取中");
+        },
+        loadComplete: function () {
+            // 加载完成的回调函数。this指向图片对象，并将图片地址作为参数传入
+            console.log("照片读取完成");
+        },
+        //loadError: function(event) {}, // 加载失败的回调函数。this指向 fileReader 对象，并将错误事件的 event 对象作为参数传入
+        clipFinish: function (dataURL) {
+            // 裁剪完成的回调函数。this指向图片对象，会将裁剪出的图像数据DataURL作为参数传入
+            $('.cover-wrap').fadeOut();
+            $('#view').css('background-size', '100% 100%');
+            baseImg = dataURL.substring(23);//处理base64图片编码
+            baseImgNone = dataURL;//处理base64图片编码
+        }
+    });
+}
+
+
+</script>
+</html>

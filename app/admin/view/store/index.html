@@ -1,0 +1,65 @@
+{extend name="store/storebase" /}
+
+{block name="body"}
+    <div class="app-content">
+      <div class="app-r right">
+       <div class="app-lists">
+          <h3 class="page_tit">{$page_tit}</h3>
+          <ul class="rank">
+          
+          {volist name="list_data" id="vo"}
+            <li>
+              <div class="rank-num rank-num-1">{php}if($_GET['p']>0) echo $key+1+($_GET['p']-1)*10; else echo $key+1;{/php}.</div>
+              <div class="app-info">
+                <div class="icon"><a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}"><img src="/public/admin/images/no_pic.png" width="64" height="64" /></a></div>
+                <div class="info">
+                  <h4>{$vo.title}</h4>
+                  
+                 <p>
+                <span class="price">价&nbsp;&nbsp;&nbsp;格：</span>
+                  	{empty name="vo.price"}
+                    <span class="free">免费</span>
+                   	{else /}
+                    <span class="price">{$vo.price}元</span>
+                    {/empty}
+                 </p>
+                 <p><span class="less">作&nbsp;&nbsp;&nbsp;者：</span>{$vo.uid|get_nickname}</p>
+                 <p><span class="less">安装数：</span>{$vo.download_count|intval}</p>
+                 
+                
+                </div>
+              </div>
+              <div class="app_action">
+                	{empty name="vo.need_buy"}
+                         <p class="mt10">
+                            <a class="install" href="javascript:;" onclick="autoInstall({$vo.id})">一键安装</a>
+                           <a class="download" href="{:U('admin/Store/download', array('id'=>$vo['id']))}">下载</a>
+                         </p>
+                    {else /}
+                         <p class="mt10">
+                            <a class="buy" href="{:U('admin/Store/payment', array('id'=>$vo['id']))}">购买</a> </p>
+                    {/empty} 
+                    <p class="mt10">
+                    <a href="{:U('admin/Store/detail', array('id'=>$vo['id']))}" class="detail">查看详情>></a>
+                    </p>
+                </div>
+            </li>
+            {/volist}
+          </ul>
+        </div>
+      </div>
+      <div class="page">
+        {$_page|default=''}
+     </div>
+</div>
+<script type="text/javascript">
+function autoInstall(id){
+	updateAlert('安装中，请等待...','alert-success');
+	
+	var host = "{$host_url}"; //本地安装地址
+	host = host.replace('http://', '');
+
+	location.href = 'http://' + host + '/index.php?s=/admin/update/downloadAndInstall&id=' + id;
+}
+</script> 
+{/block}

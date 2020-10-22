@@ -1,0 +1,22 @@
+{extend name="common@base/common" /}
+
+{block name="body"}
+<!-- 标签页导航 -->
+<div class="wrap">
+
+    <div class="tab-content">
+        <!-- 表单 -->
+        {php} isset($post_url) || $post_url = U('add?model='.$model['id']);{/php}
+        <form id="form" action="{$post_url}" method="post" class="form-horizontal layui-form" lay-filter="xw-form">
+
+            {include file="common@base/_form" /}
+
+            <div class="form-item cf">
+                <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+                <a class="btn btn-return" href="javascript:;" style="background-color: #a7a7a7!important;">返 回</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{/block}

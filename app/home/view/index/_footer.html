@@ -1,0 +1,90 @@
+<footer class="foot text-center">
+    <div class="addess">
+        <div class="container">
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <dl class="dl-horizontal list-unstyled">
+                        <dt><span class="icon-foot-addess"></span></dt>
+                        <dd>
+                            <h3>中国·深圳市</h3>
+                            <p>深圳市龙岗区坂田街道</p>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <dl class="dl-horizontal list-unstyled">
+                        <dt><span class="icon-foot-tel"></span></dt>
+                        <dd>
+                            <h3>24小时服务</h3>
+                            <p><a href="tel:18123611282">18123611282</a></p>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <dl class="dl-horizontal list-unstyled">
+                        <dt><span class="icon-foot-map"></span></dt>
+                        <dd>
+                            <h3><a href="https://map.baidu.com/poi/%E9%A1%BA%E5%85%B4(%E5%9D%82%E7%94%B0)%E5%B7%A5%E4%B8%9A%E5%8C%BA/@12700029.743237754,2570695.605,19z?uid=c9af8d596cd1d9b40b69d945&ugc_type=3&ugc_ver=1&device_ratio=1&compat=1&querytype=detailConInfo&da_src=shareurl" target="_blank">在地图上找到我们</a></h3>
+                            <p>欢迎阁下莅临公司参观指导！</p>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="copy container">
+				<div class="well hidden-xs"> 小韦云科技有限公司版权所有 粤ICP备20031850号 </div>
+			</div>
+        </div>
+    </div>
+</footer>
+<!--end-->
+<ul class="list-unstyled kefu visible-xs-block">
+    <li>
+        <a class="gt" href="javascript:;" title="在线沟通" target="_blank"><span class="icon-goutong"></span></a>
+    </li>
+    <li class="hidden-xs">
+        <a class="lx" href="javascript:;" title="联系"><span class="icon-page-lianxi"></span></a>
+    </li>
+    <li class="visible-xs-inline-block">
+        <a class="lx" href="javascript:;" title="拔打电话"><span class="icon-page-lianxi"></span></a>
+    </li>
+    <li>
+        <a id="top" class="top" href="javascript:;" title="回顶部"><span class="icon-top"></span></a>
+    </li>
+</ul>
+<!--end-->
+<script type="text/javascript" src="__STATIC__/jquery-2.0.3.min.js"></script>
+<script src="__JS__/jquery.min.js"></script>
+<script src="__JS__/owl.carousel.min.js"></script>
+<script src="__JS__/owl.carousel.quote.js"></script>
+<script src="__JS__/wow.min.js"></script>
+<script src="__JS__/base.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+<script>
+    wow = new WOW({
+        animateClass: 'animated',
+        offset: 100
+    });
+    wow.init();
+    document.getElementById('moar').onclick = function() {
+        var section = document.createElement('section');
+        section.className = 'section--purple wow fadeInDown';
+        this.parentNode.insertBefore(section, this);
+    };
+</script>
+<script src="__JS__/fastclick.min.js"></script>
+<script>
+    (function() {
+    //自动提交到百度
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+{include file="common@base/_auto_check" /}

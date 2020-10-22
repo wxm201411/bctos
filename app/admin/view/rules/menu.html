@@ -1,0 +1,51 @@
+{extend name="common@base/common" /}
+
+{block name="body"}
+<div class="wrap">
+<form class="layui-form" action="">
+
+
+{volist name="list_data" id="data"}
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+<h3><input type="checkbox" value="{$data.id}" name="ids[]" title="{$data.title}" {in name="data.id" value="$menu_rule"} checked {/in} /></h3>
+{volist name="data.child" id="child"}
+<input type="checkbox" value="{$child.id}" name="ids[]" title="{$child.title}" {in name="child.id" value="$menu_rule"} checked {/in} />
+{/volist}
+    </div>
+    </div>
+{/volist}
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="checkbox" lay-filter="allChoose" title="全选/反选"/>
+            <input type="hidden" name="id" value="{:id()}"/>
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+        </div>
+    </div>
+    </form>
+</div>
+<script type="application/javascript">
+    function layui_funs(form) {
+        //点击全选, 勾选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(".layui-form-item input[type='checkbox']");
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            $.post("{:U('menu')}",data.field,function (res) {
+                layer.msg(res.msg);
+                if(res.code==0){
+                    window.location.href=res.url
+                }
+            })
+            return false;
+        });
+    }
+</script>
+{/block}

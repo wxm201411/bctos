@@ -1,0 +1,15 @@
+
+{extend name="store/storebase" /}
+{block name="body"}
+  <form method="post" action="">
+    <p>购买项目：{$info.title}</p>
+    <p>付款金额：{$info.price|intval}</p>
+    <p>账号余额：{$web_info.wealth|intval}元 </p>
+    <p>&nbsp;</p>
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$info.id|intval}" />
+      <button class="btn ajax-post_custom submit-btn" target-form="form-horizontal" id="submit">确认支付</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+{/block}

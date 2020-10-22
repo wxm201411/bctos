@@ -1,0 +1,100 @@
+<textarea name="{$data.name}" style="{$data.style|raw}" id="editor_id_{$data.name}" class="editor-textarea">{$data.value|raw}</textarea>
+
+<input type="hidden" name="parse" value="0">
+
+{if condition='$editor_load_count eq 0'}
+<script type="text/javascript" src="__STATIC__/{$driver_file}/ueditor.config.js?v={:SITE_VERSION}"></script>
+<script type="text/javascript" src="__STATIC__/{$driver_file}/ueditor.all.js?v={:SITE_VERSION}"></script>
+<script type="text/javascript" src="__STATIC__/{$driver_file}/lang/zh-cn/zh-cn.js?v={:SITE_VERSION}"></script>
+{/if}
+
+<script type="text/javascript">
+    window.UEDITOR_HOME_URL = "__STATIC__/{$driver_file}";
+    window.UEDITOR_CONFIG.initialFrameHeight = parseInt('{$addons_config.editor_height}');
+    window.UEDITOR_CONFIG.scaleEnabled = true;
+    window.UEDITOR_CONFIG.imageUrl = '{:U("home/uploads/ue_upimg")}';
+    window.UEDITOR_CONFIG.imagePath = '';
+    window.UEDITOR_CONFIG.imageFieldName = 'imgFile';
+    //在这里扫描图片
+    window.UEDITOR_CONFIG.imageManagerUrl='{:U("home/uploads/ue_mgimg")}';//图片在线管理的处理地址
+    window.UEDITOR_CONFIG.imageManagerPath='';
+    var imageEditor = UE.getEditor('editor_id_{$data.name}',{
+        toolbars: [
+            ['fullscreen','source', 'undo', 'redo',
+                'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall',
+                'lineheight',
+                'customstyle', 'paragraph', 'fontfamily', 'fontsize', 'indent',
+                'justifyleft', 'justifycenter', 'justifyright',
+                'link', 'unlink',  'insertimage', 'wordimage', 'emotion', 'attachment', 'map']
+        ],
+        autoHeightEnabled: false,
+        autoFloatEnabled: true,
+        initialFrameHeight:300,
+        catchRemoteImageEnable: false
+    });
+
+
+    //添加一下判断是否是单个按钮管理图片 需要执行一下代码
+    {if condition="isset($data['btnClassName'])"}
+    imageEditor.ready(function () {
+        //设置编辑器不可用
+        imageEditor.setDisabled();
+        //隐藏编辑器，因为不会用到这个编辑器实例，所以要隐藏
+        imageEditor.hide();
+
+
+        imageEditor.addListener('beforeInsertImage', function (t, arg) {
+            //将地址赋值给相应的input,只去第一张图片的路径
+//						 console.log(t);
+//						 console.log(arg);
+//						 alert('图片上传了');
+            {if condition="empty($data['is_mult'])"}
+
+            //单张情况
+            $(".{$data.name}_preview").html("");
+            var imghtml = $("<img src="+arg[0].src+" width='100' height='100'/>");
+
+            $(".{$data.name}_preview").append(imghtml);
+            //储存路劲
+            //单张图片存储图片id
+            $("#editor_id_{$data.name}").text(arg[0].id);
+            //图片预览
+            $(".{$data.name}_preview").show();
+            //微信预览
+            $('.weixin-cover-pic').attr('src',arg[0].src);
+            //console.log(arg);
+
+            {else/}
+                // 多张情况
+                var srcs = "";
+                var srcIds = "";
+                //$(".{$data.name}_preview").html("");
+                for(var i=0;i<arg.length;i++){
+                    if(i==arg.length-1){
+                        srcs = srcs + arg[i].src;
+                        srcIds = arg[i].id;
+                    }else{
+                        srcs = srcs + arg[i].src+"|";
+                        srcIds = srcIds + arg[i].id+",";
+                    }
+                    var imghtml = $("<img src="+arg[i].src+" width='100' height='100'/>");
+                    $(".{$data.name}_preview").append(imghtml);
+                    //console.log(arg[i].src);
+                }
+                $(".{$data.name}_preview").append(imghtml);
+                $(".{$data.name}_preview").show();
+                var oldIds = $("#editor_id_{$data.name}").text();
+                //多张图片存储一逗号分隔的id串
+                $("#editor_id_{$data.name}").text(oldIds+","+srcIds);
+                {/if}
+                })
+
+        // 增加按钮className
+        $('.{$data.btnClassName}').bind('click',function(){
+            var uploadImage = imageEditor.getDialog("insertimage");
+            uploadImage.open();
+        });
+
+    });
+    {/if}
+</script>

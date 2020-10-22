@@ -1,0 +1,62 @@
+{extend name="store/storebase" /}
+
+{block name="body"}
+<div class="app-content app-lists">
+    <div class="app-detail">
+        <div class="info">
+            <div class="pic"><img width="100" height="100" src="{$data.logo|get_cover_url}"/></div>
+            <p>
+
+                <span class="less">价&nbsp;&nbsp;&nbsp;格：</span>
+                {empty name="data.price"}
+                <span class="free">免费</span>
+                {else /}
+                <span class="price">{$data.price}元</span>
+                {/empty}
+            </p>
+            <p><span class="less">作&nbsp;&nbsp;&nbsp;者：</span>{$data.uid|get_nickname}</p>
+            <p><span class="less">安装数：</span>{$data.download_count|intval}</p>
+
+            {empty name="data.need_buy"}
+            <p class="mt10">
+                <a class="install" href="javascript:;" onClick="autoInstall({$data.id})">一键安装</a>
+            </p>
+            <p class="mt10">
+                <a class="download" href="{:U('admin/Store/download', array('id'=>$data['id']))}">下载</a>
+            </p>
+            {else /}
+            <p class="mt10">
+                <a class="buy" href="{:U('admin/Store/payment', array('id'=>$data['id']))}">购买</a></p>
+            {/empty}
+
+            <p class="mt10">
+                <a class="btn" href="javascript:history.back();">返回</a>
+            </p>
+
+        </div>
+        <div class="app-desc">
+            <h4>{$data.title}</h4>
+            <div class="desc">{$data.content|raw}</div>
+            {php} if($data['img']) { {/php}
+            <div class="plus_shot">
+                <h5>应用截图</h5>
+                {php}$data['img'] = explode(',', $data['img']);{/php}
+                {volist name='data.img' id='img'}
+                <a href="{$img|get_cover_url}" target="_blank"><img src="{$img|get_cover_url}"/></a><br/>
+                {/volist}
+            </div>
+            {php} } {/php}
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function autoInstall(id) {
+        updateAlert('安装中，请等待...', 'alert-success');
+
+        var host = "{$host_url}"; //本地安装地址
+        host = host.replace('http://', '');
+
+        location.href = 'http://' + host + '/index.php?s=/admin/update/downloadAndInstall&id=' + id+'&uid={$mid}';
+    }
+</script>
+{/block}

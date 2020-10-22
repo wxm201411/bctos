@@ -1,0 +1,127 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .layui-form {
+        padding: 20px 10px;
+    }
+
+    .layui-form-label {
+        width: 100px;
+    }
+
+    #history_block {
+        display: none;
+        width: 95%;
+        margin: 0 auto;
+    }
+
+    .history-line {
+        margin: 10px auto;
+    }
+
+    .del-history {
+        float: right;
+        color: #999;
+    }
+</style>
+<div class="page_message">
+    <section id="contents">
+        <!-- 数据列表 -->
+        <form class="layui-form" lay-filter="formTest">
+            <div class="layui-form-item">
+                <label class="layui-form-label">链码名称</label>
+                <div class="layui-input-block">
+                    <select name="chaincode" lay-verify="required">
+                        {volist name="codeList" id="vo"}
+                        <option value="{$vo}" {eq name="data.chaincode" value="$vo" }selected{
+                        /eq}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">查询类型</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="func" value="invoke" title="执行(invoke)" {eq name="data.func"
+                           value="invoke" }checked{/eq}>
+                    <input type="radio" name="func" value="query" title="查询(query)" {eq name="data.func" value="query"
+                           }checked{/eq}>
+                    <input type="radio" name="func" value="instantiate" title="初始化(instantiate)" {eq name="data.func"
+                           value="instantiate" }checked{/eq}>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">输入参数</label>
+                <div class="layui-input-block">
+                    <textarea name="param" placeholder='请输入' class="layui-textarea">{$data.param}</textarea>
+                    <div style="font-size: small;color: #999">参数由你的链码决定，不能使用单引号，如：{"function":"initLedger","Args":[]} 或
+                        {"Args":["queryAllCars"]}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <a class="layui-btn layui-btn-primary" onclick="history()">历史操作</a>
+                </div>
+            </div>
+            <div class="layui-form-item" id="history_block">
+                {volist name="history" id="vo" empty="暂时没有历史操作"}
+                <div rel="{$vo.id}" class="history-line">
+                    <a href="javascript:void (0);" class="history"><span class="code">{$vo.chaincode}</span> <span
+                            class="fun">{$vo.func}</span> <span class="param">{$vo.param}</span></a>
+                    <a href="javascript:void (0);" class="del-history">删除</a>
+                </div>
+                {/volist}
+            </div>
+        </form>
+        <textarea placeholder="返回结果" id="res" class="layui-textarea" disabled
+                  style="height: 300px; width: 95%; margin: 0 auto;"></textarea>
+        <script>
+            function history() {
+                $('#history_block').toggle()
+            }
+            function Octal2Chinese(str) {
+                const matches = str.match(/(\\\d{3}){3}/g);
+                if (matches) matches.forEach(match => {
+                    let encoded = '';
+                    const splits = match.split('\\');
+                    splits.forEach(code => !code || (encoded += '%' + parseInt(code, 8).toString(16)));
+                    const cChar = decodeURI(encoded);
+                    str = str.replace(match, cChar);
+                });
+                return str;
+            }
+            $(function () {
+                $('.del-history').click(function () {
+                    var id = $(this).parent().attr('rel')
+                    $(this).parent().remove()
+                    $.post("{:U('delHistory')}", {id})
+                })
+            })
+
+            //Demo
+            layui.use('form', function () {
+                var form = layui.form;
+                form.on('submit(formDemo)', function (data) {
+                    var index = layer.load();
+                    $.post("{:U('test')}", data.field, function (res) {
+                        layer.close(index);
+                        $('#res').html(Octal2Chinese(res.msg))
+                    })
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+
+                $('.history').click(function () {
+                    var obj = $(this)
+                    form.val("formTest", {
+                        "chaincode": obj.find('.code').text()
+                        , "func": obj.find('.fun').text()
+                        , "param": obj.find('.param').text()
+                    });
+                })
+            });
+        </script>
+    </section>
+</div>
+{/block}
