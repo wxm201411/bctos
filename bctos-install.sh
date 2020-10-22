@@ -84,12 +84,20 @@ if [[  !($(which git) && $(git --version)) ]]; then
     echo "============Install git==================="
     yum -y install git
 fi
-echo "============download file from gitee ==================="
-git clone https://gitee.com/bctos_cn/bctos.git
-if [ $? -ne 0 ]; then
-	git clone https://github.com/wxm201411/bctos.git
+if [[  $(which podman) ]]; then
+    echo "============remove podman==================="
+    yum -y remove podman
 fi
-if [[ ! -d public ]]; then
+echo "============download file from gitee ==================="
+if [ -d bctos ];then
+	git pull
+else
+	git clone https://gitee.com/bctos_cn/bctos.git
+	if [ $? -ne 0 ]; then
+		git clone https://github.com/wxm201411/bctos.git
+	fi
+fi
+if [[ ! -d "bctos/www" ]]; then
 	    Red_Error "git clone fail"
 	else
 		echo "git clone success";
@@ -99,7 +107,12 @@ cd bctos
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
 	echo "============Install docker==================="
 	yum install -y containerd.io-1.2.6-3.3.fc30.x86_64.rpm
-    curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+	yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
+    #curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+    #curl -sSL https://get.daocloud.io/docker | sh
+    yum install -y yum-utils device-mapper-persistent-data lvm2
+    yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+    yum install -y docker-ce docker-ce-cli containerd.io
 
 	mkdir -p /etc/docker
 	tee /etc/docker/daemon.json <<-'EOF'
@@ -110,7 +123,6 @@ EOF
 
     systemctl enable docker
 	systemctl start docker
-	systemctl status docker
 fi
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
     	Red_Error "docker 安装失败"
@@ -135,10 +147,15 @@ docker ps -a
 if [ $? -ne 0 ]; then
 	systemctl enable docker
 	systemctl start docker
-	systemctl status docker
 fi
 
 cd www
+if [ ! -d runtime ];then
+	mkdir runtime
+fi
+if [ ! -d "db/migrations" ];then
+	mkdir -p db/migrations
+fi
 chmod 777 start.sh
 chmod -R +x scripts
 chmod -R 755 public runtime db app
