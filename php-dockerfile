@@ -11,6 +11,6 @@ deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib \
 deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib \
 deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib" >/etc/apt/sources.list
 
-RUN install-php-extensions pdo_mysql ssh2
+RUN apt-get update && install-php-extensions pdo_mysql ssh2
 
 CMD /var/www/html/start.sh
