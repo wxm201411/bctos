@@ -1,5 +1,5 @@
 FROM php:7.2-fpm
-RUN mv "/var/www/html/php.ini-production" "$PHP_INI_DIR/php.ini"
+COPY php.ini-production "$PHP_INI_DIR/php.ini"
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN echo  "deb http://mirrors.aliyun.com/debian/ buster main non-free contrib \

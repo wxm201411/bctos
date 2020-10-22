@@ -90,7 +90,9 @@ if [[  $(which podman) ]]; then
 fi
 echo "============download file from gitee ==================="
 if [ -d bctos ];then
+	cd bctos
 	git pull
+	cd ..
 else
 	git clone https://gitee.com/bctos_cn/bctos.git
 	if [ $? -ne 0 ]; then
@@ -149,6 +151,10 @@ if [ $? -ne 0 ]; then
 	systemctl start docker
 fi
 
+
+if [ ! -d "mysql-data" ];then
+	mkdir mysql-data
+fi
 cd www
 if [ ! -d runtime ];then
 	mkdir runtime
@@ -156,6 +162,10 @@ fi
 if [ ! -d "db/migrations" ];then
 	mkdir -p db/migrations
 fi
+if [ ! -d "public/storage" ];then
+	mkdir -p public/storage
+fi
+
 chmod 777 start.sh
 chmod -R +x scripts
 chmod -R 755 public runtime db app
