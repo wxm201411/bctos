@@ -1,5 +1,4 @@
 #!/bin/bash
-#set -x
 LANG=en_US.UTF-8
 
 MYSQL_PWD=${1:-'3306'}
@@ -85,12 +84,20 @@ if [[  !($(which git) && $(git --version)) ]]; then
     echo "============Install git==================="
     yum -y install git
 fi
+echo "============download file from gitee ==================="
+git clone https://gitee.com/bctos_cn/bctos.git
+if [ $? -ne 0 ]; then
+	git clone https://github.com/wxm201411/bctos.git
+fi
+if [[ ! -d public ]]; then
+	    Red_Error "git clone fail"
+	else
+		echo "git clone success";
+fi
+cd bctos
 # 安装docker
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
 	echo "============Install docker==================="
-	if [ ! -f "containerd.io-1.2.6-3.3.fc30.x86_64.rpm" ];then
-		wget https://www.bctos.cn/install/containerd.io-1.2.6-3.3.fc30.x86_64.rpm
-	fi
 	yum install -y containerd.io-1.2.6-3.3.fc30.x86_64.rpm
     curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
 
@@ -124,16 +131,6 @@ if [[  ! ($(which docker-compose) && $(docker-compose --version)) ]]; then
 	else
 		echo "docker-compose install success";
 fi
-if [[ ! -f bctos-install.tar.gz ]]; then
-	    echo "============download bctos-install.tar.gz==================="
-	    wget https://www.bctos.cn/install/bctos-install.tar.gz
-	    tar -zxvf bctos-install.tar.gz
-fi
-if [[ ! -d bctos-install ]]; then
-	    Red_Error "bctos-install 代码包下载解压失败"
-	else
-		echo "bctos-install download and unzip success";
-fi
 docker ps -a
 if [ $? -ne 0 ]; then
 	systemctl enable docker
@@ -141,19 +138,7 @@ if [ $? -ne 0 ]; then
 	systemctl status docker
 fi
 
-cd bctos-install/www
-git clone https://gitee.com/bctos_cn/bctos.git
-if [ $? -ne 0 ]; then
-	git clone https://github.com/wxm201411/bctos.git
-fi
-if [[ ! -d public ]]; then
-	    Red_Error "git clone fail"
-	else
-		echo "git clone success";
-fi
-if [[ -f install.sql ]]; then
-	cp install.sql ../sql/install.sql
-fi
+cd www
 chmod 777 start.sh
 chmod -R +x scripts
 chmod -R 755 public runtime db app
@@ -191,5 +176,3 @@ password: ${MYSQL_PWD} \
 =================================================================="
 echo -e result > account.log
 echo -e result
-
-#set +x
