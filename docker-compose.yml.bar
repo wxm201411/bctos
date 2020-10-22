@@ -1,0 +1,43 @@
+version: "3.1"
+networks: 
+   default: 
+
+services: 
+   mysql: 
+      build: 
+         context: .
+         dockerfile: mysql-dockerfile
+      hostname: mysql
+      container_name: mysql
+      ports: 
+         - 3306:3306
+      volumes:
+         - ./mysql-data:/var/lib/mysql
+      environment: 
+         MYSQL_ROOT_PASSWORD: 123456
+
+   php: 
+      build: 
+         context: .
+         dockerfile: php-dockerfile
+      hostname: php
+      container_name: php
+      depends_on:
+         - mysql
+      ports: 
+         - 9000:9000
+      volumes:
+         - ./www:/var/www/html
+   nginx: 
+      image: nginx
+      hostname: nginx
+      container_name: nginx
+      depends_on:
+         - php
+      ports: 
+         - 80:80
+      volumes:
+         - ./conf.d:/etc/nginx/conf.d
+         - ./www/public:/var/www/html
+      links: 
+         - php
