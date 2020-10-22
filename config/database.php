@@ -18,11 +18,11 @@ return [
             // 服务器地址
             'hostname' => '127.0.0.1',
             // 数据库名
-            'database' => 'bc_web_bctos_cn',//bc_web_bctos_cn
+            'database' => 'bctos_cn',//bc_web_bctos_cn
             // 用户名
             'username' => 'root',//phinx
             // 密码
-            'password' => '78e791c2af3fdfac',
+            'password' => '123456',
             // 端口
             'hostport' => '3306',
             // 数据库连接参数
