@@ -69,8 +69,10 @@ if [ "${is64bit}" != '64' ];then
 	Red_Error "抱歉, 系统不支持32位系统, 请使用64位系统或安装小韦云链!";
 fi
 
-
-yum -y install which
+which -v
+if [ $? -ne 0 ]; then
+	yum -y install which
+fi
 
 if [[  !($(which wget) && $(wget --version)) ]]; then
     echo "============Install wget==================="
@@ -105,6 +107,7 @@ if [[ ! -d "bctos/www" ]]; then
 		echo "git clone success";
 fi
 cd bctos
+chmod 777 start.sh
 # 安装docker
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
 	echo "============Install docker==================="
@@ -151,6 +154,12 @@ if [ $? -ne 0 ]; then
 	systemctl start docker
 fi
 
+if [ ! -d libssh2-1.9.0 ];then
+	tar zxf libssh2-1.9.0.tar.gz
+	cd libssh2-1.9.0
+	./configure && make && make install
+	cd ..
+fi
 
 if [ ! -d "mysql-data" ];then
 	mkdir mysql-data
@@ -166,7 +175,6 @@ if [ ! -d "public/storage" ];then
 	mkdir -p public/storage
 fi
 
-chmod 777 start.sh
 chmod -R +x scripts
 chmod -R 755 public runtime db app
 sed -i "s/123456/${MYSQL_PWD}/" config/database.php
@@ -179,8 +187,6 @@ sed -i "s/9000\:/${PHP_PORT}\:/" docker-compose.yml
 sed -i "s/bctosMysqlPwd/${MYSQL_PWD}/" docker-compose.yml
 docker-compose -f docker-compose.yml up -d
 echo "==========docker-compose up success=================";
-
-docker exec -it php /bin/bash -c "/var/www/html/start.sh"
 
 Get_Ip_Address
 result="================================================================== \
@@ -201,5 +207,5 @@ password: ${MYSQL_PWD} \
 \033[33mrelease the following panel port [666] in the security group\033[0m \
 \033[33m若无法访问面板，请检查防火墙/安全组是否有放行面板[666]端口\033[0m \
 =================================================================="
-echo -e result > account.log
-echo -e result
+echo -e $result > account.log
+echo $result
