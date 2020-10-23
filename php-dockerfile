@@ -2,5 +2,5 @@ FROM php:7.2-fpm
 COPY php.ini-production "$PHP_INI_DIR/php.ini"
 COPY start.sh "/var/www/start.sh"
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
-RUN apt-get update && install-php-extensions pdo_mysql ssh2
+RUN apt-get update && install-php-extensions pdo_mysql ssh2 pcntl gd memcached opcache redis
 CMD ["/var/www/start.sh", "-d"]
