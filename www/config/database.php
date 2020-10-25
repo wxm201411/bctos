@@ -16,7 +16,7 @@ return [
             // 数据库类型
             'type' => 'mysql',
             // 服务器地址
-            'hostname' => '127.0.0.1',
+            'hostname' => 'mysql',
             // 数据库名
             'database' => 'bctos_cn',//bc_web_bctos_cn
             // 用户名

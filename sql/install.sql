@@ -3193,6 +3193,31 @@ CREATE TABLE `wp_menu`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 889 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
+INSERT INTO `wp_menu` VALUES (1, '0', '开发功能', 1, '', 'admin/Apps/index', '', 0, 99, 0, '_self', NULL);
+INSERT INTO `wp_menu` VALUES (2, '1', '应用管理', 1, '', 'admin/Apps/index', NULL, 0, 1, 0, '_self', NULL);
+INSERT INTO `wp_menu` VALUES (3, '1', '数据模型', 1, '', 'admin/Model/index', NULL, 0, 2, 0, '_self', NULL);
+INSERT INTO `wp_menu` VALUES (4, '1', '菜单管理', 1, '', 'admin/Menu/lists', NULL, 0, 3, 0, '_self', NULL);
+INSERT INTO `wp_menu` VALUES (7, '1', '网站设置', 1, '', 'admin/Config/group', NULL, 0, 6, 0, '_self', NULL);
+INSERT INTO `wp_menu` VALUES (8, '1', '配置管理', 1, '', 'admin/Config/index', NULL, 0, 7, 0, '_self', NULL);
+INSERT INTO `wp_menu` VALUES (12, '1', '清除缓存', 1, '', 'admin/Update/delcache', NULL, 0, 11, 0, '_self', NULL);
+INSERT INTO `wp_menu` VALUES (843, '839', '充值余额查询', 1, '', 'weixin/user_center/company', '', 1, 4, 0, '_self', '1');
+INSERT INTO `wp_menu` VALUES (851, '0', '平台账号管理', 1, '', 'weixin/user_center/admin', '', 1, 1, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (852, '1', '权限配置', 1, '', 'admin/rules/index', '', 0, 8, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (856, '0', '平台资料', 1, '', 'home/user/edit', '', 1, 98, 0, '_self', '1');
+INSERT INTO `wp_menu` VALUES (862, '0', '客户端管理', 1, '', 'weixin/publics/lists', '', 1, 0, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (863, '0', '打卡挑战', 0, 'clock_in', '', '', 0, 0, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (865, '863', '提现审核', 1, '', 'clock_in/clockInCash/lists', '', 0, 2, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (868, '0', '扩展商城', 1, '', 'admin/Store/lists', '', 1, 2, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (870, '0', '开发者中心', 1, '', 'home/dev/index', '', 1, 0, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (871, '868', '首页', 1, '', 'admin/Store/lists', '', 1, 1, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (875, '0', '应用管理', 1, '', '', '', 0, 2, 0, '_self', '1');
+INSERT INTO `wp_menu` VALUES (876, '0', '客户端配置', 1, '', '', '', 0, 3, 0, '_self', '1');
+INSERT INTO `wp_menu` VALUES (877, '0', '消息中心', 1, '', '', '', 0, 4, 0, '_self', '1');
+INSERT INTO `wp_menu` VALUES (878, '0', '账号中心', 1, '', '', '', 0, 5, 0, '_self', '1');
+INSERT INTO `wp_menu` VALUES (881, '0', '测试网络', 0, 'blockchain', '', '', 0, 1, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (882, '0', '容器管理', 0, 'docker', '', '', 0, 4, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (887, '0', '生产环境部署', 1, '', 'blockchain/Deploy/lists', '', 0, 3, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (888, '1', '在线升级', 1, '', 'admin/Update/index', '', 0, 8, 0, '_self', '2');
 -- ----------------------------
 -- Table structure for wp_message
 -- ----------------------------
