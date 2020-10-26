@@ -9,7 +9,7 @@ services:
          dockerfile: mysql-dockerfile
       hostname: mysql
       container_name: mysql
-      always: always
+      restart: always
       ports: 
          - 3306:3306
       volumes:
@@ -23,7 +23,7 @@ services:
          dockerfile: php-dockerfile
       hostname: php
       container_name: php
-      always: always
+      restart: always
       depends_on:
          - mysql
       ports: 
@@ -36,7 +36,7 @@ services:
          dockerfile: msg-dockerfile
       hostname: msg
       container_name: msg
-      always: always
+      restart: always
       ports: 
          - 2120:2120
          - 2121:2121
@@ -48,7 +48,7 @@ services:
          dockerfile: socket-dockerfile
       hostname: socket
       container_name: socket
-      always: always
+      restart: always
       ports: 
          - 2100:2100
       volumes:
@@ -58,7 +58,7 @@ services:
       image: nginx
       hostname: nginx
       container_name: nginx
-      always: always
+      restart: always
       depends_on:
          - php
       ports: 
