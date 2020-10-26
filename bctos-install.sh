@@ -5,7 +5,7 @@ MYSQL_PWD=${1:-'3306'}
 if [ !$MYSQL_PWD ];then
 	MYSQL_PWD=$(head /dev/urandom |cksum |md5sum |cut -c 1-9)
 fi
-NGINX_PORT=${2:-'80'}
+NGINX_PORT=${2:-'666'}
 MYSQL_PORT=${3:-'3306'}
 PHP_PORT=${4:-'9000'}
 
@@ -107,7 +107,6 @@ if [[ ! -d "bctos/www" ]]; then
 		echo "git clone success";
 fi
 cd bctos
-chmod 777 start.sh
 # 安装docker
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
 	echo "============Install docker==================="
@@ -174,7 +173,8 @@ fi
 if [ ! -d "public/storage" ];then
 	mkdir -p public/storage
 fi
-
+#在容器中33表示www-data用户
+chown -R 82.82 ./*
 chmod -R +x scripts
 chmod -R 755 public runtime db app
 sed -i "s/123456/${MYSQL_PWD}/" config/database.php
@@ -188,6 +188,10 @@ sed -i "s/bctosMysqlPwd/${MYSQL_PWD}/" docker-compose.yml
 docker-compose -f docker-compose.yml up -d
 echo "==========docker-compose up success=================";
 
+if [ -f "/var/www/html/vendor/web-msg-sender/start.php" ];then
+    php /var/www/html/vendor/web-msg-sender/start.php start -d
+    php /var/www/html/public/node/server/bin/websocket.php -d &
+fi
 Get_Ip_Address
 result="================================================================== \
 \033[32mCongratulations! Installed successfully!\033[0m \
