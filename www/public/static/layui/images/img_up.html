@@ -1,0 +1,132 @@
+{extend name="other/public"}
+{block name="css"}
+<link rel="stylesheet" href="__STATIC__/vendor/jquery/jquery-ui-1.10.4.custom.css" type="text/css" />
+<link rel="stylesheet" href="__STATIC__/vendor/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css" type="text/css" />
+<style>
+.content-1{margin-bottom: 10px;}
+</style>
+{/block}
+{block name="content"}
+<div class="an-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;">后台</a>
+        <a class='title'><cite>图片上传</cite></a>
+    </span>
+    <div style='float:right' class='header-but'>
+        <button class="layui-btn layui-btn-sm but-1"><i class="layui-icon">&#xe669;</i> 刷新页面 </button>
+    </div>
+</div>
+<div class="content">
+    <div class="content-1 an-style1">
+        <fieldset class="layui-elem-field">
+            <legend>选择需要上传的文件夹 - Dir</legend>
+            <div class="layui-field-box">
+                <form class="layui-form" action="">
+                    <div class="form-box">
+                        <div class="inp">
+                            <input type="radio" name="name" lay-filter="filter" value="test" title="封面图文件夹" checked>
+                            <input type="radio" name="name" lay-filter="filter" value="wxeditor" title="其他文件夹">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+    </div>
+    <div class="content-2 an-style1">
+        <div id="uploader"></div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript" src="__STATIC__/vendor/jquery/jquery-ui-1.10.4.custom.js"></script>
+<script type="text/javascript" src="__STATIC__/vendor/plupload/plupload.full.min.js"></script>
+<script type="text/javascript" src="__STATIC__/vendor/plupload/jquery.ui.plupload/jquery.ui.plupload.js"></script>
+<script type="text/javascript" src="__STATIC__/vendor/plupload/i18n/zh_CN.js"></script>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+
+        },
+        //页面载入，ajax获取数据
+        created() {
+
+        },
+        methods:{
+
+        }
+    })
+
+        //写入cookies
+        function setCookie(name, value, time) {
+            var strsec = getsec(time);
+            var exp = new Date();
+            exp.setTime(exp.getTime() + strsec * 1);
+            document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+        }
+        //cookie时间
+        function getsec(str) {
+            var str1 = str.substring(1, str.length) * 1;
+            var str2 = str.substring(0, 1);
+            if (str2 == "s") {
+                return str1 * 1000;
+            } else if (str2 == "h") {
+                return str1 * 60 * 60 * 1000;
+            } else if (str2 == "d") {
+                return str1 * 24 * 60 * 60 * 1000;
+            }
+
+        }
+        setCookie('imgName', 'test', "h1");//默认上传类型为封面图，有效时间为一小时
+
+        layui.use('form', function () {
+            var form = layui.form;
+            form.on('radio(filter)', function (data) {
+                layer.msg(data.value)
+                setCookie('imgName', data.value, "h1");//改变上传类型
+            })
+        });
+
+        //当DOM准备好时初始化控件
+        $(function () {
+            $("#uploader").plupload({
+                //上传插件初始化选用那种方式的优先级顺序，如果第一个初始化失败就走第二个，依次类推
+                runtimes: 'html5,flash,silverlight,html4',
+                url: '{:url("admin/img/ajax_up_img")}',//上传服务器地址
+                max_file_count: 30,
+                //当上传文件大于服务器接收端文件大小限制的时候，可以分多次请求发给服务器，如果不需要从设置中移出
+                chunk_size: '4mb',
+                //修改图片属性
+                //            resize : {
+                //                width : 800,
+                //                height : 800,
+                //                quality : 60,//质量
+                //                crop: false,//是否裁剪图片
+                //                preserve_headers: false//：压缩后是否保留图片的元数据，true为保留，false为不保留,默认为true。
+                //            },
+                //选择文件扩展名的过滤器,每个过滤规则中只有title和ext两项[{title:'', extensions:''}]
+                filters: {
+                    //最大上传文件大小（格式100b, 10kb, 10mb, 1gb）
+                    max_file_size: '3mb',
+                    //只允许上传图
+                    mime_types: [
+                        { title: "Image files", extensions: "jpg,gif,png" },
+                        //                    {title : "Zip files", extensions : "zip"}
+                    ],
+                    prevent_duplicates: false //不允许选取重复文件
+                },
+                rename: true,//布尔值，上传之前可以重命名文件，默认false，木有找到如何重命名啊
+                sortable: true,//排序
+                dragdrop: true,//开启可拖曳上传
+                views: {
+                    list: true,
+                    thumbs: true, // Show thumbs
+                    active: 'thumbs'
+                },
+                flash_swf_url: 'vendor/plupload/Moxie.swf',//flash文件地址
+                silverlight_xap_url: 'vendor/plupload/Moxie.xap' //silverlight文件，当需要使用silverlight方式进行上传时需要配置该参数
+            });
+        });
+
+</script>
+{/block}

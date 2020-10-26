@@ -1,0 +1,171 @@
+{extend name="other/public"}
+{block name="css"}
+<style>
+.el-form{margin: 28px;}
+.content-1{margin-bottom: 10px;}
+@media screen and (max-width:640px){
+    .layui-breadcrumb{display: none;}
+}
+</style>
+{/block}
+
+{block name="content"}
+<div class="an-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;">后台</a>
+        <a href="javascript:;">权限管理</a>
+        <a class='title'><cite>角色管理</cite></a>
+    </span>
+    <div style='float:right' class='header-but'>
+        <button class="layui-btn layui-btn-sm but-2"><i class="layui-icon">&#xe629;</i> 导出Excel表格 </button>
+        <button class="layui-btn layui-btn-sm but-1"><i class="layui-icon">&#xe669;</i> 刷新页面 </button>
+    </div>
+</div>
+<div class="content">
+    <div class="content-1 an-style1">
+        <fieldset class="layui-elem-field">
+            <legend>添加角色 - AddRole</legend>
+                <table class="layui-table" lay-skin="nob">
+                    <tbody>
+                        <tr>
+                            <td><el-input v-model="form.name" placeholder="请输入角色名称"></el-input></td>
+                            <td><el-input v-model="form.notes" placeholder="请输入注释"></el-input></td>
+                            <td><el-button type="primary" @click='anAdd'>立即添加</el-button></td>
+                        </tr>
+                    </tbody>
+                </table>
+        </fieldset>
+    </div>
+    <div class="content-1 an-style1">
+        <fieldset class="layui-elem-field">
+            <legend>角色列表 - ListRole</legend>
+            <div class="layui-field-box" style="margin:5px 5px 28px 5px;">
+                <table class="layui-table" lay-skin="line">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>注释</th>
+                            <th>添加时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(v,index) in list">
+                            <td>{{v.role_name}}</td>
+                            <td>{{v.notes}}</td>
+                            <td>{{v.create_time}}</td>
+                            <td>
+                                <button class="layui-btn layui-btn-sm layui-btn-normal" @click="power(v.id,v.role_name)">权限分配</button>
+                                <button class="layui-btn layui-btn-sm layui-btn-primary" @click="anDel(v.id,v.role_name)">删除</button>
+                            </td>
+   
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            nodeArr: [],
+            form:{
+                name:'',
+                notes:''
+            },
+            list:[
+                { name: '超级管理员', notes: '备注' },
+                { name: '游客', notes: '备注' }
+            ]
+        },
+        created() {
+            var anThis = this;
+            //获取所有角色
+            $.post("{:url('admin/rbac/ajax_role')}", function (msg) {
+                anThis.list = msg;
+            })
+        },
+        methods:{
+            //添加角色
+            anAdd(){
+                var anThis = this;
+
+                if(anThis.form.name==''){
+                    anThis.$notify.error({
+                        title: '失败',
+                        message: '角色名称不能为空',
+                    }); 
+                }else{
+                    $.post("{:url('admin/rbac/ajax_add_role')}", anThis.form, function (msg) {
+                        if (msg.code == 200) {
+                            anThis.form = {name:'',notes:''};
+                            $.post("{:url('admin/rbac/ajax_role')}", function (res) {
+                                anThis.list = res;
+                            })
+                            anThis.$notify({
+                                title: '成功',
+                                message: msg.tips,
+                                type: 'success'
+                            });
+                        } else {
+                            anThis.$notify.error({
+                                title: '失败',
+                                message: msg.tips,
+                            });
+                        }
+                    });
+                }
+            },
+            //分配权限
+            power(id,name) {
+                parent.layer.open({
+                    type: 2,
+                    skin: 'layui-layer-lan',//蓝色样式
+                    closeBtn: 0,//不显示关闭按钮
+                    title: '权限分配',
+                    area: ['600px', '80%'],
+                    fixed: false, //不固定
+                    maxmin: false,//隐藏最大最小化
+                    shadeClose: true,//点击遮罩关闭
+                    content: "{:url('admin/rbac/power')}?role_id="+id+"&role_name="+name
+                });
+            },
+            //删除
+            anDel(id,name){
+                var anThis = this;
+                parent.layer.confirm('确定删除'+name+'角色？', {
+                    btn: ['确定', '取消'], //按钮
+                    title: '系统提示',//标题
+                    closeBtn: 0,//不显示关闭按钮
+                }, function () {
+                    parent.layer.closeAll();
+                    $.post("{:url('admin/rbac/ajax_del_role')}",{role_id:id}, function (msg) {
+                        if (msg.code == 200) {
+                            //获取所有角色
+                            $.post("{:url('admin/rbac/ajax_role')}", function (msg) {
+                                anThis.list = msg;
+                            })
+                            anThis.$notify({
+                                title: '成功',
+                                message: msg.tips,
+                                type: 'success'
+                            });
+                        } else {
+                            anThis.$notify.error({
+                                title: '失败',
+                                message: msg.tips,
+                            });
+                        }
+                    });
+
+                });
+            }
+        }
+    })
+
+</script>
+{/block}

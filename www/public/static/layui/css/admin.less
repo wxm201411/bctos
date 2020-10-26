@@ -1,0 +1,36 @@
+//定义变量
+@colorA:red;
+@colorB:#111;
+@size:100px;
+@border:1px;
+
+body{background:@colorA;}//使用变量
+
+//定义函数
+.anan(@size:100px){
+    width:@size;
+    height:@size;
+    background: @colorA;
+}
+
+//使用函数
+.less-box-1{.anan;}
+.less-box-2{.anan(200px)}
+
+//嵌套
+#header{
+    .box{width:@size;height:@size;
+        .box-1{width:@size;height:50px;background: @colorA;}
+        .box-2{width:@size;height:50px;background: blue;
+            &:hover{background: @colorA;}
+        }
+    }
+}
+
+//运算
+#header{
+    .box{width: @size*2;height:@size*2;
+        .box-1{width: @size*2;background: @colorB*5;}
+        .box-2{width: @size*2;border:@border*10 solid @colorA;}
+    }
+}

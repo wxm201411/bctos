@@ -1,0 +1,150 @@
+{extend name="other/public"}
+{block name="css"}
+<style>
+.content-1{margin-bottom: 10px;}
+.content-1 .img{width: 100px;}
+@media screen and (max-width:640px){
+    .layui-breadcrumb{display: none;}
+}
+</style>
+{/block}
+{block name="content"}
+<div class="an-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;">后台</a>
+        <a class='title'><cite>文章列表管理</cite></a>
+    </span>
+    <div style='float:right' class='header-but'>
+        <button class="layui-btn layui-btn-sm but-2"><i class="layui-icon">&#xe629;</i> 导出Excel表格 </button>
+        <button class="layui-btn layui-btn-sm but-1"><i class="layui-icon">&#xe669;</i> 刷新页面 </button>
+    </div>
+</div>
+<div class="content">
+    <div class="content-1 an-style1">
+        <el-table :data="tableData" style="width: 100%">
+            <el-table-column type="index" :index="indexMethod" label="序号"></el-table-column>
+            <el-table-column label="封面图片">
+                <template slot-scope="scope">
+                    <img class='img' :src="'{$Think.config.qiniu.spaceUrlA}' + scope.row.img" alt="">
+                </template>
+            </el-table-column>
+            <el-table-column prop="title" label="标题"></el-table-column>
+            <el-table-column prop="label" label="标签"></el-table-column>
+            <el-table-column prop="create_time" label="添加时间"></el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-button-group>
+                        <el-button size="mini" type="primary" icon="el-icon-view" @click="anSelect(scope.row.id)" title='查看'></el-button>
+                        <el-button size="mini" type="primary" icon="el-icon-edit" @click="anEdit(scope.row.id)" title='编辑'></el-button>
+                        <el-button size="mini" type="primary" icon="el-icon-delete" @click="anDel(scope.row.id,scope.row.title)" title='删除'></el-button>
+                    </el-button-group>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+    <div class="content-2 an-style1">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1"
+            :page-sizes="[10, 50, 100]" :page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            tableData:'',
+            total:''
+        },
+        //页面载入，ajax获取数据
+        created() {
+            var anThis = this;
+            //获取所有数据
+            $.post("{:url('admin/news/ajax_list_news')}",function(msg){
+                anThis.tableData = msg;
+                
+            })
+            //获取总数
+            $.post("{:url('admin/news/ajax_news_total')}",function(msg){
+                anThis.total = msg;
+            })
+        },
+        methods:{
+            //表格序号重写
+            indexMethod(index) {
+                return index + 1;
+            },
+            //编辑文章
+            anEdit(index) {
+                window.location.href="{:url('admin/news/news_updata')}?id="+index;
+            },
+            //查看文章
+            anSelect(index){
+                parent.layer.open({
+                    type: 2,
+                    title: '查看文章',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['1100px', '90%'],
+                    content:"{:url('admin/news/news_select')}?id="+index
+                });
+            },
+
+            //调整每页数据
+            handleSizeChange(val) {
+                var anThis = this;
+                anThis.limit = val;
+                $.post("{:url('admin/news/ajax_list_news')}?page=1&limit=" + val, function (msg) {
+                    anThis.tableData = msg;
+                })
+            },
+
+            //获取分页数据
+            handleCurrentChange(val) {
+                var anThis = this;
+                $.post("{:url('admin/news/ajax_list_news')}?page="+val, function (msg) {
+                    anThis.tableData = msg;
+
+                })
+            },
+
+            //删除
+            anDel(id, title) {
+                var anThis = this;
+                parent.layer.confirm('确定删除？', {
+                    btn: ['确定', '取消'], //按钮
+                    title: '系统提示',//标题
+                    closeBtn: 0,//不显示关闭按钮
+                }, function () {
+                    parent.layer.closeAll();
+                    $.post("{:url('admin/news/ajax_del_news')}", { 'id': id, 'title': title }, function (msg) {
+                        if (msg.code == 200) {
+                            //获取所有文章
+                            $.post("{:url('admin/news/ajax_list_news')}", function (msg) {
+                                anThis.tableData = msg;
+                            })
+                            anThis.$notify({
+                                title: '成功',
+                                message: msg.tips,
+                                type: 'success'
+                            });
+                        } else {
+                            anThis.$notify.error({
+                                title: '失败',
+                                message: msg.tips,
+                            });
+                        }
+                    });
+
+                });
+            },
+        }
+    })
+
+    //导出表格
+    $(".header-but .but-2").click(function () {
+        window.location.href = "{:url('admin/news/excel')}"
+    })
+</script>
+{/block}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="__STATIC__/vendor/highlight/monokai-sublime.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="__STATIC__/vendor/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css">
+    <style>
+        .content{width: 640px;margin: 0 auto;}
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="content-1"><img src="{$Think.config.qiniu.spaceUrlA}/{$news['img']}" alt=""></div>
+        <div class="content-2"><h1>标题：{$news['title']}</h1></div>
+        <hr>
+        <div class="content-3">
+            <p>正文</p>
+            {$news['content']}
+        </div>
+        <div class="content-4"></div>
+        <div class="content-5"></div>
+        <div class="content-6"></div>
+        <div class="content-7"></div>
+        <div class="content-8"></div>
+        <div class="content-9"></div>
+        <div class="content-10"></div>
+    </div>
+    <script type="text/javascript" charset="utf-8" src="__STATIC__/vendor/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
+    <script>
+        SyntaxHighlighter.all();//代码高亮
+    </script>
+</body>
+</html>

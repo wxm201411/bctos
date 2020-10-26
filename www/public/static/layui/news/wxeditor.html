@@ -1,0 +1,370 @@
+{extend name="other/public"}
+{block name="css"}
+<link rel="stylesheet" type="text/css" href="__STATIC__/layui/wx/css/bootstrap/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/layui/wx/css/site.css"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/layui/wx/css/wwei_editor.css"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/layui/wx/wxeditor/css/jquery.jgrowl.css" />
+<style>
+.content-1{margin-top: 10px;margin-bottom:10px; }
+.content-1 .cover-wrap{display:none;position:fixed;left:0;top:0;width:100%;height:100%;background: rgba(0, 0, 0, 0.4);z-index: 10000000;text-align:center;}
+.content-1 #file{cursor:pointer;opacity:0;filter:alpha(opacity=0);width:100%;height:100%;position:absolute;top:0;left:0;}
+.content-1 .up-img-but{width:140px;height:32px;background-color:#409EFF;color: #FFFFFF;font-size: 14px;text-align:center;line-height:32px;outline:none;position:relative;top:249px;}
+.content-1 #view{width:500px;height:281px;background: #f2f2f2;}
+.content-1 .PhotoClip{width:80%;height:80%;background-color:#FFFFFF;overflow: hidden;border-radius:4px;position: absolute;left:10%;top:10%;}
+.content-1 #clipArea{margin:5px;height:83%;}
+.content-1 #select select {display: block !important;}
+.content-1 .div>div{float:left;}
+.layui-form-radio span {  color: #409EFF;  }
+.layui-form-radio i:hover, .layui-form-radioed i {  color: #409EFF;  }
+
+.layui-form-switch {box-sizing: unset;}
+</style>
+{/block}
+{block name="content"}
+<div class="an-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;">后台</a>
+        <a class='title'><cite>文章添加 ( 新版 )</cite></a>
+    </span>
+    <div style='float:right' class='header-but'>
+        <button class="layui-btn layui-btn-sm but-1"><i class="layui-icon">&#xe669;</i> 刷新页面 </button>
+    </div>
+</div>
+<div class="content">
+    <form class="layui-form" action="">
+        <div class="content-1 an-style1">
+            <div class="layui-form-item">
+                <label class="layui-form-label">封面</label>
+                <div class="layui-input-block">
+                    <div class="cover-wrap">
+                        <div class="PhotoClip">
+                            <div id="clipArea"></div>
+                            <div class="" style="height:56px;line-height:36px;text-align: center;padding-top:8px;">
+                                <button id="clipBtn" class="layui-btn layui-btn-normal" type='button'>保存封面</button>
+                                <span>滚动鼠标滑轮可以缩放图片</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div clear-fixed">
+                        <div id="view"></div>
+                        <div class="up-img-but">点击上传封面图<input type="file" id="file"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标签</label>
+                <div class="layui-input-block">
+                    <input type="text" name="label" placeholder="请输入标签" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="type" value="1" title="HTML+CSS" checked>
+                    <input type="radio" name="type" value="2" title="JavaScript">
+                    <input type="radio" name="type" value="3" title="PHP">
+                    <input type="radio" name="type" value="4" title="其他">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">水印</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="watermark" lay-skin="switch">
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-lg4 layui-col-md5">
+                <div class="an-style1">
+                    <ul class="nav nav-tabs" id="templateTab">
+                        <li class="active"><a href="#temp-title" data-type="title">标题</a></li>
+                        <li><a href="#temp-text" data-type="text">正文</a></li>
+                        <li><a href="#temp-img" data-type="img">图片</a></li>
+                        <li><a href="#temp-follow" data-type="follow">吸粉</a></li>
+                        <li><a href="#temp-scene" data-type="scene">场景</a></li>
+                        <li><a href="#temp-tpl" data-type="tpl">模板</a></li>
+                    </ul>
+                    <div class="tab-content template-content">
+                        <div id="template-loading" class="hide"><img src="__STATIC__/layui/wx/images/loading.gif"> 加载中...</div>
+                        <div class="tab-pane active" id="temp-title"></div>
+                        <div class="tab-pane" id="temp-text"></div>
+                        <div class="tab-pane" id="temp-img"></div>
+                        <div class="tab-pane" id="temp-follow"></div>
+                        <div class="tab-pane" id="temp-scene"></div>
+                        <div class="tab-pane" id="temp-tpl"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-lg8 layui-col-md7" id="wxcontent">
+                <div class="an-style1">
+                <fieldset>
+                    <div style="clear:both"></div>
+                    <div>
+                        <script id="wwei_editor" type="text/plain" style="width:100%;height:641px;"></script>
+                    </div>
+                    <div>
+                        <span class="pull-left">
+                            <div class="layui-btn-group">
+                                <button class="layui-btn layui-btn-normal" id="clear-editor">清空</button>
+                                <button class="layui-btn layui-btn-normal anan-but" type="button">预览</button>
+                                <button class="layui-btn layui-btn-normal post-but" lay-submit lay-filter="formDemo" type="button">提交</button>
+                            </div>
+
+                        </span>
+                    </div>
+                </fieldset>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript" src="__STATIC__/layui/js/photoClip/all.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script type="text/javascript" src="__STATIC__/layui/wx/js/jquery-1.7.2.min.js"></script> -->
+<script type="text/javascript" src="__STATIC__/layui/wx/css/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/wx/wxeditor/css/jquery.jgrowl.min.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/wx/wxeditor/js/less.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/wx/wxeditor/js/colorPicker.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/wx/wxeditor/js/ueditor1_4_3/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/wx/wxeditor/js/ueditor1_4_3/ueditor.all.min.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/wx/wxeditor/js/ueditor1_4_3/third-party/zeroclipboard/ZeroClipboard.min.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/wx/wxeditor/js/wwei_editor.js"></script>
+<script type="text/javascript">
+    var less_parser = new less.Parser;
+    ZeroClipboard.config({ swfPath: "__STATIC__/layui/wx/wxeditor/js/ueditor1_4_3/third-party/zeroclipboard/ZeroClipboard.swf" });
+
+    var wwei_editor = UE.getEditor('wwei_editor');
+    //加载本地缓存
+    
+    wwei_editor.ready(function(){
+        var editor_document = wwei_editor.selection.document;
+        if( window.localStorage){
+            if(typeof window.localStorage._wweiContent != "undefined"){
+                //wwei_editor.setContent(window.localStorage._wweiContent);
+            }
+            setInterval(function(){
+                window.localStorage._wweiContent = wwei_editor.getContent();
+            },2000);            
+        }
+    });
+
+    $(function () {
+        /*模板Tab */
+        var dataType = 'title';
+
+        function _loadtemp(dataType) {
+            $("#template-loading").show();
+            $.ajax({
+                type: "POST",
+                url: "{:url('admin/other/loadtemp')}",
+                data: { "type": dataType },
+                success: function (data) {
+                    $("#template-loading").hide();
+                    var tabPane = $("#temp-" + dataType);
+                    tabPane.html(data);
+                    var _tempLi = tabPane.find(".template-list li");
+                    _tempLi.hover(function () {
+                        $(this).css({ "background-color": "#f5f5f5" });
+                    }, function () {
+                        $(this).css({ "background-color": "#fff" });
+                    });
+                    _tempLi.click(function () {
+                        if (dataType == "tpl") {
+                            var _tempHtml = $(this).find('.tpl-code').html();
+                            wwei_editor.setContent("");
+                            wwei_editor.execCommand("insertHtml", _tempHtml);
+                        } else {
+                            var _tempHtml = $(this).html();
+                            insertHtml(_tempHtml + "<p><br/></p>");
+                        }
+
+                    });
+                }
+            });
+        }
+        _loadtemp(dataType);//加载
+        //TAB切换
+        $("#templateTab a").click(function (e) {
+            e.preventDefault();
+            $(this).tab("show");
+
+            dataType = $(this).attr("data-type");
+            if (dataType) {
+                var tabPane = $("#temp-" + dataType);
+                if (tabPane.find(".template-list").length <= 0) {
+                    _loadtemp(dataType);
+                }
+            }
+        });
+
+
+        //清空
+        $("#clear-editor").click(function () {
+            parent.layer.confirm('确定清空', {
+                btn: ['确定', '取消'], //按钮
+                title: '系统提示',//标题
+                closeBtn: 0,//不显示关闭按钮
+            }, function () {
+                parent.layer.closeAll();
+                wwei_editor.setContent("");
+            });
+            // if (confirm("是否确认清空内容，清空后内容将无法恢复")) {
+            //     wwei_editor.setContent("");
+            // }
+        });
+
+
+        $(".anan-but").click(function () {
+            parent.layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: ['960px', '80%'],
+                shadeClose: true,
+                skin: 'an-view',
+                content: getEditorHtml()
+            });
+        })
+
+        //定制效果
+        $("#is_show_title").click(function () {
+            var cked = $(this).attr("checked");
+            if (cked == undefined) {
+                $("#wx_show_title").hide();
+
+            } else {
+                $("#wx_show_title").show();
+            }
+        });
+        $("#is_show_statis").click(function () {
+            var cked = $(this).attr("checked");
+            if (cked == undefined) {
+                $("#wxpreview .wxfoot").hide();
+
+            } else {
+                $("#wxpreview .wxfoot").show();
+            }
+        });
+    });
+
+        //上传封面
+        var baseImg; //base64图片编码
+        var baseImgNone; //base64图片编码
+        var token;
+        var clipArea = new bjj.PhotoClip("#clipArea", {
+            size: [500, 281],// 截取框的宽和高组成的数组。默认值为[260,260]
+            outputSize: [500, 281], // 输出图像的宽和高组成的数组。默认值为[0,0]，表示输出图像原始大小
+            //outputType: "jpg", // 指定输出图片的类型，可选 "jpg" 和 "png" 两种种类型，默认为 "jpg"
+            file: "#file", // 上传图片的<input type="file">控件的选择器或者DOM对象
+            view: "#view", // 显示截取后图像的容器的选择器或者DOM对象
+            ok: "#clipBtn", // 确认截图按钮的选择器或者DOM对象
+            outputQuality: .6, //输出质量，取值 0 - 1，默认为0.8
+            loadStart: function () {
+                // 开始加载的回调函数。this指向 fileReader 对象，并将正在加载的 file 对象作为参数传入
+                $('.cover-wrap').fadeIn();
+                console.log("照片读取中");
+            },
+            loadComplete: function () {
+                // 加载完成的回调函数。this指向图片对象，并将图片地址作为参数传入
+                console.log("照片读取完成");
+            },
+            //loadError: function(event) {}, // 加载失败的回调函数。this指向 fileReader 对象，并将错误事件的 event 对象作为参数传入
+            clipFinish: function (dataURL) {
+                // 裁剪完成的回调函数。this指向图片对象，会将裁剪出的图像数据DataURL作为参数传入
+                $('.cover-wrap').fadeOut();
+                $('#view').css('background-size', '100% 100%');
+                baseImg = dataURL.substring(23);//处理base64图片编码
+                baseImgNone = dataURL;//处理base64图片编码
+            }
+        });
+
+
+        layui.use('form', function () {
+            var form = layui.form;
+
+            //监听提交
+            form.on('submit(formDemo)', function (data) {
+
+                var content = getEditorHtml();//获取编辑器内容
+
+                $.ajaxSettings.async = false;//ajax同步
+
+                //判断是否需要添加水印
+                if (data.field.watermark == undefined) {
+                    if (baseImg != undefined) {
+                        //上传到七牛云------------------------------------开始
+                        //ajax从后台七牛云获取token
+                        $.post("{:url('admin/tools/getQiniuToken')}?name={$Think.config.qiniu.spaceNameA}", function (msg) {
+                            token = msg.data;
+                        })
+
+                        var file_name = $.base64.encode(Date.parse(new Date()) + getCode());//文件名称进行base64编码
+                        var addr = [
+                            'upload.qiniu.com',         // 华东
+                            'upload-z1.qiniu.com',      // 华北
+                            'upload-z2.qiniu.com',      // 华南
+                            'upload-na0.qiniu.com',     // 北美
+                        ];
+                        $.ajax({
+                            url: 'http://' + addr[2] + '/putb64/-1/key/' + file_name,
+                            type: 'POST',
+                            beforeSend(request) {
+                                request.setRequestHeader('Content-Type', 'application/octet-stream')
+                                request.setRequestHeader('Authorization', 'UpToken ' + token) // token服务端请求
+                            },
+                            data: baseImg,
+                            timeout: 1000,
+                            success: function (res) {
+                                data.field['img'] = res.key;//获取图片名称
+                            }
+                        })
+                        //上传到七牛云------------------------------------结束 
+                    } else {
+                        parent.layer.msg('请上传封面图');
+                        return false;
+                    }
+                } else {
+                    if (baseImgNone != undefined) {
+                        $.ajaxSettings.async = false;//ajax同步
+                        $.post("{:url('admin/news/baseImg')}", { 'base64': baseImgNone }, function (msg) {
+                            data.field['img'] = msg.img;//获取图片名称
+                        })
+                    } else {
+                        parent.layer.msg('请上传封面图');
+                        return false;
+                    }
+                }
+
+
+
+                if (data.field.title == '') {
+                    parent.layer.msg('标题不能为空');
+                    return false;
+                } else if (content == '') {
+                    parent.layer.msg('内容不能为空');
+                    return false;
+                } else {
+                    data.field['content'] = content;
+                    $.post("{:url('admin/news/ajax_add_news')}", data.field, function (msg) {
+                        if (msg.code == 200) {
+                            parent.layer.msg(msg.tips);
+                            setInterval(function () {
+                                window.location.href = "{:url('admin/news/news_add')}"
+                            }, 1000)
+                        }
+                    })
+                    return false;
+                }
+                return false;
+            });
+        });
+
+</script>
+{/block}

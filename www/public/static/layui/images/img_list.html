@@ -1,0 +1,112 @@
+{extend name="other/public"}
+{block name="css"}
+<style>
+.content-1{margin-bottom: 10px;}
+.masonry { 
+    column-count:7; 
+    column-gap: 0; 
+    width: 100%;margin: 0 auto;}
+.item { break-inside: avoid; box-sizing: border-box; padding:15px; }
+.masonry img{width:100%;}
+.masonry .img-box{width: 100%;height: 100%;position: relative;box-sizing: border-box;border-radius:10px;box-shadow: 2px 2px 15px #aaa;overflow: hidden;}
+.masonry .img-box:hover .zz{display: block !important;}
+.masonry .img-box:hover .but{display: block !important;}
+.masonry .but{position: absolute;left:0;bottom:0;width: 100%;z-index: 2;display: none !important;}
+.masonry .but>div{width: 50%;height: 50%;text-align: center;float:left;}
+.masonry .but button{cursor:pointer;color: #fff;font-size: 13px;background: #63acff;border: 0;padding:10px 0;width:100%;}
+.masonry .but button:hover{background: #b60000;} 
+
+@media screen and (max-width:1600px){
+    .masonry { column-count:6;}
+    .item {padding:10px; }
+}
+
+</style>
+{/block}
+{block name="content"}
+<div class="an-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;">后台</a>
+        <a class='title'><cite>图片列表</cite></a>
+    </span>
+    <div style='float:right' class='header-but'>
+        <button class="layui-btn layui-btn-sm but-1"><i class="layui-icon">&#xe669;</i> 刷新页面 </button>
+    </div>
+</div>
+<div class="content">
+    <div class="content-1 an-style1">
+        <el-button type="primary" size="small" @click="coverDir">封面图文件夹</el-button>
+        <el-button type="primary" size="small" @click="wxDir">其他文件夹</el-button>
+    </div>
+    <div class="content-1 an-style1">
+        <div class="masonry" id='layer-photos-demo'>
+            <div class="item" v-for="v in list">
+                <div class="item__content">
+                    <div class="img-box">
+                        <div class="img">
+                            <img :src="'{$Think.config.qiniu.spaceUrlB}/'+v.key" alt="陈广安" v-if='bool == 2'/>
+                            <img :src="'{$Think.config.qiniu.spaceUrlA}/'+v.key" alt="陈广安" v-else/>
+                        </div>
+                        <div class="zz"></div>
+                        <div class="but">
+                            <div>
+                                <button class="btn img-url" :data-clipboard-text="'{$Think.config.qiniu.spaceUrlB}/'+v.key" v-if='bool == 2'>复制图片链接</button>
+                                <button class="btn img-url" :data-clipboard-text="'{$Think.config.qiniu.spaceUrlA}/'+v.key" v-else>复制图片链接</button>
+                            </div>
+                            <div><button class="button-del" name="">删除图片</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script src="__STATIC__/vendor/copy/clipboard.min.js"></script>
+<script>
+    $.ajaxSettings.async = false;//ajax同步
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            list:'',
+            bool:1
+        },
+        
+        //页面载入，ajax获取数据
+        created() {
+            var anThis = this;
+            $.post("{:url('admin/img/get_img')}?name={$Think.config.qiniu.spaceNameA}", function (res) {
+                anThis.list = res[0];
+            })
+           
+        },
+        methods:{
+            coverDir(){
+                var anThis = this;
+                this.bool = 1;
+                $.post("{:url('admin/img/get_img')}?name={$Think.config.qiniu.spaceNameA}",function(res){
+                    anThis.list = res[0];
+                })
+            },
+            wxDir(){
+                var anThis = this;
+                this.bool=2;
+                $.post("{:url('admin/img/get_img')}?name={$Think.config.qiniu.spaceNameB}",function(res){
+                    anThis.list = res[0];
+                })
+            }
+        }
+    })
+
+            //复制图片链接到剪贴板
+            var clipboard = new Clipboard('.btn');
+            clipboard.on('success', function (e) {
+                layer.msg('复制成功');
+            });
+            clipboard.on('error', function (e) {
+                console.log(e);
+            });
+
+</script>
+{/block}

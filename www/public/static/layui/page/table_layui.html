@@ -1,0 +1,66 @@
+{extend name="other/public"}
+{block name="css"}
+<style>
+.content-1{margin-bottom: 10px;}
+</style>
+{/block}
+
+{block name="content"}
+<div class="an-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;">后台</a>
+        <a class='title'><cite>layui表格</cite></a>
+    </span>
+    <div style='float:right' class='header-but'>
+        <button class="layui-btn layui-btn-sm but-1"><i class="layui-icon">&#xe669;</i> 刷新页面 </button>
+    </div>
+</div>
+<div class="content">
+    <div class="content-1 an-style1">
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="200">
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>昵称</th>
+                    <th>加入时间</th>
+                    <th>签名</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>贤心</td>
+                    <td>2016-11-29</td>
+                    <td>人生就像是一场修行</td>
+                </tr>
+                <tr>
+                    <td>许闲心</td>
+                    <td>2016-11-28</td>
+                    <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+
+        },
+        //页面载入，ajax获取数据
+        created() {
+
+        },
+        methods:{
+
+        }
+    })
+
+</script>
+{/block}

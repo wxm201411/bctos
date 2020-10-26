@@ -1,0 +1,47 @@
+{extend name="other/public"}
+{block name="css"}
+<style>
+.content-1{margin-bottom: 10px;}
+.content-1 li{display: inline-block;vertical-align: middle;width: 130px;height: 150px;line-height: 25px;padding: 20px 0; margin-right: -4px;margin-bottom: -1px;border: 1px solid #e2e2e2;font-size: 14px;text-align: center;color: #666;transition: all .3s;-webkit-transition: all .3s;}
+.content-1 .layui-icon{display: inline-block;font-size: 36px;}   
+.content-1  li .doc-icon-fontclass {height: 40px;line-height: 20px;padding: 0 5px;font-size: 13px;color: #333;}
+</style>
+{/block}
+{block name="content"}
+<div class="an-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;">后台</a>
+        <a class='title'><cite>layui图标</cite></a>
+    </span>
+    <div style='float:right' class='header-but'>
+        <button class="layui-btn layui-btn-sm but-1"><i class="layui-icon">&#xe669;</i> 刷新页面 </button>
+    </div>
+</div>
+<div class="content">
+    <div class="content-1 an-style1">
+        <ul class='clear-fixed'>
+            {volist name="ico" id="vo"}
+                {$vo}
+            {/volist}
+        </ul>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+
+        },
+        //页面载入，ajax获取数据
+        created() {
+
+        },
+        methods:{
+
+        }
+    })
+
+</script>
+{/block}

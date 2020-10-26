@@ -1,0 +1,226 @@
+{extend name="other/public"}
+{block name="css"}
+<link rel="stylesheet" type="text/css" href="__STATIC__/layui/js/wangEditor/css/wangEditor.min.css">
+<style>
+.content-1{margin-bottom: 10px;}
+.content-1 .cover-wrap{display:none;position:fixed;left:0;top:0;width:100%;height:100%;background: rgba(0, 0, 0, 0.4);z-index: 10000000;text-align:center;}
+.content-1 #file{cursor:pointer;opacity:0;filter:alpha(opacity=0);width:100%;height:100%;position:absolute;top:0;left:0;}
+.content-1 .up-img-but{width:140px;height:32px;background-color:#409EFF;color: #FFFFFF;font-size: 14px;text-align:center;line-height:32px;outline:none;position:relative;top:249px;}
+.content-1 #view{width:500px;height:281px;background: #f2f2f2;background: url(http://oueweqgry.bkt.clouddn.com/20180425_cover_2d9391122.jpg)}
+.content-1 .PhotoClip{width:900px;height:600px;background-color:#FFFFFF;overflow: hidden;border-radius:4px;position: absolute;left:50%;top:50%;margin-left: -450px;margin-top: -300px;}
+.content-1 #clipArea{margin:10px;height: 520px;}
+.content-1 #select select {display: block !important;}
+.content-1 .div>div{float:left;}
+.layui-form-radio span {  color: #409EFF;  }
+.layui-form-radio i:hover, .layui-form-radioed i {  color: #409EFF;  }
+.wangEditor-txt{padding: 10px;}
+.wangEditor-container .wangEditor-txt h1, .wangEditor-container .wangEditor-txt h2, .wangEditor-container .wangEditor-txt h3, .wangEditor-container .wangEditor-txt h4, .wangEditor-container .wangEditor-txt h5, .wangEditor-container .wangEditor-txt p {margin: 0 0 5px;line-height: 24px;}
+.wangEditor-container .wangEditor-txt blockquote {border-left: 8px solid #409EFF;}
+.wangEditor-container .wangEditor-txt blockquote p{margin: 0;}
+.wangEditor-drop-panel .panel-tab img{width:50px;}
+.wangEditor-menu-container{height:32px;}
+</style>
+{/block}
+{block name="content"}
+<div class="an-header">
+    <span class="layui-breadcrumb">
+        <a href="">后台</a>
+        <a class='title'><cite>添加分享</cite></a>
+    </span>
+    <div style='float:right' class='header-but'>
+        <button class="layui-btn layui-btn-sm but-1"><i class="layui-icon">&#xe669;</i> 刷新页面 </button>
+    </div>
+</div>
+<div class="content an-style1">
+    <div class="content-1">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">封面</label>
+                <div class="layui-input-block">
+                    <div class="cover-wrap">
+                        <div class="PhotoClip">
+                            <div id="clipArea"></div>
+                            <div class="" style="height:56px;line-height:36px;text-align: center;padding-top:8px;">
+                                <button id="clipBtn" class="layui-btn layui-btn-normal" type='button'>保存封面</button>
+                                <span>滚动鼠标滑轮可以缩放图片</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div clear-fixed">
+                        <div id="view"></div><div class="up-img-but">点击上传封面图<input type="file" id="file"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标签</label>
+                <div class="layui-input-block">
+                    <input type="text" name="lable" placeholder="请输入标签" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="type" value="1" title="HTML+CSS" checked>
+                    <input type="radio" name="type" value="2" title="JavaScript">
+                    <input type="radio" name="type" value="3" title="PHP">
+                    <input type="radio" name="type" value="4" title="其他">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">内容</label>
+                <div class="layui-input-block" id="select">
+                    <textarea cols="30" rows="30" id="textarea1" name="content"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script src="__STATIC__/layui/js/photoClip/iscroll-zoom.js" type="text/javascript" charset="utf-8"></script>
+<script src="__STATIC__/layui/js/photoClip/hammer.js" type="text/javascript" charset="utf-8"></script>
+<script src="__STATIC__/layui/js/photoClip/lrz.all.bundle.js" type="text/javascript" charset="utf-8"></script>
+<script src="__STATIC__/layui/js/photoClip/jquery.photoClip.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__STATIC__/layui/js/jquery/jquery.base64.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="__STATIC__/layui/js/wangEditor/js/wangEditor.min.js"></script>
+<script type="text/javascript">
+    // 获取元素
+    var textarea = document.getElementById('textarea1');
+    // 生成编辑器
+    var editor = new wangEditor(textarea);
+    editor.config.uploadImgUrl = '{:url("share/loads")}';//图片上传路径
+
+     // 仅仅想移除某几个菜单
+     editor.config.menus = $.map(wangEditor.config.menus, function(item, key) {
+         if (item === 'table') {return null;}
+         if (item === 'undo') {return null;}
+         if (item === 'redo') {return null;}
+         return item;
+     });
+
+
+    // 配置自定义表情，在 create() 之前配置
+    editor.config.emotions = {
+        // 第一组，id叫做 'default' 
+        'default': {
+            title: '乖巧宝宝',  // 组名称
+            data: [
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/1.gif", value: "[流泪]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/2.gif",value: "[呵呵]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/3.gif",value: "[送花]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/4.gif",value: "[受伤]]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/5.gif",value: "[666]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/6.gif",value: "[乖巧]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/7.gif",value: "[拥抱]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/8.gif",value: "[冷漠]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/9.gif",value: "[小心心]]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/10.gif",value: "[哈哈]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/11.gif",value: "[赞]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/12.gif",value: "[谢谢老板]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/13.gif",value: "[来吧]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/14.gif",value: "[ok]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/15.gif",value: "[吃瓜]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/16.gif",value: "[110]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/20.gif",value: "[吃药]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/17.gif",value: "[滚]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/18.gif",value: "[害羞]]"}, 
+                {icon: "__STATIC__/vendor/face/myemoji.pl/img/19.gif",value: "[方了]"},
+            ]
+        },
+        // 第二组，id叫做'weibo'
+        'weibo': {
+            title: '微博表情',  // 组名称
+            data: [ 
+                { icon: "__STATIC__/vendor/face/myemoji.pl/img/1.gif", value: "[流泪]" }, 
+            ]
+        }
+    };
+
+
+
+    editor.create();
+
+    //上传封面
+    var baseImg; //base64图片编码
+    var token;
+    var clipArea = new bjj.PhotoClip("#clipArea", {
+        size: [500, 281],// 截取框的宽和高组成的数组。默认值为[260,260]
+        outputSize: [500, 281], // 输出图像的宽和高组成的数组。默认值为[0,0]，表示输出图像原始大小
+        //outputType: "jpg", // 指定输出图片的类型，可选 "jpg" 和 "png" 两种种类型，默认为 "jpg"
+        file: "#file", // 上传图片的<input type="file">控件的选择器或者DOM对象
+        view: "#view", // 显示截取后图像的容器的选择器或者DOM对象
+        ok: "#clipBtn", // 确认截图按钮的选择器或者DOM对象
+        outputQuality: .6, //输出质量，取值 0 - 1，默认为0.8
+        loadStart: function () {
+            // 开始加载的回调函数。this指向 fileReader 对象，并将正在加载的 file 对象作为参数传入
+            $('.cover-wrap').fadeIn();
+            console.log("照片读取中");
+        },
+        loadComplete: function () {
+            // 加载完成的回调函数。this指向图片对象，并将图片地址作为参数传入
+            console.log("照片读取完成");
+        },
+        //loadError: function(event) {}, // 加载失败的回调函数。this指向 fileReader 对象，并将错误事件的 event 对象作为参数传入
+        clipFinish: function (dataURL) {
+            // 裁剪完成的回调函数。this指向图片对象，会将裁剪出的图像数据DataURL作为参数传入
+            $('.cover-wrap').fadeOut();
+            $('#view').css('background-size', '100% 100%');
+            baseImg = dataURL.substring(23);//处理base64图片编码
+        }
+    });
+
+    layui.use('form', function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+             $.ajaxSettings.async = false;//ajax同步
+            if(baseImg!= undefined){
+                //上传到七牛云------------------------------------开始
+                //ajax从后台七牛云获取token
+                $.post("{:url('admin/tools/getQiniuToken')}?name=test", function (msg) {
+                    token = msg.data;
+                })
+                var file_name = $.base64.encode('2018-8-2202');//文件名称进行base64编码
+                var addr = [
+                    'upload.qiniu.com',         // 华东
+                    'upload-z1.qiniu.com',      // 华北
+                    'upload-z2.qiniu.com',      // 华南
+                    'upload-na0.qiniu.com',     // 北美
+                ];
+                $.ajax({
+                    url: 'http://' + addr[2] + '/putb64/-1/key/' + file_name,
+                    type: 'POST',
+                    beforeSend(request) {
+                        request.setRequestHeader('Content-Type', 'application/octet-stream')
+                        request.setRequestHeader('Authorization', 'UpToken ' + token) // token服务端请求
+                    },
+                    data: baseImg,
+                    timeout: 1000,
+                    success: function (res) {
+                        data.field['img'] = res.key;//获取图片名称
+                    }
+                 })
+                //上传到七牛云------------------------------------结束 
+                
+            }
+
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+
+</script>
+{/block}

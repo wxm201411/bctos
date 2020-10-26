@@ -1,0 +1,373 @@
+{extend name="other/public"} {block name="css"}
+<style>
+.an-style1 {border-radius: 3px;box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);background: #fff;padding: 20px;}
+.content-1 {margin-bottom:10px;}
+.content .content-1 td{width:20%;padding: 9px 10px}
+.content .content-1 td:nth-child(1){width: 130px;}
+.custom-tree-node {flex: 1;display: flex;align-items: center;justify-content: space-between;font-size: 14px;padding-right: 8px;}
+</style>
+{/block} {block name="content"}
+<div class="an-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;">后台</a>
+        <a href="javascript:;">权限管理</a>
+        <a class='title'>
+            <cite>节点管理</cite>
+        </a>
+    </span>
+    <div style='float:right' class='header-but'>
+        <button class="layui-btn layui-btn-sm but-1"><i class="layui-icon">&#xe669;</i> 刷新页面 </button>
+    </div>
+</div>
+<div class="content">
+    <el-row :gutter="10">
+        <el-col :lg="16" :md="18">
+            <div class="content-1 an-style1">
+                <fieldset class="layui-elem-field">
+                    <legend>添加模块 - Module</legend>
+                    <div class="layui-field-box">
+                        <table class="layui-table" lay-skin="nob">
+                            <tbody>
+                                <tr>
+                                    <td>http://localhost/</td>
+                                    <td><el-input v-model="form_1.module" placeholder="请输入模块名称"></el-input></td>
+                                    <td><el-input v-model="form_1.notes" placeholder="请输入注释"></el-input></td>
+                                    <td><el-button type="primary" @click='fun_1'>立即添加</el-button></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="content-1 an-style1">
+                <fieldset class="layui-elem-field">
+                    <legend>添加控制器 - Controller</legend>
+                    <div class="layui-field-box">
+                        <table class="layui-table" lay-skin="nob">
+                            <tbody>
+                                <tr>
+                                    <td>http://localhost/</td>
+                                    <td>
+                                    <el-select v-model="form_2.module" placeholder="请选择模块">
+                                        <el-option v-for="v in node" :key="v.id" :label="v.module" :value="v.id"  v-if='v.pid==0'></el-option>
+                                    </el-select>
+                                    </td>
+                                    <td><el-input v-model="form_2.controller" placeholder="请输入控制器名称"></el-input></td>
+                                    <td><el-input v-model="form_2.notes" placeholder="请输入注释"></el-input></td>
+                                    <td><el-button type="primary" @click='fun_2'>立即添加</el-button></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="content-1 an-style1">
+                <fieldset class="layui-elem-field">
+                    <legend>添加方法 - Function</legend>
+                    <div class="layui-field-box">
+                        <el-form :model='form_3' ref="form_3">
+                            <table class="layui-table" lay-skin="nob">
+                                <tbody>
+                                    <tr>
+                                        <td>http://localhost/</td>
+                                        <td>
+                                            <el-select v-model="form_3.module" placeholder="请选择模块">
+                                                <el-option v-for="v in node" :key="v.id" :label="v.module" :value="v.id" v-if='v.pid==0'></el-option>
+                                            </el-select>
+                                        </td>
+                                        <td>
+                                            <el-select v-model="form_3.controller" placeholder="请选择控制器" prop='controller'>
+                                                <el-option v-for="v in node" :key="v.id" :label="v.controller" :value="v.id" v-if='v.pid==form_3.module'></el-option>
+                                            </el-select>
+                                        </td>
+                                        <td><el-input v-model="form_3.fun" placeholder="请输入方法名称"></el-input></td>
+                                        <td><el-input v-model="form_3.notes" placeholder="请输入注释"></el-input></td>
+                                        <td><el-button type="primary" @click='fun_3'>立即添加</el-button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </el-form>
+                    </div>
+                </fieldset>
+            </div>
+        </el-col>
+        <el-col :lg="8" :md="6">
+            <div class="content-1 an-style1">
+                <el-input placeholder="权限关键字搜索" v-model="filterText"></el-input>
+            </div>
+            <div class="content-2 an-style1">
+                <el-tree :data="nodeArr" node-key="id" default-expand-all :expand-on-click-node="false" :filter-node-method="filterNode"
+                    :props="defaultProps" ref="tree">
+                    <span class="custom-tree-node" slot-scope="{ node, data }">
+                        <span>{{ node.label }}</span>
+                        <span><el-button type="text" size="mini" @click="() => remove(node, data)">删除</el-button></span>
+                    </span>
+                </el-tree>
+            </div>
+        </el-col>
+    </el-row>
+</div>
+{/block} 
+{block name="js"}
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            nodeArr: [],
+            filterText: '',
+            defaultProps: {
+                children: 'children',
+                label: 'label'
+            },
+            node: '',//所有后台返回
+            //储存添加模块数据
+            form_1: {
+                module: '',
+                notes: '',
+                type: '1',
+                pid: '0'
+            },
+            //储存添加控制器数据
+            form_2: {
+                module: '',
+                controller: '',
+                notes: '',
+                type: '2',
+                pid: '0'
+            },
+            //储存添加方法数据
+            form_3: {
+                module: '',
+                controller: '',
+                fun: '',
+                notes: '',
+                type: '3',
+                pid: '0'
+            }
+        },
+        created() {
+            var anThis = this;
+            //获取所有节点
+            $.post("{:url('admin/rbac/ajax_node')}", function (msg) {
+                anThis.nodeArr = anThis.dg(msg);
+                anThis.node = msg;
+            })
+        },
+        methods: {
+            //模块提交
+            fun_1() {
+                var anThis = this;
+                if(anThis.form_1.module!=''&& anThis.form_1.notes !=''){
+                    $.post("{:url('admin/rbac/ajax_add_node')}", anThis.form_1, function (msg) {
+                        if (msg.code == 200) {
+                            anThis.form_1 = { module: '', notes: '', type: '1', pid: '0' };//重置表单
+                            $.post("{:url('admin/rbac/ajax_node')}", function (res) {
+                                anThis.node = res;
+                                anThis.nodeArr = anThis.dg(res);
+                            })
+                            anThis.$notify({
+                                title: '成功',
+                                message: msg.tips,
+                                type: 'success'
+                            });
+                        } else {
+                            anThis.$notify.error({
+                                title: '失败',
+                                message: msg.tips,
+                            });
+                        }
+                    });
+                }else if(anThis.form_1.module == ''){
+                    anThis.$notify.error({
+                        title: '失败',
+                        message: '模块名称不能为空',
+                    });
+                }else{
+                    anThis.$notify.error({
+                        title: '失败',
+                        message: '注释不能为空',
+                    });
+                }
+            },
+            //控制器提交
+            fun_2() {
+                var anThis = this;
+
+                if(anThis.form_2.module==''){
+                    anThis.$notify.error({
+                        title: '失败',
+                        message: '模块名称不能为空',
+                    });
+                }else if(anThis.form_2.controller==''){
+                    anThis.$notify.error({
+                        title: '失败',
+                        message: '控制器名称不能为空',
+                    });
+                }else if(anThis.form_2.notes==''){
+                    anThis.$notify.error({
+                        title: '失败',
+                        message: '注释不能为空',
+                    });
+                }else{
+                    //将ID存储，把名称赋值进去
+                    anThis.form_2.pid = anThis.form_2.module;
+                    for (var i = 0; i <= anThis.node.length; i++) {
+                        if (anThis.node[i].id == anThis.form_2.module) {
+                            anThis.form_2.module = anThis.node[i].module;
+                            break;
+                        }
+                    }
+
+                    $.post("{:url('admin/rbac/ajax_add_node')}", anThis.form_2, function (msg) {
+                        if (msg.code == 200) {
+                            anThis.form_2 = { module: '', controller: '', notes: '', type: '2', pid: '0' };//重置表单
+                            $.post("{:url('admin/rbac/ajax_node')}", function (res) {
+                                anThis.node = res;
+                                anThis.nodeArr = anThis.dg(res);
+                            })
+                            anThis.$notify({
+                                title: '成功',
+                                message: msg.tips,
+                                type: 'success'
+                            });
+                        } else {
+                            anThis.$notify.error({
+                                title: '失败',
+                                message: msg.tips,
+                            });
+                        }
+                    });
+                }
+
+
+            },
+            //方法提交
+            fun_3() {
+                var anThis = this;
+                if (anThis.form_3.module=='') {
+                    anThis.$notify.error({
+                        title: '失败',
+                        message: '模块名称不能为空',
+                    });
+                } else if (anThis.form_3.controller =='') {
+                    anThis.$notify.error({
+                        title: '失败',
+                        message: '控制器名称不能为空',
+                    });
+                } else if (anThis.form_3.fun=='') {
+                    anThis.$notify.error({
+                        title: '失败',
+                        message: '方法名称不能为空',
+                    });
+                } else if (anThis.form_3.notes=='') {
+                    anThis.$notify.error({
+                        title: '失败',
+                        message: '注释不能为空',
+                    });
+                } else {
+                    for (var i = 0; i <= anThis.node.length; i++) {
+                        if (anThis.node[i].id == anThis.form_3.module) {
+                            anThis.form_3.module = anThis.node[i].module;
+                            break;
+                        }
+                    }
+
+                    anThis.form_3.pid = anThis.form_3.controller;
+                    for (var j = 0; j <= anThis.node.length; j++) {
+                        if (anThis.node[j].id == anThis.form_3.controller) {
+                            anThis.form_3.controller = anThis.node[j].controller;
+                            break;
+                        }
+                    }
+
+                    $.post("{:url('admin/rbac/ajax_add_node')}", anThis.form_3, function (msg) {
+                        if (msg.code == 200) {
+                            anThis.form_3 = { module: '', controller: '', fun: '', notes: '', type: '3', pid: '0' };//重置表单
+                            $.post("{:url('admin/rbac/ajax_node')}", function (res) {
+                                anThis.node = res;
+                                anThis.nodeArr = anThis.dg(res);
+                            })
+                            anThis.$notify({
+                                title: '成功',
+                                message: msg.tips,
+                                type: 'success'
+                            });
+                        } else {
+                            anThis.$notify.error({
+                                title: '失败',
+                                message: msg.tips,
+                            });
+                        }
+                    });
+                }
+            },
+            //递归
+            dg(msg,pid=0){
+                var node = [];
+                for (var i = 0; i < msg.length; i++) {
+                    if (msg[i].pid == pid) {
+                        var arr = {
+                            id: msg[i].id,
+                            label: msg[i].notes,
+                            children: this.dg(msg, msg[i]['id'])//调用自身
+                        }
+                        node.push(arr)
+                    }
+                }
+                return node;
+            },
+            //搜索节点
+            filterNode(value, data) {
+                if (!value) return true;
+                return data.label.indexOf(value) !== -1;
+            },
+            //删除节点
+            remove(node, data) {
+                var anThis = this;
+                parent.layer.confirm('确定删除'+ data.label+'节点？', {
+                    btn: ['确定', '取消'], //按钮
+                    title: '系统提示',//标题
+                    closeBtn: 0,//不显示关闭按钮
+                }, function () {
+                    parent.layer.closeAll();
+                    $.post("{:url('admin/rbac/ajax_del_node')}", { node_id: data.id }, function (msg) {
+                        if (msg.code == 200) {
+                            //获取所有角色
+                            $.post("{:url('admin/rbac/ajax_node')}", function (res) {
+                                anThis.nodeArr = anThis.dg(res);
+                            })
+                            anThis.$notify({
+                                title: '成功',
+                                message: msg.tips,
+                                type: 'success'
+                            });
+                        } else {
+                            anThis.$notify.error({
+                                title: '失败',
+                                message: msg.tips,
+                            });
+                        }
+                    });
+
+                    // const parent = node.parent;
+                    // const children = parent.data.children || parent.data;
+                    // const index = children.findIndex(d => d.id === data.id);
+                    // children.splice(index, 1);
+                });
+                
+
+            },
+        },
+        watch: {
+            filterText(val) {
+                this.$refs.tree.filter(val);
+            }
+        },
+    })
+
+    
+</script> 
+{/block}

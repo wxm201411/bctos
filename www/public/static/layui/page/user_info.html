@@ -1,0 +1,215 @@
+{extend name="other/public"}
+{block name="css"}
+<style>
+.content-1{margin-bottom: 10px;}
+.content-1 .cover-wrap{display:none;position:fixed;left:0;top:0;width:100%;height:100%;background: rgba(0, 0, 0, 0.4);z-index: 10000000;text-align:center;}
+.content-1 #file{cursor:pointer;opacity:0;filter:alpha(opacity=0);width:100%;height:100%;position:absolute;top:0;left:0;}
+.content-1 .up-img-but{width:200px;height:32px;background-color:#409EFF;color: #FFFFFF;font-size: 14px;text-align:center;line-height:32px;outline:none;position: relative;left:50%;margin-left: -100px;}
+.content-1 #view{width:200px;height:200px;background: #f2f2f2;margin: 0 auto;}
+.content-1 .PhotoClip{width:80%;height:80%;background-color:#FFFFFF;overflow: hidden;border-radius:4px;position: absolute;left:10%;top:10%;}
+.content-1 #clipArea{margin:5px;height:83%;}
+.content-1 .layui-field-box{padding: 20px;}
+.content-2 .layui-field-box{padding: 20px;}
+.layui-form-label {width: 100px;}
+</style>
+{/block}
+
+{block name="content"}
+<div class="an-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;">后台</a>
+        <a class='title'><cite>信息设置</cite></a>
+    </span>
+    <div style='float:right' class='header-but'>
+        <button class="layui-btn layui-btn-sm but-1"><i class="layui-icon">&#xe669;</i> 刷新页面 </button>
+    </div>
+</div>
+<div class="content">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md5">
+            <div class="content-1 an-style1">
+                <fieldset class="layui-elem-field">
+                    <legend>更换头像 - IMG</legend>
+                    <div class="layui-field-box">
+                        <div class="cover-wrap">
+                            <div class="PhotoClip">
+                                <div id="clipArea"></div>
+                                <div class="" style="height:56px;line-height:36px;text-align: center;padding-top:8px;">
+                                    <button id="clipBtn" class="layui-btn layui-btn-normal" type='button'>保存封面</button>
+                                    <span>滚动鼠标滑轮可以缩放图片</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="view"></div>
+                        <div class="up-img-but">点击更换头像<input type="file" id="file"></div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="content-1 an-style1">
+                <fieldset class="layui-elem-field">
+                    <legend>更改密码 - Pass</legend>
+                    <div class="layui-field-box">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item"><input type="password" name="pass" placeholder="请输入原密码" autocomplete="off" class="layui-input"></div>
+                            <div class="layui-form-item"><input type="password" name="newPass" placeholder="请输入新密码" autocomplete="off" class="layui-input"></div>
+                            <div class="layui-form-item"><input type="password" name="confirmPass" placeholder="请再次输入新密码" autocomplete="off" class="layui-input"></div>
+                            <div class="layui-form-item">
+                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formPass">立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="layui-col-md7">
+            <div class="content-2 an-style1">
+                <fieldset class="layui-elem-field">
+                    <legend>更改信息 - Info</legend>
+                    <div class="layui-field-box">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <input type="text" name="name" placeholder="请输入昵称" autocomplete="off" class="layui-input user-name" value="{$myinfo['nickname']}">
+                            </div>
+                            <div class="layui-form-item">
+                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formInfo" type='button'>立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script src="__STATIC__/layui/js/photoClip/all.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var header_img = "{$myinfo['headimgurl']}";
+    console.log()
+    if (header_img == null || header_img == ''|| header_img==undefined) {
+        $("#view").css({ 'background': "url(__STATIC__/admin/img/head_img.jpg)", 'background-size': '100%' });
+    } else {
+        $("#view").css({ 'background': "url(http://omdlu1w65.bkt.clouddn.com/" + header_img + ")", 'background-size': '100%' });
+    }
+
+    //上传封面
+    var baseImg; //base64图片编码
+    var token;
+    var clipArea = new bjj.PhotoClip("#clipArea", {
+        size: [320, 320],// 截取框的宽和高组成的数组。默认值为[260,260]
+        outputSize: [320, 320], // 输出图像的宽和高组成的数组。默认值为[0,0]，表示输出图像原始大小
+        //outputType: "jpg", // 指定输出图片的类型，可选 "jpg" 和 "png" 两种种类型，默认为 "jpg"
+        file: "#file", // 上传图片的<input type="file">控件的选择器或者DOM对象
+        view: "#view", // 显示截取后图像的容器的选择器或者DOM对象
+        ok: "#clipBtn", // 确认截图按钮的选择器或者DOM对象
+        outputQuality: .6, //输出质量，取值 0 - 1，默认为0.8
+        loadStart: function () {
+            // 开始加载的回调函数。this指向 fileReader 对象，并将正在加载的 file 对象作为参数传入
+            $('.cover-wrap').fadeIn();
+            layer.load(2);
+            // console.log("照片读取中");
+        },
+        loadComplete: function () {
+            // 加载完成的回调函数。this指向图片对象，并将图片地址作为参数传入
+            // console.log("照片读取完成");
+            layer.closeAll('loading');
+        },
+        //loadError: function(event) {}, // 加载失败的回调函数。this指向 fileReader 对象，并将错误事件的 event 对象作为参数传入
+        clipFinish: function (dataURL) {
+            // 裁剪完成的回调函数。this指向图片对象，会将裁剪出的图像数据DataURL作为参数传入
+            $('.cover-wrap').fadeOut();
+            $('#view').css('background-size', '100% 100%');
+            baseImg = dataURL.substring(23);//处理base64图片编码
+            //上传到七牛云------------------------------------开始
+            $.ajaxSettings.async = false;//ajax同步
+            //ajax从后台七牛云获取token
+            $.post("{:url('admin/tools/getQiniuToken')}?name=test", function (msg) {
+                console.log(msg)
+                token = msg.data;
+            })
+            var file_name = $.base64.encode('head' + Date.parse(new Date()) + getCode());//文件名称进行base64编码
+            var addr = [
+                'upload.qiniu.com',         // 华东
+                'upload-z1.qiniu.com',      // 华北
+                'upload-z2.qiniu.com',      // 华南
+                'upload-na0.qiniu.com',     // 北美
+            ];
+            $.ajax({
+                url: 'http://' + addr[2] + '/putb64/-1/key/' + file_name,
+                type: 'POST',
+                beforeSend(request) {
+                    request.setRequestHeader('Content-Type', 'application/octet-stream')
+                    request.setRequestHeader('Authorization', 'UpToken ' + token) // token服务端请求
+                },
+                data: baseImg,
+                timeout: 1000,
+                success: function (res) {
+                    console.log(res)
+                    //图片名称入库
+                    $.post("{:url('admin/tools/ajax_up_head_img')}", { 'head_img': res.key }, function (msg) {
+                        $(".layui-nav-img", parent.document).attr('src','http://omdlu1w65.bkt.clouddn.com/'+res.key)
+                        parent.layer.msg(msg.tips);
+                    })
+                }
+            })
+            //上传到七牛云------------------------------------结束 
+        }
+    });
+
+    layui.use('form', function () {
+        var form = layui.form;
+        //更改密码
+        form.on('submit(formPass)', function (data) {
+            if(data.field.pass==''){
+                parent.layer.msg('请输入原密码');
+            }else if(data.field.newPass == ''){
+                parent.layer.msg('请输入新密码');
+            }else if(data.field.confirmPass == ''){
+                parent.layer.msg('请输入确认密码');
+            }else if(data.field.confirmPass != data.field.newPass){
+                parent.layer.msg('两次密码不一致');
+            }else if(!regCode.test(data.field.confirmPass) || !regCode.test(data.field.newPass)){
+                parent.layer.msg('密码不能包含特殊字符');
+            }else{
+                $.post("{:url('admin/tools/ajax_up_pass')}", data.field, function (msg) {
+                    if(msg.code==200){
+                        parent.window.location.href = "{:url('admin/tools/out_admin')}?pass=2"
+                    }else{
+                        parent.layer.msg(msg.tips);
+                    }
+                    
+                })
+            }
+            return false;
+        });
+
+        //更改信息
+        var userName = $(".user-name").val();
+        form.on('submit(formInfo)', function (data) {
+            if(data.field.name==''){
+                parent.layer.msg('用户名不能为空');
+            }else if(userName== data.field.name){
+                parent.layer.msg('请输入新的用户名');
+            }else{
+                $.post("{:url('admin/tools/ajax_up_info')}", data.field, function (msg) {
+                    if(msg.code==200){
+                        parent.layer.msg(msg.tips);
+                        $(".user-name", parent.document).html(data.field.name)
+                        setInterval(function(){
+                            window.location.href = "{:url('admin/page/user_info')}";
+                        },1000)
+                        return false;
+                    }else{
+                        parent.layer.msg(msg.tips);
+                        return false;
+                    }
+                    
+                })
+            }
+            return false;
+        });
+    });
+</script>
+{/block}

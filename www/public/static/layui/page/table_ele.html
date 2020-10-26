@@ -1,0 +1,76 @@
+{extend name="other/public"}
+{block name="css"}
+<style>
+.content-1{margin-bottom: 10px;}
+</style>
+<!-- <link  rel="stylesheet/less" type="text/css" href="__STATIC__/admin/css/admin.less"> -->
+{/block}
+{block name="content"}
+<div class="an-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;">后台</a>
+        <a class='title'><cite>Element表格</cite></a>
+    </span>
+    <div style='float:right' class='header-but'>
+        <button class="layui-btn layui-btn-sm but-1"><i class="layui-icon">&#xe669;</i> 刷新页面 </button>
+    </div>
+</div>
+<div class="content">
+    <!-- <div class="content-2 an-style1">
+        <div id="header">
+            <div class="box">
+                <div class="box-1"></div>
+                <div class="box-2"></div>
+            </div>
+        </div>
+        <div class="less-box-1"></div>
+        <div class="less-box-2"></div>
+        <div class="less-box-3"></div>
+    </div> -->
+    <div class="content-1 an-style1">
+        <el-table :data="tableData" style="width: 100%">
+            <el-table-column prop="date" label="日期" width="180">
+            </el-table-column>
+            <el-table-column prop="name" label="姓名" width="180">
+            </el-table-column>
+            <el-table-column prop="address" label="地址">
+            </el-table-column>
+        </el-table>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script src="__STATIC__/layui/js/less/less.min.js" type="text/javascript"></script>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            tableData: [{
+                date: '2016-05-02',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+            }, {
+                date: '2016-05-04',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1517 弄'
+            }, {
+                date: '2016-05-01',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1519 弄'
+            }, {
+                date: '2016-05-03',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1516 弄'
+            }]
+        },
+        //页面载入，ajax获取数据
+        created() {
+
+        },
+        methods:{
+
+        }
+    })
+
+</script>
+{/block}
