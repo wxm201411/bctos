@@ -1,8 +1,8 @@
 #!/bin/bash
 LANG=en_US.UTF-8
 
-MYSQL_PWD=${1:-'3306'}
-if [ !$MYSQL_PWD ];then
+MYSQL_PWD=${1:-''}
+if [ ! $MYSQL_PWD ];then
 	MYSQL_PWD=$(head /dev/urandom |cksum |md5sum |cut -c 1-9)
 fi
 NGINX_PORT=${2:-'666'}
