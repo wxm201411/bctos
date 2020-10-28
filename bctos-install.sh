@@ -9,11 +9,6 @@ NGINX_PORT=${2:-'666'}
 MYSQL_PORT=${3:-'3306'}
 PHP_PORT=${4:-'9000'}
 
-if [ ! -d "/data" ]; then
-	mkdir /data
-fi	
-cd /data
-
 echo "
 +----------------------------------------------------------------------
 | Bctos FOR CentOS/Ubuntu/Debian
@@ -68,6 +63,23 @@ is64bit=$(getconf LONG_BIT)
 if [ "${is64bit}" != '64' ];then
 	Red_Error "抱歉, 系统不支持32位系统, 请使用64位系统或安装小韦云链!";
 fi
+check=$(lsof -i :$NGINX_PORT | awk 'END {print $1}')
+if [ $check ]; then
+	Red_Error "nginx的端口号： $NGINX_PORT 已被占用，占用的服务是：$check，请关闭此服务或换端口再试";
+fi
+check=$(lsof -i :$MYSQL_PORT | awk 'END {print $1}')
+if [ $check ]; then
+	Red_Error "mysql的端口号： $MYSQL_PORT 已被占用，占用的服务是：$check，请关闭此服务或换端口再试";
+fi
+check=$(lsof -i :$PHP_PORT | awk 'END {print $1}')
+if [ $check ]; then
+	Red_Error "php的端口号： $(PHP_PORT) 已被占用，占用的服务是：$(check)，请关闭此服务或换端口再试";
+fi
+
+if [ ! -d "/data" ]; then
+	mkdir /data
+fi	
+cd /data
 
 which -v
 if [ $? -ne 0 ]; then

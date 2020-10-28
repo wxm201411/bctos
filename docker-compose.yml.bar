@@ -41,7 +41,7 @@ services:
          - 2120:2120
          - 2121:2121
       volumes:
-         - ./bctos:/var/www/html
+         - ./wwwroot/bctos.cn:/var/www/html
    socket: 
       build: 
          context: php
@@ -52,7 +52,7 @@ services:
       ports: 
          - 2100:2100
       volumes:
-         - ./bctos:/var/www/html         
+         - ./wwwroot/bctos.cn:/var/www/html         
 
    nginx: 
       image: nginx:alpine
