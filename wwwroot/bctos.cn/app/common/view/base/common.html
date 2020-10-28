@@ -21,12 +21,7 @@ empty( $forward ) && cookie('__forward__', $_SERVER['REQUEST_URI']);
         <!-- 左侧栏用户信息 -->
         <div class="user-info">
 
-
-            <a href="#" class="user-info-head">
-                <img class="admin_head url" src="{:SITE_URL}/static/base/images/admin.jpg"/>
-            </a>
-
-            <div class="user-info-name">{$myinfo.nickname|getShort=4}<i class="pl_5 fa fa-sort-down"></i>
+            <div class="user-info-name">{$myinfo.nickname}<i class="pl_5 fa fa-sort-down"></i>
                 <div class="user-info-dropdown">
                     <a href="{:U('home/User/profile')}">修改密码</a>
                     <a href="{:U('home/User/logout')}">退出</a>

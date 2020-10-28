@@ -170,7 +170,8 @@ class Rules extends Admin
         $list = D('common/AuthRule')->getAll();
         foreach ($data as &$v) {
             foreach ($list as $k => $lv) {
-                if (strtolower($v['name']) == strtolower($lv['mod'])) {
+                $lv['mod'] = parse_name_lower(explode('/', $lv['name'])[0]);
+                if (strtolower($v['name']) == $lv['mod']) {
                     $v['auth'][] = $lv;
                     unset($list[$k]);
                 }
@@ -179,7 +180,7 @@ class Rules extends Admin
         $this->assign('data', $data);
         $tagInfo = M('auth_group')->where('id', $id)->find();
         $this->assign('tagInfo', $tagInfo);
-        $this->assign('rule_arr', explode(',', $tagInfo['rule']));
+        $this->assign('rule_arr', explode(',', $tagInfo['rules']));
         return $this->fetch();
     }
 

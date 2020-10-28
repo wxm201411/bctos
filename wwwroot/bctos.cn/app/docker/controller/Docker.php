@@ -27,7 +27,6 @@ class Docker extends WebBase
     function lists()
     {
         $model = $this->getModel();
-
         $dataTable = D('common/Models')->getFileInfo($model);
         $this->assign('add_button', $dataTable->config['add_button']);
         $this->assign('del_button', $dataTable->config['del_button']);

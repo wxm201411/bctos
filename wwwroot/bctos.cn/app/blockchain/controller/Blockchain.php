@@ -9,6 +9,7 @@ class Blockchain extends WebBase
 {
     function lists()
     {
+        ssh2('bash -l ' . SITE_PATH . '/scripts/startSocket.sh');
         $this->assign('page_tips', '网络启动后会生成两个peer节点和一个orderer节点，并且自动应用通道，通道名称可在上面的“功能配置”中设置');
 
         return $this->fetch();

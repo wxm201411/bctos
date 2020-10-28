@@ -221,7 +221,9 @@ sql;
         if ($file === false) {
             return false;
         }
-
+        if (strpos($file, 'TitleTable')) {
+            file_log($file, 'files');
+        }
         require_once $file;
 
         $name = parse_name($model['name'], 1);
@@ -388,6 +390,9 @@ str;
         // dump ( $content );
         // exit ();
         file_put_contents($dir . $name . 'Table.php', $content);
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate($dir . $name . 'Table.php');
+        }
         if (parse_name_lower($model['addon']) != parse_name_lower($config['addon'])) {
             // 删除旧文件
             $file = $this->requireFile($model);
@@ -546,7 +551,7 @@ str;
             $change .= "->update();";
         } else {
             $change .= "->create();";
-            $sql = 'CREATE TABLE IF NOT EXISTS `{$this->table_name}` (' . PHP_EOL;
+            $sql = "CREATE TABLE IF NOT EXISTS `{$this->table_name}` (" . PHP_EOL;
             if ($model_info['need_pk']) {
                 $sql .= "`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键' ,
                 `{$field['name']}`  {$field['field']} {$default} COMMENT '{$field['title']}' ,

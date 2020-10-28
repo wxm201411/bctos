@@ -29,7 +29,6 @@ class Index extends Home
         foreach ($list as $vo) {
             $data[$vo['block_id']] = json_decode($vo['content'], true);
         }
-        //dump($data);
         $this->assign($data);
     }
 
@@ -294,7 +293,7 @@ class Index extends Home
                 'wpid' => $GLOBALS ['myinfo'] ['wpid']
             ]);
         } else {
-            $url = U('weixin/publics/lists');
+            $url = U('admin/apps/index');
         }
         return redirect($url);
 

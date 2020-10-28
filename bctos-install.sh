@@ -201,20 +201,20 @@ Get_Ip_Address
 result="================================================================== \
 \033[32mCongratulations! Installed successfully!\033[0m \
 ================================================================== \
-echo  \"外网面板地址: http://${getIpAddress}:666 \
-echo  \"内网面板地址: http://${LOCAL_IP}:666 \
+echo  \"外网面板地址: http://${getIpAddress}:${NGINX_PORT} \
+echo  \"内网面板地址: http://${LOCAL_IP}:${NGINX_PORT} \
 username: admin \
 password: 123 \
 mysql连接信息: \
-${getIpAddress}:3309 \
+${getIpAddress}:${MYSQL_PORT} \
 username: root \
 password: ${MYSQL_PWD} \
 代码在本机目录：/www/bctos-install/www \
 代码在容器目录：/var/www/html \
 账号信息保存在：$(pwd)/account.log
 \033[33mIf you cannot access the panel,\033[0m \
-\033[33mrelease the following panel port [666] in the security group\033[0m \
-\033[33m若无法访问面板，请检查防火墙/安全组是否有放行面板[666]端口\033[0m \
+\033[33mrelease the following panel port [${NGINX_PORT}] in the security group\033[0m \
+\033[33m若无法访问面板，请检查防火墙/安全组是否有放行面板[${NGINX_PORT}]端口\033[0m \
 =================================================================="
 echo -e $result > account.log
 echo $result

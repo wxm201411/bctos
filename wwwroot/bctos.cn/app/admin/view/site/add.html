@@ -1,0 +1,205 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .form-group select {
+        margin-left: 0;
+    }
+
+    .col-lg-8 .uploadrow2 {
+        margin-left: -15px;
+    }
+
+    .layui-form-label {
+        width: auto;
+    }
+
+    .layui-input, .layui-form-select {
+        max-width: 500px;
+    }
+
+    .input-samll {
+        max-width: 200px;
+    }
+
+    .upload_file {
+        padding-left: 0;
+    }
+
+    .layui-form {
+        display: none;
+    }
+</style>
+<div class="page_message">
+    <section id="contents"> {include file="common@base/_nav" /}
+        <div class="tab-content">
+            <!-- 表单 -->
+            {php} isset($post_url) || $post_url = U('add?model='.$model['id'], $get_param);{/php}
+            <form id="form" action="{$post_url}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+                <style>
+
+                </style>
+                <div class="layui-form-item" show-set="[]">
+                    <label class="layui-form-label">
+                        <span class="need_flag">*</span> 域名 </label>
+                    <div class="layui-input-block">
+                        <textarea name="domain" class="layui-textarea" placeholder="每个域名一行，默认为80端口&#10;泛解析添加如：*.domain.com&#10;如需加端口格式为：www.bctos.cn:8080"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item" show-set="[]">
+                    <label class="layui-form-label">备注 </label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="remark" value="" placeholder="网站备注">
+                    </div>
+                </div>
+                <div class="layui-form-item" show-set="[]">
+                    <label class="layui-form-label">网站目录 </label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="path" value="/www/wwwroot/">
+                    </div>
+                </div>
+                <div class="layui-form-item" show-set="[]">
+                    <label class="layui-form-label">数据库 </label>
+                    <div class="layui-input-block">
+                        <div class="layui-input-inline">
+                            <select name="database" lay-filter="database">
+                                <option value="not" selected="">不创建</option>
+                                <option value="mysql">MySql</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="db_set" lay-filter="db_set">
+                                <option value="utf8mb4" selected="">utf8mb4</option>
+                                <option value="utf8">utf8</option>
+                                <option value="gbk">gbk</option>
+                                <option value="big5">big5</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" show-set="{&quot;database&quot;:[&quot;mysql&quot;]}">
+                    <label class="layui-form-label">数据库设置 </label>
+                    <div class="layui-input-block">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-inline" style="width: 100px"><input type="text" class="layui-input" name="db_user" value=""></div>
+                        <div class="layui-form-label">密码</div>
+                        <div class="layui-input-inline" style="width: 150px"><input type="text" class="layui-input" name="db_passwd" value=""></div>
+                    </div>
+                </div>
+                <div class="layui-form-item" show-set="[]">
+                    <label class="layui-form-label">PHP版本 </label>
+                    <div class="layui-input-block">
+                        <div class="layui-input-inline">
+                            <select name="php_version" lay-filter="php_version">
+                                <option value="php-72" selected="">PHP7.2</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="">
+                    <div class="offset-sm-2 col-sm-8">
+                        <button class="btn btn-primary submit-btn  ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </section>
+</div>
+<link href="__STATIC__/datetimepicker/css/datetimepicker.css?v={:SITE_VERSION}" rel="stylesheet" type="text/css">
+<link href="__STATIC__/datetimepicker/css/dropdown.css?v={:SITE_VERSION}" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v={:SITE_VERSION}" charset="UTF-8"></script>
+<script type="text/javascript">
+    $(function () {
+        var old_val = ''
+        $('.layui-textarea').bind('input propertychange', function () {
+            var val = $(this).val()
+            var arr = val.split("\n");
+            arr = arr[0].split(":");
+            if ('/www/wwwroot/' + old_val == $("input[name='path']").val()) {
+                $("input[name='path']").val('/www/wwwroot/' + arr[0])
+                old_val = arr[0]
+            }
+        });
+        change_form();
+        $('.layui-form').show();
+        layui.form.on('select', function (data) {
+            change_form();
+        });
+        layui.form.on('checkbox', function (data) {
+            change_form();
+        });
+        layui.form.on('switch', function (data) {
+            change_form();
+        });
+        layui.form.on('radio', function (data) {
+            change_form();
+        });
+    });
+
+    function in_array(search, array) {
+        for (var i in array) {
+            if (array[i] == search) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function intersection(arr1, arr2) {
+        for (var i = 0; i < arr1.length; i++) {
+            for (var j = 0; j < arr2.length; j++) {
+                if (arr1[i] == arr2[j]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //控制动态字段的显示与隐藏
+    function change_form() {
+        var post = form.val("xw-form");
+        for (var p in post) {
+            var test = p.split("[");
+            if (test.length > 1) {
+                if (!post.hasOwnProperty(test[0])) {
+                    post[test[0]] = [post[p]];
+                } else {
+                    post[test[0]].push(post[p]);
+                }
+            }
+        }
+        $('.layui-form-item').each(function () {
+            var data = $(this).attr('show-set');
+
+            if (data != '[]') {
+                data = JSON.parse(data);
+                var check = true;
+                for (var n in data) {
+                    var val = post[n] == undefined ? 0 : post[n];
+                    if (typeof (val) == 'object') {
+                        //计算两个数组的交集
+                        var res = intersection(val, data[n]);
+                        if (!res) {
+                            check = false;
+                            break;
+                        }
+                    } else {
+                        if (!in_array(val, data[n])) {
+                            check = false;
+                            break;
+                        }
+                    }
+                }
+                if (!check) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            }
+        });
+    }
+</script>
+{/block}

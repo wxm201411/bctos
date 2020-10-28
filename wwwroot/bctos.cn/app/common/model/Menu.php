@@ -175,8 +175,11 @@ class Menu extends Base
         } else {
             $menus['core_side_menu'] = '';
         }
-        // dump($menus);
-        return $menus;
+        // dump($menus);exit;
+        $new_menu = $menus;
+        $new_menu['core_top_menu'] = $menus['core_side_menu'];
+        $new_menu['core_side_menu'] = $menus['core_top_menu'];
+        return $new_menu;
     }
 
     public function updateMenuData($data, $map)

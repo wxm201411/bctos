@@ -40,7 +40,6 @@ class Attribute extends Admin
             $list = $obj->fields;
         }
 
-
         foreach ($list as $k => &$vo) {
             $vo['show'] = '';
             if (isset($vo['show_set']) && !empty($vo['show_set'])) {
@@ -56,8 +55,7 @@ class Attribute extends Admin
                 }
             }
         }
-
-        $this->assign('_list', $list);
+        $this->assign('list_data', $list);
         $this->assign('field_lists', D('common/Models')->fieldData(null));
 
         return $this->fetch();
@@ -417,10 +415,10 @@ class Attribute extends Admin
             // dump ( $newList );
             // exit ();
             $dao->buildFile($model, $list, $list_grid);
-            $url = U('index', ['model_id' => $model_id]);
+            $url = U('index', ['model_id' => $model_id, 't' => NOW_TIME]);
         } else {
             $dao->buildConfigFile($app_name, $list, $old);
-            $url = U('index', ['app_name' => $app_name]);
+            $url = U('index', ['app_name' => $app_name, 't' => NOW_TIME]);
         }
         return $this->success('保存成功', $url);
     }

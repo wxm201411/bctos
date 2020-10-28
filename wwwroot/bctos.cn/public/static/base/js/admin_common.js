@@ -1,35 +1,35 @@
 //dom加载完成后执行的js
 ;$(function () {
     //实现列表中开关按钮更新操作
-    layui.use(['layer','form'], function(){
+    layui.use(['layer', 'form'], function () {
         var layer = layui.layer;
         var form = layui.form;
-        form.on('switch(switch-ajax-update)', function(data){
+        form.on('switch(switch-ajax-update)', function (data) {
             var url = data.elem.getAttribute('url')
-            var value = data.elem.checked ? 1:0
-            $.post(url,{value}, function (res) {
-                if(res.code==1){
+            var value = data.elem.checked ? 1 : 0
+            $.post(url, {value}, function (res) {
+                if (res.code == 1) {
                     layer.msg(res.msg)
                 }
             })
         });
-        form.on('select(switch-ajax-update)', function(data){
+        form.on('select(switch-ajax-update)', function (data) {
             var url = data.elem.getAttribute('url');
             var remark_url = data.elem.getAttribute('remark_url');
             var value = data.value
 
-            $.post(url,{value}, function (res) {
-                if(res.code==1){
+            $.post(url, {value}, function (res) {
+                if (res.code == 1) {
                     layer.msg(res.msg)
-                }else{
+                } else {
                     layer.prompt({
                         formType: 2,
                         title: '备注原因',
                         maxlength: 140, //可输入文本的最大长度，默认500
-                    }, function(value, index, elem){
+                    }, function (value, index, elem) {
                         layer.close(index);
-                        $.post(remark_url,{value}, function (res) {
-                            if(res.code==1){
+                        $.post(remark_url, {value}, function (res) {
+                            if (res.code == 1) {
                                 layer.msg(res.msg)
                             }
                         })
@@ -250,9 +250,9 @@
     });
     //abtn-return 返回
     $('.btn-return').click(function () {
-        if($(this).attr('url')){
+        if ($(this).attr('url')) {
             location.href = $(this).attr('url')
-        }else{
+        } else {
             history.back(-1);
         }
     });
@@ -428,8 +428,7 @@
     });
 
 
-
-/* 上传图片预览弹出层 */
+    /* 上传图片预览弹出层 */
 
     $(window).resize(function () {
         var winW = $(window).width();
@@ -524,43 +523,51 @@ function showTab() {
         $("." + target).addClass("in");
     }).filter("[data-tab=tab" + window.location.hash.substr(1) + "]").click();
 }
+
 /* 设置表单的值 */
-function setFormValue (name, value){
-    var first = name.substr(0,1), input, i = 0, val;
-    if(value === "") return;
-    if("#" === first || "." === first){
+function setFormValue(name, value) {
+    var first = name.substr(0, 1), input, i = 0, val;
+    if (value === "") return;
+    if ("#" === first || "." === first) {
         input = $(name);
     } else {
         input = $("[name='" + name + "']");
     }
 
-    if(input.eq(0).is(":radio")) { //单选按钮
-        input.filter("[value='" + value + "']").each(function(){this.checked = true});
-    } else if(input.eq(0).is(":checkbox")) { //复选框
-        if(!$.isArray(value)){
+    if (input.eq(0).is(":radio")) { //单选按钮
+        input.filter("[value='" + value + "']").each(function () {
+            this.checked = true
+        });
+    } else if (input.eq(0).is(":checkbox")) { //复选框
+        if (!$.isArray(value)) {
             val = new Array();
             val[0] = value;
         } else {
             val = value;
         }
-        for(i = 0, len = val.length; i < len; i++){
-            input.filter("[value='" + val[i] + "']").each(function(){this.checked = true});
+        for (i = 0, len = val.length; i < len; i++) {
+            input.filter("[value='" + val[i] + "']").each(function () {
+                this.checked = true
+            });
         }
     } else {  //其他表单选项直接设置值
         input.val(value);
     }
 }
-function urlMerge(url){
-	if( url.indexOf('?')>0 ){
-		url += '&';
-	}else{
-		url += '?';
-	}
-	return url;	
+
+function urlMerge(url) {
+    if (url.indexOf('?') > 0) {
+        url += '&';
+    } else {
+        url += '?';
+    }
+    return url;
 }
-function only_body(url){
-    return urlMerge(url)+'only_body=1'
+
+function only_body(url) {
+    return urlMerge(url) + 'only_body=1'
 }
+
 $(function () {
     var $window = $(window), $subnav = $("#subnav"), url;
     $window.resize(function () {
@@ -657,9 +664,9 @@ function parseSecondToMinAndSecond2(value) {
 
 //上传图片组件
 function initUploadImg(opts) {
-	// $('.del_img_icon').each(function(index, obj) {
-	// 	console.log('del_img_icondel_img_icon')
-	// });
+    // $('.del_img_icon').each(function(index, obj) {
+    // 	console.log('del_img_icondel_img_icon')
+    // });
     $(".upload-img-view").dragsort({
         itemSelector: ".upload-pre-item22",
         dragSelector: ".upload-pre-item22",
@@ -698,10 +705,11 @@ function uploadImgDialog(obj, opts) {
     $uploadHtml = '<div><div class="upload_dialog" style="height:520px;overflow-y:hidden;overflow-x:hidden;"><div><iframe id="goodsIframe" name="goodsIframe" style="height:520px;width:100%; border:none" border="0" src="' + UPLOAD_DIALOG_URL + '/max/' + maxCount + '/field/' + field + '"></iframe></div></div></div>';
     $.Dialog.open("上传图片", {width: 800, height: 560}, $uploadHtml);
 }
+
 function selectIconDialog(obj, opts) {
     var field = $(obj).attr('rel');
     uploadObj = obj;
-    console.log(SELECT_ICON_URL + '/field/' + field )
+    console.log(SELECT_ICON_URL + '/field/' + field)
     $uploadHtml = '<div><div class="upload_dialog" style="height:520px;overflow-y:hidden;overflow-x:hidden;"><div>' +
         '<iframe id="iconIframe" name="iconIframe" style="height:520px;width:100%; border:none" border="0" src="' + SELECT_ICON_URL + '/field/' + field + '"></iframe></div></div></div>';
     $.Dialog.open("选择图标", {width: 775, height: 560}, $uploadHtml);
@@ -713,13 +721,13 @@ function initUploadFile(callback) {
         var name = $(obj).find('input[type="hidden"]').attr('name');
         var uploadFileExts = $(obj).find('input[type="hidden"]').attr('data-fileexts');
         var maxSize = $(obj).find('input[type="hidden"]').attr('data-maxsize');
-        if(uploadFileExts!=''){
-        	UPLOAD_FILE+='/allow_file_ext/'+uploadFileExts;
+        if (uploadFileExts != '') {
+            UPLOAD_FILE += '/allow_file_ext/' + uploadFileExts;
         }
-        if(parseFloat(maxSize) > 0){
-        	UPLOAD_FILE+='/allow_file_maxsize/'+maxSize;
+        if (parseFloat(maxSize) > 0) {
+            UPLOAD_FILE += '/allow_file_maxsize/' + maxSize;
         }
-        
+
         var uploader = WebUploader.create({
 
             // 设置文件上传域的name
@@ -783,7 +791,7 @@ function initUploadFile(callback) {
 
 function onUploadFileSuccess(file, data, name) {
 //	var data = $.parseJSON(data);
-    if (data.code==0) {
+    if (data.code == 0) {
         $("input[name=" + name + "]").val(data.id);
         $("input[name=" + name + "]").parent().find('.upload-img-box').html(
             "<div class=\"upload-pre-file\"><span class=\"upload_icon_all\"></span>" + data.name + "</div>"
@@ -961,7 +969,7 @@ function simpleColorPicker(_this, callback) {
 
     /* 选择图文素材 */
     function openSelectAppMsg(dataUrl, callback, title) {
-        dataUrl = urlMerge(dataUrl)+'only_body=1&isRadio=1'
+        dataUrl = urlMerge(dataUrl) + 'only_body=1&isRadio=1'
         var $contentHtml = $('<div class="appmsg_dialog" style="padding:10px; max-height:560px;overflow-y:auto;overflow-x:hidden;">' +
             '<ul class="mt_10"><center><br/><br/><br/><img src="' + IMG_PATH + '/loading.gif"/></center></ul></div>');
         $.Dialog.open(title ? title : "选择图文素材", {width: 1000, height: 640}, $contentHtml);
@@ -985,8 +993,8 @@ function simpleColorPicker(_this, callback) {
     }
 
     /* 选择文本素材 */
-    function openSelectAppText(dataUrl, callback, title,count=1) {
-		dataUrl = urlMerge(dataUrl)+'only_body=1&isRadio=1'
+    function openSelectAppText(dataUrl, callback, title, count = 1) {
+        dataUrl = urlMerge(dataUrl) + 'only_body=1&isRadio=1'
         var $contentHtml = $('<div><div class="goods_dialog" style="padding:10px; height:530px;overflow-y:hidden;overflow-x:hidden;"><div class="mt_10"><iframe id="usersIframe" name="usersIframe" style="height:530px;width:100%; border:none" border="0" src="' + dataUrl + '"></iframe></div></div><div class="btn_bar"><a href="javascript:;" class="btn confirm_btn">确定</a>&nbsp;&nbsp;<a href="javascript:;" class="border-btn cancel_btn">取消</a></div></div>');
         $.Dialog.open(title ? title : "选择文本素材", {width: 1000, height: 640}, $contentHtml);
 
@@ -1016,7 +1024,7 @@ function simpleColorPicker(_this, callback) {
     function initCopyBtn(id) {
         $('#' + id).click(function () {
             var url = COPY_PAGE_URL;
-            url = urlMerge(url) + 'text='+encodeURIComponent($('#' + id).attr('data-clipboard-text'));
+            url = urlMerge(url) + 'text=' + encodeURIComponent($('#' + id).attr('data-clipboard-text'));
 
             console.log(url);
 
@@ -1103,10 +1111,10 @@ function simpleColorPicker(_this, callback) {
      *
      */
     function openSelectLists(dataUrl, count, title, callback, isIds) {
-		dataUrl = urlMerge(dataUrl) + 'only_body=1'
+        dataUrl = urlMerge(dataUrl) + 'only_body=1'
         if (count == 1) {
             dataUrl += '&isRadio=1';
-        } 		
+        }
         var $contentHtml = $('<div><div class="goods_dialog" style="padding:10px; height:530px;overflow-y:hidden;overflow-x:hidden;"><div class="mt_10"><iframe id="usersIframe" name="usersIframe" style="height:530px;width:100%; border:none" border="0" src="' + dataUrl + '"></iframe></div></div><div class="btn_bar"><a href="javascript:;" class="btn confirm_btn">确定</a>&nbsp;&nbsp;<a href="javascript:;" class="border-btn cancel_btn">取消</a></div></div>');
         $.Dialog.open(title, {width: 1000, height: 640}, $contentHtml);
 
@@ -1146,10 +1154,10 @@ function simpleColorPicker(_this, callback) {
     * count 0 表示无限制
     */
     function openSelectUsers(dataUrl, count, callback) {
-		dataUrl = urlMerge(dataUrl) + 'only_body=ajax'
+        dataUrl = urlMerge(dataUrl) + 'only_body=ajax'
         if (count == 1) {
             dataUrl += '&isRadio=1';
-        } 
+        }
         var $contentHtml = $('<div><div class="goods_dialog" style="padding:10px; height:530px;overflow-y:hidden;overflow-x:hidden;"><div class="mt_10"><iframe id="usersIframe" name="usersIframe" style="height:530px;width:100%; border:none" border="0" src="' + dataUrl + '"></iframe></div></div><div class="btn_bar"><a href="javascript:;" class="btn confirm_btn">确定</a>&nbsp;&nbsp;<a href="javascript:;" class="border-btn cancel_btn">取消</a></div></div>');
 
         $.Dialog.open("选择用户", {width: 1000, height: 640}, $contentHtml);
@@ -1181,7 +1189,7 @@ function simpleColorPicker(_this, callback) {
     }
 
     //选择单用户
-    function selectSingleUser(dataUrl, name,_this) {
+    function selectSingleUser(dataUrl, name, _this) {
         $.WeiPHP.openSelectUsers(dataUrl, 1, function (data) {
             if (data && data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
@@ -1198,7 +1206,7 @@ function simpleColorPicker(_this, callback) {
     }
 
     //选择单用户
-    function selectMutiUser(dataUrl, count, name,_this) {
+    function selectMutiUser(dataUrl, count, name, _this) {
         $.WeiPHP.openSelectUsers(dataUrl, count, function (data) {
             if (data && data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
@@ -1444,4 +1452,3 @@ function change_search_url(url) {
     url = url.replace(/\?&[\d\w]*=&|[\d\w]*=&|&[\d\w]*=$|[=?&]/g, '/');
     return url;
 }
-

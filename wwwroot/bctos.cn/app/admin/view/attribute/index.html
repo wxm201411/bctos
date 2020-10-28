@@ -33,11 +33,11 @@
                 </tr>
                 </thead>
                 <tbody class="needdragsort layui-form">
-                {notempty name="_list"}
+                {notempty name="list_data"}
                 {php}$is_show_arr = array(0=>'不显示',1=>'始终显示',2=>'新增显示',3=>'编辑显示',5=>'条件控件',4=>'隐藏值');
                 $is_must_arr = array(0=>'否',1=>'是');
                 {/php}
-                {volist name="_list" id="vo"}
+                {volist name="list_data" id="vo"}
                 {php}$vo['is_show'] = intval($vo['is_show']);$vo['is_must'] = intval($vo['is_must']);
                 {/php}
                 <tr>
@@ -166,7 +166,7 @@
         var model_id = "{:input('model_id/d',-1)}";
         $.post("{:U('add_fields')}", {fields, model_id}, function (res) {
             if (res.code == 0) {
-                window.location.href = res.url
+                window.location.href = res.url;
             } else {
                 updateAlert(res.msg);
             }

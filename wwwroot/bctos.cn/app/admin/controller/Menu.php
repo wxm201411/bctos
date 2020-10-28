@@ -26,7 +26,7 @@ class Menu extends Admin
      */
     public function lists()
     {
-        $gid = input('gid/d', 1);
+        $gid = input('gid/d', 2);
         session('menu_gid', $gid);
         $groups = M('auth_group')->where('type', 0)->column('title', 'id');
         $nav = [];

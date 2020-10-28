@@ -7,7 +7,7 @@
 
 <!-- 导航条
 ================================================== -->
-{if !input('?only_body')}
+{if !input('?only_body') && !empty($top_menu['core_top_menu']) }
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="wrap">
 
@@ -30,4 +30,7 @@
             </div>
         </div>
 </div>
+{/if}
+{if !input('?only_body') && empty($top_menu['core_top_menu']) }
+<div style="padding-bottom: 20px"></div>
 {/if}

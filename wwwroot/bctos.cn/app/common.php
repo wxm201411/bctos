@@ -6230,6 +6230,9 @@ function get_app_config_file($app, $controller = '')
 function ssh2($command, $return_err = false, $show_err = false)
 {
     set_time_limit(0);
+    if (!function_exists('ssh2_connect')) {
+        return '';
+    }
     static $conn;
     if (!$conn) {
         $conn = ssh2_connect(SSH_IP, '22');   //初始化连接

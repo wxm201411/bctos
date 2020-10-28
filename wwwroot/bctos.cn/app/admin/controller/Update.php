@@ -19,7 +19,15 @@ class Update extends Admin
     {
         return $this->fetch();
     }
+    // 清空缓存
+    function delcache()
+    {
+        $cahce_dirs = SITE_PATH . '/runtime';
+        $this->rmdirr($cahce_dirs);
 
+        @mkdir($cahce_dirs, 0777, true);
+        return $this->fetch();
+    }
     function getRemoteVersion()
     {
         //远程最新版本号

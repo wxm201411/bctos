@@ -32,10 +32,6 @@ class ComposerStaticInit7a8476b8baeb19ab2fc6f74475d97347
     );
 
     public static $prefixLengthsPsr4 = array (
-        'x' => 
-        array (
-            'xingwenge\\canal_php\\' => 20,
-        ),
         't' => 
         array (
             'think\\view\\driver\\' => 18,
@@ -68,7 +64,6 @@ class ComposerStaticInit7a8476b8baeb19ab2fc6f74475d97347
             'Symfony\\Component\\Filesystem\\' => 29,
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Config\\' => 25,
-            'Socket\\Raw\\' => 11,
         ),
         'Q' => 
         array (
@@ -98,13 +93,9 @@ class ComposerStaticInit7a8476b8baeb19ab2fc6f74475d97347
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
-            'Google\\Protobuf\\' => 16,
-            'GPBMetadata\\Google\\Protobuf\\' => 28,
-            'GPBMetadata\\' => 12,
         ),
         'C' => 
         array (
-            'Com\\Alibaba\\Otter\\Canal\\Protocol\\' => 33,
             'Cake\\Utility\\' => 13,
             'Cake\\Datasource\\' => 16,
             'Cake\\Database\\' => 14,
@@ -116,10 +107,6 @@ class ComposerStaticInit7a8476b8baeb19ab2fc6f74475d97347
     );
 
     public static $prefixDirsPsr4 = array (
-        'xingwenge\\canal_php\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/xingwenge/canal_php/src',
-        ),
         'think\\view\\driver\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-view/src',
@@ -208,10 +195,6 @@ class ComposerStaticInit7a8476b8baeb19ab2fc6f74475d97347
         array (
             0 => __DIR__ . '/..' . '/symfony/config',
         ),
-        'Socket\\Raw\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/clue/socket-raw/src',
-        ),
         'QL\\' => 
         array (
             0 => __DIR__ . '/..' . '/jaeger/querylist/src',
@@ -267,22 +250,6 @@ class ComposerStaticInit7a8476b8baeb19ab2fc6f74475d97347
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
-        ),
-        'Google\\Protobuf\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/google/protobuf/src/Google/Protobuf',
-        ),
-        'GPBMetadata\\Google\\Protobuf\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/google/protobuf/src/GPBMetadata/Google/Protobuf',
-        ),
-        'GPBMetadata\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/xingwenge/canal_php/src/protocol/GPBMetadata',
-        ),
-        'Com\\Alibaba\\Otter\\Canal\\Protocol\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/xingwenge/canal_php/src/protocol/Com/Alibaba/Otter/Canal/Protocol',
         ),
         'Cake\\Utility\\' => 
         array (

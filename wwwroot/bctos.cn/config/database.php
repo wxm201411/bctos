@@ -16,13 +16,13 @@ return [
             // 数据库类型
             'type' => 'mysql',
             // 服务器地址
-            'hostname' => 'mysql',
+            'hostname' => 'mysql-57',
             // 数据库名
             'database' => 'bctos_cn',//bc_web_bctos_cn
             // 用户名
             'username' => 'root',//phinx
             // 密码
-            'password' => '123456',
+            'password' => '1e2d3a970',
             // 端口
             'hostport' => '3306',
             // 数据库连接参数
