@@ -7,11 +7,10 @@ services:
       build: 
          context: .
          dockerfile: mysql-dockerfile
-      hostname: mysql-57
-      container_name: mysql-57
-      restart: always
+      hostname: mysql
+      container_name: mysql
       ports: 
-         - 3306:3306
+         - 3307:3306
       volumes:
          - ./mysql-data:/var/lib/mysql
       environment: 
@@ -19,54 +18,49 @@ services:
 
    php: 
       build: 
-         context: php
+         context: .
          dockerfile: php-dockerfile
-      hostname: php-72
-      container_name: php-72
-      restart: always
+      hostname: php
+      container_name: php
       depends_on:
          - mysql
       ports: 
-         - 9000:9000
+         - 9001:9000
       volumes:
          - ./wwwroot:/var/www/html
-         - ./bctos:/var/www/html         
    msg: 
       build: 
          context: php
          dockerfile: msg-dockerfile
       hostname: msg
       container_name: msg
-      restart: always
       ports: 
          - 2120:2120
          - 2121:2121
+         - 2123:2123
       volumes:
-         - ./bctos:/var/www/html
+         - ./wwwroot:/var/www/html
    socket: 
       build: 
          context: php
          dockerfile: socket-dockerfile
       hostname: socket
       container_name: socket
-      restart: always
       ports: 
          - 2100:2100
       volumes:
-         - ./bctos:/var/www/html         
+         - ./wwwroot:/var/www/html
 
    nginx: 
-      image: nginx:alpine
+      image: nginx
       hostname: nginx
       container_name: nginx
-      restart: always
       depends_on:
          - php
       ports: 
-         - 80:80
+         - 81:80
       volumes:
          - ./conf.d:/etc/nginx/conf.d
          - ./wwwroot:/var/www/html
-         - ./bctos:/var/www/html
       links: 
          - php

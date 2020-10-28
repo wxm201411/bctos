@@ -7,12 +7,12 @@ if [ !$MYSQL_PWD ];then
 fi
 NGINX_PORT=${2:-'666'}
 MYSQL_PORT=${3:-'3306'}
-PHP_PORT=${4:-'9000'}
+#PHP_PORT=${4:-'9000'}
 
-if [ ! -d "/data" ]; then
-	mkdir /data
+if [ ! -d "/www" ]; then
+	mkdir /www
 fi	
-cd /data
+cd /www
 
 echo "
 +----------------------------------------------------------------------
@@ -91,22 +91,19 @@ if [[  $(which podman) ]]; then
     yum -y remove podman
 fi
 echo "============download file from gitee ==================="
-if [ -d bctos ];then
-	cd bctos
+if [ -d conf.d ];then
 	git pull
-	cd ..
 else
-	git clone https://gitee.com/bctos_cn/bctos.git
+	git clone https://gitee.com/bctos_cn/bctos.git ./
 	if [ $? -ne 0 ]; then
-		git clone https://github.com/wxm201411/bctos.git
+		git clone https://github.com/wxm201411/bctos.git ./
 	fi
 fi
-if [[ ! -d "bctos/www" ]]; then
+if [[ ! -d "conf.d" ]]; then
 	    Red_Error "git clone fail"
 	else
 		echo "git clone success";
 fi
-cd bctos
 # 安装docker
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
 	echo "============Install docker==================="
@@ -163,7 +160,7 @@ fi
 if [ ! -d "mysql-data" ];then
 	mkdir mysql-data
 fi
-cd www
+cd wwwroot
 if [ ! -d runtime ];then
 	mkdir runtime
 fi
@@ -204,7 +201,7 @@ mysql连接信息: \
 ${getIpAddress}:3309 \
 username: root \
 password: ${MYSQL_PWD} \
-代码在本机目录：/data/bctos-install/www \
+代码在本机目录：/www/bctos-install/www \
 代码在容器目录：/var/www/html \
 账号信息保存在：$(pwd)/account.log
 \033[33mIf you cannot access the panel,\033[0m \
