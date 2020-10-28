@@ -156,11 +156,13 @@ if [ ! -d libssh2-1.9.0 ];then
 	./configure && make && make install
 	cd ..
 fi
-
+if [ ! -d wwwroot ];then
+	mkdir wwwroot
+fi
+cd bctos
 if [ ! -d "mysql-data" ];then
 	mkdir mysql-data
 fi
-cd wwwroot
 if [ ! -d runtime ];then
 	mkdir runtime
 fi
@@ -176,6 +178,7 @@ chmod -R +x scripts
 chmod -R 755 public runtime db app
 sed -i "s/123456/${MYSQL_PWD}/" config/database.php
 cd ..
+echo -e $(ls)
 cp -f docker-compose.yml.bar docker-compose.yml
 
 sed -i "s/80\:/${NGINX_PORT}\:/" docker-compose.yml

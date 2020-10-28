@@ -25,7 +25,7 @@ services:
       depends_on:
          - mysql
       ports: 
-         - 9001:9000
+         - 9000:9000
       volumes:
          - ./wwwroot:/var/www/html
    msg: 
