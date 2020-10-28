@@ -11,11 +11,11 @@ PHP_PORT=${4:-'9000'}
 
 echo "
 +----------------------------------------------------------------------
-| Bctos FOR CentOS/Ubuntu/Debian
+| 小韦面板支持 CentOS/Ubuntu/Debian 系统
 +----------------------------------------------------------------------
-| Copyright © 2015-2099 小韦云科技(https://www.bctos.cn) All rights reserved.
+| Copyright © 2020-2099 小韦云科技(https://www.bctos.cn) All rights reserved.
 +----------------------------------------------------------------------
-| The WebPanel URL will be http://SERVER_IP:666 when installed.
+| 小韦面板安装成功后可通过 http://你的服务器IP:666 进行访问.
 +----------------------------------------------------------------------
 "
 GetSysInfo(){
@@ -198,23 +198,23 @@ sed -i "s/bctosMysqlPwd/${MYSQL_PWD}/" docker-compose.yml
 docker-compose -f docker-compose.yml up -d
 echo "==========docker-compose up success=================";
 Get_Ip_Address
-result="================================================================== \
-\033[32mCongratulations! Installed successfully!\033[0m \
-================================================================== \
-echo  \"外网面板地址: http://${getIpAddress}:${NGINX_PORT} \
-echo  \"内网面板地址: http://${LOCAL_IP}:${NGINX_PORT} \
-username: admin \
-password: 123 \
-mysql连接信息: \
-${getIpAddress}:${MYSQL_PORT} \
-username: root \
-password: ${MYSQL_PWD} \
-代码在本机目录：/www/bctos-install/www \
-代码在容器目录：/var/www/html \
+echo "==================================================================
+恭喜! 小韦面板安装成功了!
+==================================================================
+外网面板地址: http://${getIpAddress}:${NGINX_PORT}
+内网面板地址: http://${LOCAL_IP}:${NGINX_PORT}
+用户名: admin
+密码: 123
+
+mysql连接信息:
+${getIpAddress}:${MYSQL_PORT}
+用户名: root
+密码: ${MYSQL_PWD}
+
+代码在本机目录：/www/bctos-install/www
+代码在容器目录：/var/www/html
 账号信息保存在：$(pwd)/account.log
-\033[33mIf you cannot access the panel,\033[0m \
-\033[33mrelease the following panel port [${NGINX_PORT}] in the security group\033[0m \
-\033[33m若无法访问面板，请检查防火墙/安全组是否有放行面板[${NGINX_PORT}]端口\033[0m \
-=================================================================="
-echo -e $result > account.log
-echo $result
+如果你无法访问小韦面板，请检查防火墙/安全组是否有放行面板[${NGINX_PORT}]端口
+==================================================================
+" > account.log
+cat account.log
