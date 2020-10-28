@@ -29,8 +29,7 @@ services:
       ports: 
          - 9000:9000
       volumes:
-         - ./wwwroot:/var/www/html
-         - ./bctos:/var/www/html         
+         - ./wwwroot:/var/www/html       
    msg: 
       build: 
          context: php
@@ -67,6 +66,5 @@ services:
       volumes:
          - ./conf.d:/etc/nginx/conf.d
          - ./wwwroot:/var/www/html
-         - ./bctos:/var/www/html
       links: 
          - php

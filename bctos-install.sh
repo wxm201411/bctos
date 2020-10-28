@@ -7,7 +7,7 @@ if [ !$MYSQL_PWD ];then
 fi
 NGINX_PORT=${2:-'666'}
 MYSQL_PORT=${3:-'3306'}
-#PHP_PORT=${4:-'9000'}
+PHP_PORT=${4:-'9000'}
 
 if [ ! -d "/www" ]; then
 	mkdir /www
