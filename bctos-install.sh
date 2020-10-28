@@ -9,10 +9,10 @@ NGINX_PORT=${2:-'666'}
 MYSQL_PORT=${3:-'3306'}
 PHP_PORT=${4:-'9000'}
 
-if [ ! -d "/www" ]; then
-	mkdir /www
+if [ ! -d "/data" ]; then
+	mkdir /data
 fi	
-cd /www
+cd /data
 
 echo "
 +----------------------------------------------------------------------
@@ -156,13 +156,11 @@ if [ ! -d libssh2-1.9.0 ];then
 	./configure && make && make install
 	cd ..
 fi
-if [ ! -d wwwroot ];then
-	mkdir wwwroot
-fi
-cd bctos
+
 if [ ! -d "mysql-data" ];then
 	mkdir mysql-data
 fi
+cd wwwroot/bctos.cn
 if [ ! -d runtime ];then
 	mkdir runtime
 fi
@@ -177,7 +175,7 @@ chown -R 82.82 ./*
 chmod -R +x scripts
 chmod -R 755 public runtime db app
 sed -i "s/123456/${MYSQL_PWD}/" config/database.php
-cd ..
+cd ../..
 echo -e $(ls)
 cp -f docker-compose.yml.bar docker-compose.yml
 
@@ -187,11 +185,6 @@ sed -i "s/9000\:/${PHP_PORT}\:/" docker-compose.yml
 sed -i "s/bctosMysqlPwd/${MYSQL_PWD}/" docker-compose.yml
 docker-compose -f docker-compose.yml up -d
 echo "==========docker-compose up success=================";
-
-if [ -f "/var/www/html/vendor/web-msg-sender/start.php" ];then
-    php /var/www/html/vendor/web-msg-sender/start.php start -d
-    php /var/www/html/public/node/server/bin/websocket.php -d &
-fi
 Get_Ip_Address
 result="================================================================== \
 \033[32mCongratulations! Installed successfully!\033[0m \

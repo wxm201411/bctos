@@ -3,7 +3,7 @@ networks:
    default: 
 
 services: 
-   mysql: 
+   mysql-57: 
       build: 
          context: .
          dockerfile: mysql-dockerfile
@@ -17,7 +17,7 @@ services:
       environment: 
          MYSQL_ROOT_PASSWORD: 123456
 
-   php: 
+   php-72: 
       build: 
          context: php
          dockerfile: php-dockerfile
