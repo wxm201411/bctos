@@ -15,4 +15,4 @@ services:
       - /bctos/server/mysql57/mysql-data:/var/lib/mysql
       - /bctos/server/mysql57/my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
-      MYSQL_ROOT_PASSWORD: fnhipje201411
+      MYSQL_ROOT_PASSWORD: bctos_panel

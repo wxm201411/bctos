@@ -1,7 +1,7 @@
 <?php
-define('DB_PREFIX', 'wp_');
+defined('DB_PREFIX') || define('DB_PREFIX', 'wp_');
 if (!function_exists('env')) {
-    function env(string $name = null, $default = null)
+    function env($name = null, $default = null)
     {
         return [];
     }
@@ -16,13 +16,13 @@ return [
             // 数据库类型
             'type' => 'mysql',
             // 服务器地址
-            'hostname' => 'mysql-57',
+            'hostname' => 'localhost',
             // 数据库名
-            'database' => 'bctos_cn',//bc_web_bctos_cn
+            'database' => 'bctos_panel',
             // 用户名
             'username' => 'root',//phinx
             // 密码
-            'password' => '123456',
+            'password' => 'bctos_panel',
             // 端口
             'hostport' => '3306',
             // 数据库连接参数
