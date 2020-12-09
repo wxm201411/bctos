@@ -64,18 +64,18 @@ is64bit=$(getconf LONG_BIT)
 if [ "${is64bit}" != '64' ];then
 	error_tip "抱歉, 系统不支持32位系统, 请使用64位系统或安装小韦云链!";
 fi
-check=$(lsof -i :$NGINX_PORT | awk 'END {print $1}')
-if [ $check ]; then
-	error_tip "nginx的端口号： $NGINX_PORT 已被占用，占用的服务是：$check，请关闭此服务或换端口再试";
-fi
-check=$(lsof -i :$MYSQL_PORT | awk 'END {print $1}')
-if [ $check ]; then
-	error_tip "mysql的端口号： $MYSQL_PORT 已被占用，占用的服务是：$check，请关闭此服务或换端口再试";
-fi
-check=$(lsof -i :$PHP_PORT | awk 'END {print $1}')
-if [ $check ]; then
-	error_tip "php的端口号： $(PHP_PORT) 已被占用，占用的服务是：$(check)，请关闭此服务或换端口再试";
-fi
+#check=$(lsof -i :$NGINX_PORT | awk 'END {print $1}')
+#if [ $check ]; then
+#	error_tip "nginx的端口号： $NGINX_PORT 已被占用，占用的服务是：$check，请关闭此服务或换端口再试";
+#fi
+#check=$(lsof -i :$MYSQL_PORT | awk 'END {print $1}')
+#if [ $check ]; then
+#	error_tip "mysql的端口号： $MYSQL_PORT 已被占用，占用的服务是：$check，请关闭此服务或换端口再试";
+#fi
+#check=$(lsof -i :$PHP_PORT | awk 'END {print $1}')
+#if [ $check ]; then
+#	error_tip "php的端口号： $(PHP_PORT) 已被占用，占用的服务是：$(check)，请关闭此服务或换端口再试";
+#fi
 
 if [ ! -d "/bctos" ]; then
 	mkdir /bctos
@@ -144,15 +144,24 @@ if [[ ! ($(which docker) && $(docker --version)) ]]; then
 		echo "docker install success";
 fi
 # 安装docker-compose
-if [[  ! ($(which docker-compose) && $(docker-compose --version)) ]]; then
+function version_lt() { test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" != "$1"; }
+function install_compose() {
     echo "============Install docker-compose==================="
-    #curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    curl -L https://get.daocloud.io/docker/compose/releases/download/1.24.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+    curl -L https://get.daocloud.io/docker/compose/releases/download/1.27.4/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
     ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-    docker-compose --version
+    docker-compose version
+}
+if [[  ! ($(which docker-compose) && $(docker-compose version)) ]]; then
+    install_compose
+else
+    oldVersion=$(docker-compose version|grep docker-py|sed 's/docker-py version: //'|sed 's/ //g')
+    needVersion="1.27.4"
+    if version_lt $oldVersion $needVersion; then
+        install_compose
+    fi
 fi
-if [[  ! ($(which docker-compose) && $(docker-compose --version)) ]]; then
+if [[  ! ($(which docker-compose) && $(docker-compose version)) ]]; then
     	error_tip "docker-compose 安装失败"
 	else
 		echo "docker-compose install success";
@@ -173,6 +182,7 @@ fi
 if [ ! -d "server/panel/mysql-data" ];then
 	mkdir -p server/panel/mysql-data
 fi
+chmod +x /bctos/server/panel/entrypoint.sh
 cd wwwroot/bctos.cn
 if [ ! -d runtime ];then
 	mkdir runtime
@@ -184,11 +194,15 @@ if [ ! -d "public/storage" ];then
 	mkdir -p public/storage
 fi
 #在容器中82表示www-data用户
-groupadd -g 82 www-data
-useradd -u 82 -g 82  www-data
+if [ -z $(cat /etc/passwd|grep www-data) ];then
+    groupadd -g 82 www-data
+    useradd -u 82 -g 82  www-data
+fi
+
 chown -R 82.82 ./*
 chmod -R +x scripts
 chmod -R 755 public runtime db app
+
 sed -i "s/123456/${MYSQL_PWD}/" config/database.php
 cd ../..
 echo -e $(ls)
@@ -202,7 +216,7 @@ echo "==================================================================
 外网面板地址: http://${getIpAddress}:666
 内网面板地址: http://${LOCAL_IP}:666
 用户名: admin
-密码: 123
+密码: 123456
 
 代码的目录在：/bctos/wwwroot
 账号信息保存在：/bctos/account.log

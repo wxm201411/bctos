@@ -561,9 +561,6 @@ CREATE TABLE `wp_database`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 27 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据库' ROW_FORMAT = DYNAMIC;
 
-INSERT INTO `wp_database` VALUES (25, 't2_cn', 't2_cn', '5fbf0b2215501', 'utf8mb4', '%', '', 1606355962, '123');
-INSERT INTO `wp_database` VALUES (26, 't3_cn', 't3_cn', '5fbf0b3459f2d', 'utf8mb4', 'localhost', '', 0, '');
-
 DROP TABLE IF EXISTS `wp_debug_log`;
 CREATE TABLE `wp_debug_log`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,

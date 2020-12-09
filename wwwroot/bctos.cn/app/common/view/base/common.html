@@ -40,6 +40,11 @@ empty( $forward ) && cookie('__forward__', $_SERVER['REQUEST_URI']);
     <div class="main_body {if !input('?only_body')} admin-body {/if}">
         <!-- 头部 -->
         {include file="common@base/header"/}
+            <div id="update_remind" style="clear:both; margin-bottom:10px;border:1px solid #33ab07; padding:10px; background-color:#d8f9cc; color:#33ab07; position:relative; display:none">
+                <a href="{:U('update/index')}">系统有新更新，请及时升级！</a>
+                <a href="javascript:;" title="关闭" style="color:#999; font-size:12px; position:absolute; top:5px; right:10px; text-decoration:none" onclick="set_cookie_close_version();">
+                    <i class="layui-icon layui-icon-close-fill" style="font-size: 30px; color: #1E9FFF;"></i> </a>
+            </div>
         <!-- /头部 -->
         {block name="body"}{/block}
         <!-- 底部 -->
@@ -56,13 +61,25 @@ empty( $forward ) && cookie('__forward__', $_SERVER['REQUEST_URI']);
 </div>
 <!-- /底部 -->
 <script>
-    // 判断一下侧边栏是否存在 
+    var cookie_close_version = 0;
     $(function () {
+        // 判断一下侧边栏是否存在
         if (!$('.user-info-name').length > 0) {
             // 不存在
             $('.main_body').removeClass('admin-body')
         }
-    })
+        $.get("{:U('admin/update/getRemoteVersion')}",{},function(res){
+            if(res!=0){
+                $('#update_remind').slideDown();
+                cookie_close_version = res;
+            }
+        });
+    });
+    function set_cookie_close_version(){
+        $.get("{:U('admin/update/set_cookie_close_version')}",{cookie_close_version:cookie_close_version},function(){
+            $('#update_remind').slideUp();
+        })
+    }
 </script>
 </body>
 </html>

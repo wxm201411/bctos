@@ -2,7 +2,7 @@
 cd /bctos
 
 showMsg(){
-    echo "########################### $1 ###########################"
+    echo "######## $1 ########"
 }
 showMsg "更新开始，先备份代码"
 echo "代码目录："$(pwd)
@@ -17,6 +17,7 @@ echo "备份完成"
 showMsg "使用git下载并更新代码"
 git pull
 
+cd wwwroot/bctos.cn
 showMsg "更新数据库"
 vendor/bin/phinx migrate
 
