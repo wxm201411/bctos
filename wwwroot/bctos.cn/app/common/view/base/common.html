@@ -5,14 +5,12 @@
     {block name="style"}{/block}
 </head>
 <body>
-
 <!-- 主体 -->
 {block name="header"}{/block}
 {php} //验证登录
 if(!is_login() && empty(cookie( '__forward__'))){
 $forward = cookie('__forward__');
 empty( $forward ) && cookie('__forward__', $_SERVER['REQUEST_URI']);
-//return redirect(U('home/user/login',array('from'=>4)));
 } {/php}
 <div id="main-container" class="admin_container">
     {if !input('?only_body')}
@@ -20,31 +18,22 @@ empty( $forward ) && cookie('__forward__', $_SERVER['REQUEST_URI']);
     <div class="sidebar">
         <!-- 左侧栏用户信息 -->
         <div class="user-info">
-
             <div class="user-info-name">{$myinfo.nickname}<i class="pl_5 fa fa-sort-down"></i>
                 <div class="user-info-dropdown">
                     <a href="{:U('home/User/profile')}">修改密码</a>
                     <a href="{:U('home/User/logout')}">退出</a>
                 </div>
             </div>
-
-
         </div>
-
-
         <div id="sidenav">
             <ul class="sidenav_sub">
                 {volist name='top_menu.core_side_menu' id='vo'}
-                <li class="{$vo.class}" data-id="{$vo.id}"><a href="{$vo.url}" target="{$vo.target}"> {$vo.title} </a><b
-                        class="active_arrow"></b></li>
+                <li class="{$vo.class}" data-id="{$vo.id}"><a href="{$vo.url}" target="{$vo.target}"> {$vo.title} </a><b class="active_arrow"></b></li>
                 {/volist}
                 <div class="bar"></div>
             </ul>
-
         </div>
-
     </div>
-
     {/notempty}
     {/if}
     {block name="container"}
@@ -53,27 +42,19 @@ empty( $forward ) && cookie('__forward__', $_SERVER['REQUEST_URI']);
         {include file="common@base/header"/}
         <!-- /头部 -->
         {block name="body"}{/block}
-
-
         <!-- 底部 -->
         {if !input('?only_body')}
         {include file="common@base/footer"/}
         {/if}
     </div>
     {/block}
-
-
 </div>
-
 <!-- /主体 -->
-
-
 {block name="script"}{/block} <!-- 用于加载js代码 -->
 <div class="hidden"><!-- 用于加载统计代码等隐藏元素 -->
     {block name="hidden"}{/block}
 </div>
 <!-- /底部 -->
-
 <script>
     // 判断一下侧边栏是否存在 
     $(function () {

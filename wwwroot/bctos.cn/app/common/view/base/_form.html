@@ -26,7 +26,7 @@
 {/if}
 {if condition="$field['is_show'] == 1 || $field['is_show'] == 3 || ($field['is_show'] == 5 && I($field['name']) )"}
 {php}isset($data[$field['name']]) || $data[$field['name']] = ''; {/php}
-<div class="layui-form-item" show-set="{$field.show_set|json_encode}">
+<div class="layui-form-item" show-set='{$field.show_set|json_encode}'>
     <label class="layui-form-label">
         {notempty name="field.is_must"}<span class="need_flag">*</span>{/notempty}
         {$field['title']}
@@ -53,6 +53,7 @@
         {/volist}
         {/case}
         {case value="bool"}
+        <input type="hidden" name="{$field.name}" value="0" /><!--解决开关关闭状态下值不能提交到后台问题-->
         <input type="checkbox" name="{$field.name}" lay-skin="switch" lay-text="{$field.extra_array[1]}|{$field.extra_array[0]}" value="1" {eq name="data[$field['name']]" value="1" }checked{/eq}>
         {/case}
 
@@ -302,10 +303,10 @@
                 }
             }
         }
-        $('.layui-form-item').each(function () {
+        $('.layui-form-item,.layui-inline').each(function () {
             var data = $(this).attr('show-set');
 
-            if (data != '[]') {
+            if (data != '[]' && data != undefined) {
                 data = JSON.parse(data);
                 var check = true;
                 for (var n in data) {

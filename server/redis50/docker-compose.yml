@@ -1,0 +1,14 @@
+version: "3.8"
+networks:
+  default:
+    external:
+      name: bctos
+
+services:
+  redis50:
+    hostname: redis50
+    container_name: redis50
+    image: redis:5.0-alpine
+    restart: unless-stopped
+    volumes:
+      - /bctos/server/redis50/data:/data

@@ -1,0 +1,18 @@
+version: "3.8"
+networks:
+  default:
+    external:
+      name: bctos
+services:
+  mysql55:
+    hostname: mysql55
+    container_name: mysql55
+    image: mysql:5.5
+    restart: unless-stopped
+    ports:
+      - 3355:3306
+    volumes:
+      - /bctos/server/mysql55/mysql-data:/var/lib/mysql
+      - /bctos/server/mysql55/my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: bctos_panel

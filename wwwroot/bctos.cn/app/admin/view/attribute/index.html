@@ -10,7 +10,9 @@
 <div class="tools">
     <a class="btn" href="{:U('Attribute/add?model_id='.$model_id)}">新 增</a>
     <a class="btn" href="javascript:void(0)" onclick="addFormHas()">批量新增常用字段</a>
+    {if condition="!input('?app_name')"}
     <a class="btn" href="{:U('model/edit?id='.$model_id)}#2">返回模型定义页</a>
+    {/if}
     (下面的列表支持拖动排序)
 </div>
 

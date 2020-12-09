@@ -1,0 +1,19 @@
+version: "3.8"
+networks:
+  default:
+    external:
+      name: bctos
+services:
+  php70:
+    build: /bctos/server/php70
+    hostname: php70
+    container_name: php70
+    image: bctos-php:7.0-fpm-alpine
+    restart: unless-stopped
+    volumes:
+      - /bctos/wwwroot:/bctos/wwwroot
+      - /bctos/logs:/bctos/logs
+      - /bctos/server/php70/php.ini:/usr/local/etc/php/php.ini
+      - /bctos/server/php70/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf
+    cap_add:
+      - SYS_PTRACE

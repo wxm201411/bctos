@@ -1,7 +1,7 @@
 <?php
 // 异常错误报错级别,
-// error_reporting(E_ERROR | E_PARSE);
-error_reporting(E_ALL);
+error_reporting(E_ERROR | E_PARSE);
+//error_reporting(E_ALL);
 
 define('SITE_PATH', dirname(dirname(__FILE__)));
 define('DEFAULT_PBID', 1);
@@ -36,8 +36,8 @@ if (!defined('HTTP_PREFIX')) {
 define('SITE_DOMAIN', strip_tags(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost')); // 运行socket时，获取不到http_host
 define('SITE_URL', HTTP_PREFIX . SITE_DOMAIN . __ROOT__);
 define('SITE_DIR_NAME', str_replace('.', '_', pathinfo(SITE_PATH, PATHINFO_BASENAME))); // 网站目录名，通常用于缓存，session,cookie的前缀，以防止多网站里数据冲突
-
-define('DATA_PATH', SITE_PATH . '/runtime/data/'); // 应用数据目录
+//echo defined('FROM_KOD ');exit;
+//defined('FROM_KOD ') || define('DATA_PATH', SITE_PATH . '/runtime/data/'); // 应用数据目录
 define('UPLOAD_PATH', SITE_PATH . '/public/storage');
 define('SHOP_STOCK_TIME', 1800); // 商城库存锁定时间，默认30分钟
 

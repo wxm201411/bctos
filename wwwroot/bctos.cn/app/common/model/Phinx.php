@@ -17,6 +17,9 @@ class Phinx extends Base
     {
         $name = 'phinx_db' . $num;
         $dsn = input('db' . $num);
+        if (empty($dsn)) {
+            return $this->error('请先填写数据库连接参数');
+        }
         db_config($name, $dsn);
 
         $config = config('database');
@@ -113,8 +116,22 @@ FROM information_schema.`COLUMNS` where TABLE_SCHEMA='{$db['database']}'";
         return str_replace(PHP_EOL, '', var_export($param, true));
     }
 
+    function checkInput($num)
+    {
+        $db = input('db' . $num);
+        if (empty($db)) return false;
+
+        $arr = explode(';', $db);
+        if (count($arr) != 5) return false;
+
+        return true;
+    }
+
     function mysqlDiff()
     {
+        if (!$this->checkInput(1) || !$this->checkInput(2)) {
+            return $this->error('请先填写数据库连接参数');
+        }
         list($table_1, $newTables_1, $model_data_1) = $this->mysqlDiffGetDb(1);
         list($table_2, $newTables_2, $model_data_2) = $this->mysqlDiffGetDb(2);
 
@@ -247,6 +264,7 @@ FROM information_schema.`COLUMNS` where TABLE_SCHEMA='{$db['database']}'";
     {
         //查找有没有重复的文件
         $path = SITE_PATH . '/db/migrations/';
+        mkdirs($path);
         $dirfat = dir($path);
         while (false !== $entry = $dirfat->read()) {
             if (!is_file($path . DIRECTORY_SEPARATOR . $entry)) continue;

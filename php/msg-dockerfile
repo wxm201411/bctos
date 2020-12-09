@@ -1,7 +1,0 @@
-FROM php:7.2-alpine
-COPY php.ini-production "$PHP_INI_DIR/php.ini"
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
-&& install-php-extensions pcntl
-EXPOSE 2120 2121
-CMD php /var/www/html/vendor/web-msg-sender/start.php start

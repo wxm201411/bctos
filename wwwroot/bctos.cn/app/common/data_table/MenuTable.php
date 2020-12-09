@@ -19,30 +19,34 @@ class MenuTable {
     // 列表定义
     public $list_grid = [
       'title' => [
-          'title' => '菜单名'
+          'title' => '菜单名',
+          'can_edit' => 0
       ],
       'addon_name' => [
-          'title' => '插件名'
+          'title' => '插件名',
+          'can_edit' => 0
       ],
       'url' => [
-          'title' => '外链'
-      ],
-      'icon' => [
-          'title' => '图标'
+          'title' => '外链',
+          'can_edit' => 0
       ],
       'is_hide' => [
-          'title' => '隐藏'
+          'title' => '隐藏',
+          'can_edit' => 1
       ],
       'sort' => [
-          'title' => '排序号'
+          'title' => '排序号',
+          'can_edit' => 0
       ],
       'urls' => [
           'title' => '操作',
           'come_from' => 1,
+          'can_edit' => 0,
           'href' => [
-              '1' => [
+              '0' => [
                   'title' => '删除',
-                  'url' => '[DELETE]'
+                  'url' => '[DELETE]',
+                  'show_set' => [ ]
               ]
           ]
       ]
@@ -107,8 +111,7 @@ _blank:在新窗口打开'
       'icon' => [
           'title' => '图标',
           'type' => 'icon',
-          'field' => 'varchar(50) NULL',
-          'is_show' => 1
+          'field' => 'varchar(50) NULL'
       ],
       'is_hide' => [
           'title' => '是否隐藏',
@@ -139,6 +142,7 @@ _blank:在新窗口打开'
           'type' => 'dynamic_checkbox',
           'field' => 'varchar(100) NULL',
           'extra' => 'table=auth_group&type=0',
+          'value' => 2,
           'is_show' => 1
       ]
   ];   

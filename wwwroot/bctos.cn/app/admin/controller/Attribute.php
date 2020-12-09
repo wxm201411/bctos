@@ -80,8 +80,10 @@ class Attribute extends Admin
             $dao = D('common/Models');
 
             $show = [];
-            foreach ($post['field'] as $f) {
-                isset($post[$f]) && $show[$f] = $post[$f];
+            if (isset($post['field'])) {
+                foreach ($post['field'] as $f) {
+                    isset($post[$f]) && $show[$f] = $post[$f];
+                }
             }
             $list[$field]['show_set'] = $show;
             if ($model_id != -1) {
@@ -268,23 +270,37 @@ class Attribute extends Admin
                 }
             }
 
-            //同步更新文件里的列表定义，并保持排序位置不变
-            if ($model_id != -1 && isset($list_grid[$old['name']])) {
-                $head = $footer = $now = [];
-                $has = false;
-                foreach ($list_grid as $k => $v) {
-                    if ($k == $old['name']) {
-                        $has = true;
-                        $now[$data['name']] = $v;
-                    } else {
-                        if ($has) {
-                            $footer[$k] = $v;
+            if ($model_id != -1) {
+                //同步更新文件里的列表定义，并保持排序位置不变
+                if (isset($list_grid[$old['name']])) {
+                    $head = $footer = $now = [];
+                    $has = false;
+                    foreach ($list_grid as $k => $v) {
+                        if ($k == $old['name']) {
+                            $has = true;
+                            $now[$data['name']] = $v;
                         } else {
-                            $head[$k] = $v;
+                            if ($has) {
+                                $footer[$k] = $v;
+                            } else {
+                                $head[$k] = $v;
+                            }
+                        }
+                    }
+                    $list_grid = array_merge($head, $now, $footer);
+                }
+
+                //替换show_set中设置的字段
+                foreach ($list_grid as $k => $g) {
+                    if (isset($g['href'])) {
+                        foreach ($g['href'] as $h => $url) {
+                            if (isset($url['show_set']) && isset($url['show_set'][$old['name']])) {
+                                $list_grid[$k]['href'][$h]['show_set'][$data['name']] = $list_grid[$k]['href'][$h]['show_set'][$old['name']];
+                                unset($list_grid[$k]['href'][$h]['show_set'][$old['name']]);
+                            }
                         }
                     }
                 }
-                $list_grid = array_merge($head, $now, $footer);
             }
 
             // 更新文件里的字段，并保持排序位置不变
@@ -302,7 +318,6 @@ class Attribute extends Admin
         if ($model_id != -1) {
             $model = $dao->field(true)->find($model_id);
             $cache_name = config('database.connections.mysql.database') . '.' . preg_replace('/\W+|\_+/', '', $model['name']);
-            S($cache_name, null, DATA_PATH . '_fields/');
             // dump ( $newList );
             // exit ();
             $dao->buildFile($model, $newList, $list_grid);
@@ -353,6 +368,16 @@ class Attribute extends Admin
         unset($list[$name]);
 
         if (isset($grid[$name])) unset($grid[$name]);
+        //删除show_set中设置的字段
+        foreach ($grid as $k => $g) {
+            if (isset($g['href'])) {
+                foreach ($g['href'] as $h => $url) {
+                    if (isset($url['show_set']) && isset($url['show_set'][$name])) {
+                        unset($grid[$k]['href'][$h]['show_set'][$name]);
+                    }
+                }
+            }
+        }
         $dao->buildFile($model_id, $list, $grid);
 
         // 删除表字段
@@ -411,7 +436,6 @@ class Attribute extends Admin
         if ($model_id != -1) {
             $model = $dao->field(true)->find($model_id);
             $cache_name = config('database.connections.mysql.database') . '.' . preg_replace('/\W+|\_+/', '', $model['name']);
-            S($cache_name, null, DATA_PATH . '_fields/');
             // dump ( $newList );
             // exit ();
             $dao->buildFile($model, $list, $list_grid);

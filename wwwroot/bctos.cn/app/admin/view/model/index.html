@@ -54,10 +54,13 @@
             {notempty name="vo.update_db"}<a href="{:U('freshFiletoDB?model_id='.$vo['id'])}">更新数据表</a>&nbsp;&nbsp;&nbsp;{/notempty}
                 <a href="{:U('attribute/index?model_id='.$vo['id'])}">字段管理</a>&nbsp;&nbsp;&nbsp;
 				<a href="{:U('model/edit?id='.$vo['id'])}#2">编辑</a>
+				<a class="copy-model" href="###" rel="{$vo['id']}" data-name="{$vo.name}">复制</a>
 				{else /}
 <a href="{:U('importModel',['model_name'=>$vo['name'],'model_addon'=>$vo['addon']])}">导入模型</a>
                 {/notempty}
+				{if condition="$vo.addon!='admin' && $vo.addon!='core'"}
                 &nbsp;&nbsp;&nbsp;<a href="{:U('model/del?ids='.$vo['id'])}" class="confirm">删除</a>
+				{/if}
             </td>
 		</tr>
 		{/volist}
@@ -103,6 +106,20 @@
             $('select[name=group]').change(function(){
                 location.href = this.value;
             });
+            
+            $('.copy-model').click(function () {
+            	var id = $(this).attr('rel')
+				var title = $(this).data('name')
+				var url = "{:U('copyModel?only_body=1&id=555123')}"
+				var reg = new RegExp( '555123' , "g" )
+				url = url.replace(reg, id)
+				layer_index = layer.open({
+					type: 2,
+					title: '复制'+title,
+					area: ['500px', '500px'],
+					content: url
+				});
+			})
         })
 
 </script>

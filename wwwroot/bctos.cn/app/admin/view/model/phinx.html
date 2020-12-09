@@ -53,12 +53,17 @@
             data.field.build = 0
             $.post("{:U('mysqlDiff')}", data.field, function (res) {
                 layer.close(index);
-                $('#phinx-content').html(res)
-                if (res != '') {
-                    $('#build-btn').show()
-                } else {
-                    layer.msg('没有需要升级的内容');
+                if(res==-1){
+                    layer.msg('请先正确填写数据库连接');
+                }else{
+                    $('#phinx-content').html(res)
+                    if (res != '') {
+                        $('#build-btn').show()
+                    } else {
+                        layer.msg('没有需要升级的内容');
+                    }
                 }
+
             })
             return false;
         });

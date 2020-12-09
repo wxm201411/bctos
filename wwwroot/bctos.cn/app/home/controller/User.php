@@ -251,7 +251,7 @@ class User extends Home
                         //跳转到子项目登录回调链接
                         cookie('sub_redirect_url', null);
                     } else {
-                        $url = U('admin/apps/index');
+                        $url = U('admin/site/lists');
                     }
                     $user = getUserInfo($uid);
                     D('common/User')->autoLogin($user);

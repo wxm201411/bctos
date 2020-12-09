@@ -492,7 +492,7 @@ if (!function_exists('echo_value')) {
                 }
             })();
 
-            $.getScript('//cdn.bootcss.com/prettify/r298/prettify.min.js', function(){
+            $.getScript('https://cdn.bootcss.com/prettify/r298/prettify.min.js', function(){
                 prettyPrint();
             });
         })();

@@ -671,6 +671,46 @@ class Model extends Admin
         return $this->fetch();
     }
 
+    public function copyModel()
+    {
+        if (IS_POST) {
+            $post = input('post.');
+            foreach ($post as $p) {
+                if (empty($p)) {
+                    return $this->error('参数不能为空');
+                }
+            }
+            //复制模型文件
+            $dao = D('common/Models');
+            $obj = $dao->getFileInfo($post['id']);
+            if ($obj === false) {
+                return $this->error('模型不存在或已被删除');
+            }
+            $obj->config['name'] = $post['name'];
+            $obj->config['title'] = $post['title'];
+            $obj->config['addon'] = $post['addon'];
+            $model = $obj->config;
+            // 增加到模型数据表
+            $model['id'] = $model_id = $dao->insertGetId($obj->config);
+            // 字段增加
+            if (!empty($obj->fields)) {
+                foreach ($obj->fields as $name => $f) {
+                    $f['model_id'] = $model_id;
+                    $f['name'] = $name;
+
+                    $dao->addField($f);
+                }
+            }
+
+            $dao->buildFile($model, $obj->fields, $obj->list_grid, $obj->config);
+            return $this->success('复制成功');
+
+        } else {
+            $this->_get_all_addon();
+            return $this->fetch();
+        }
+    }
+
     private function inherit_list()
     {
         $inherit_list['common_category'] = '通用分类';
@@ -708,9 +748,7 @@ class Model extends Admin
         }
 
         /* 获取一条记录的详细数据 */
-        $data = M('model')->field(true)
-            ->where('id', $id)
-            ->find();
+        $data = M('model')->field(true)->where('id', $id)->find();
         if (!$data) {
             return $this->error('140157:获取模型数据失败');
         }
@@ -739,7 +777,27 @@ class Model extends Admin
                 'title' => 'ID主键'
             ];
         }
-        // dump ($obj->list_grid);
+        if (isset($obj->list_grid['urls']['href'])) {
+            foreach ($obj->list_grid['urls']['href'] as &$vo) {
+                $vo['show'] = '';
+                if (!empty($vo['class'])) {
+                    $vo['show'] .= "({$vo['class']});";
+                }
+                if (isset($vo['show_set']) && !empty($vo['show_set'])) {
+                    foreach ($vo['show_set'] as $n => $valArr) {
+                        $title = $fields[$n]['title'];
+                        $extra = parse_field_attr($fields[$n]['extra']);
+                        $res = [];
+                        foreach ($valArr as $v) {
+                            $res[] = isset($extra[$v]) ? $extra[$v] : $v;
+                        }
+                        $val = implode(', ', $res);
+                        $vo['show'] .= "{$title}=[$val];";
+                    }
+                }
+            }
+        }
+
 
         $this->assign('fields', $fields);
         $this->assign('list_grid', $obj->list_grid);
@@ -1086,7 +1144,7 @@ sql;
         $this->assign('page_tips', '需要有mysql的information_schema数据库的访问权限，因此建议使用root账号访问。连接格式：数据库地址;端口号;数据库名称;用户名;密码<br/>
 注意：需要手工调整的部分<br/>一、表或字段重命名无法通过对比数据库得知，程序只能当作删除了旧字段和增加了新字段两个操作，因此需要手工更正
 <br/>二、表的字符集（如utf-8）更改无法通过phinx实现，因此也需要手工实现
-<br/>三、表的主键更改待完善');
+<br/>三、表的主键更改需要手工实现');
         $db1 = db_config('phinx_db1');
         if (!$db1) {
             $config = config('database.connections.mysql');
@@ -1099,9 +1157,71 @@ sql;
         return $this->fetch();
     }
 
+    function checkInput($num)
+    {
+        $db = input('db' . $num);
+        if (empty($db)) return false;
+
+        $arr = explode(';', $db);
+        if (count($arr) != 5) return false;
+
+        return true;
+    }
+
     function mysqlDiff()
     {
-        echo D('common/Phinx')->mysqlDiff();
+        if (!$this->checkInput(1) || !$this->checkInput(2)) {
+            echo -1;
+        } else {
+            echo D('common/Phinx')->mysqlDiff();
+        }
+    }
+
+    function showSet()
+    {
+        $model_id = input('model_id');
+        $model = $this->getModel($model_id);
+        $obj = D('common/Models')->getFileInfo($model_id);
+        $fields = get_model_attribute($model, $obj);
+        if (IS_POST) {
+            $post = input('post.');
+
+            $show = [];
+            if (isset($post['field'])) {
+                foreach ($post['field'] as $f) {
+                    isset($post[$f]) && $show[$f] = $post[$f];
+                }
+            }
+            $msg = '';
+            if (!empty($post['class_val'])) {
+                $msg .= "({$post['class_val']});";
+            }
+            if (!empty($show)) {
+                foreach ($show as $n => $valArr) {
+                    $title = $fields[$n]['title'];
+                    $extra = parse_field_attr($fields[$n]['extra']);
+                    $res = [];
+                    foreach ($valArr as $v) {
+                        $res[] = isset($extra[$v]) ? $extra[$v] : $v;
+                    }
+                    $val = implode(', ', $res);
+                    $msg .= "{$title}=[$val];";
+                }
+            }
+            return $this->success($msg, null, urlencode(json_encode($show)));
+        } else {
+            $field = json_decode(urldecode(input('field', '[]')), true);
+            empty($field) && $field = [];
+            $this->assign('showSet', $field);
+            foreach ($fields as $k => $v) {
+                if (!in_array($v['type'], ['bool', 'radio', 'checkbox', 'select'])) {
+                    unset($fields[$k]);
+                }
+            }
+            $this->assign('fields', $fields);
+
+            return $this->fetch();
+        }
     }
 
 }

@@ -1,0 +1,193 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .form-group select {
+        margin-left: 0;
+    }
+
+    .col-lg-8 .uploadrow2 {
+        margin-left: -15px;
+    }
+
+    .layui-form-label {
+        width: auto;
+    }
+
+    .layui-input, .layui-form-select {
+        max-width: 500px;
+    }
+
+    .input-samll {
+        max-width: 200px;
+    }
+
+    .upload_file {
+        padding-left: 0;
+    }
+
+    .layui-form {
+        display: none;
+    }
+</style>
+<div class="page_message">
+    <section id="contents"> {include file="common@base/_nav" /}
+        <div class="tab-content">
+            <!-- 表单 -->
+            {php} isset($post_url) || $post_url = U('add?model='.$model['id'], $get_param);{/php}
+            <form id="form" action="{$post_url}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">版本 </label>
+                    <div class="layui-input-block">
+                        <div class="layui-input-inline">
+                            <select name="database" lay-filter="database">
+                                {volist name="dbs" id="vo"}
+                                <option value="{$vo}">{$vo}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="db_set" lay-filter="db_set">
+                                <option value="utf8mb4" selected="">utf8mb4</option>
+                                <option value="utf8">utf8</option>
+                                <option value="gbk">gbk</option>
+                                <option value="big5">big5</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">数据库名 </label>
+                    <div class="layui-input-block">
+                            <input type="text" class="layui-input" name="db_name" value="" placeholder="请输入数据库名称，必填">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">数据库设置 </label>
+                    <div class="layui-input-block">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-inline" style="width: 120px"><input type="text" class="layui-input" name="db_user" value=""></div>
+                        <div class="layui-form-label">密码</div>
+                        <div class="layui-input-inline" style="width: 150px"><input type="text" class="layui-input" name="db_passwd" value="{$data.db_passwd}"></div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">权限</label>
+                    <div class="layui-input-block">
+                        <select name="power" lay-filter="power">
+                            {volist name="fields.power.extra_array" id="vo"}
+                            <option value="{$key}" {eq name="data['power']" value="$key" } selected {/eq}>{$vo}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item" show-set="{$fields.ip.show_set|json_encode}">
+                    <label class="layui-form-label">指定IP </label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="ip" value="{$data.ip}" placeholder="多个IP以逗号分开">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注 </label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="remark" value="" placeholder="数据库备注">
+                    </div>
+                </div>
+                <div>
+                    <div class="offset-sm-2 col-sm-8">
+                        <button class="layui-btn layui-btn-normal  ajax-post iframe" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </section>
+</div>
+<link href="__STATIC__/datetimepicker/css/datetimepicker.css?v={:SITE_VERSION}" rel="stylesheet" type="text/css">
+<link href="__STATIC__/datetimepicker/css/dropdown.css?v={:SITE_VERSION}" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v={:SITE_VERSION}" charset="UTF-8"></script>
+<script type="text/javascript">
+    $(function () {
+        var old_val = ''
+        $('.db_name').bind('input propertychange', function () {
+            var val = $(this).val().replace(/\./g, "_")
+            if (old_val == $("input[name='db_user']").val()) {
+                $("input[name='db_user']").val(val);
+                old_val = val
+            }
+        });
+        change_form(0);
+        $('.layui-form').show();
+        layui.form.on('select', function (data) {
+            change_form(1);
+        });
+    });
+
+    function in_array(search, array) {
+        for (var i in array) {
+            if (array[i] == search) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function intersection(arr1, arr2) {
+        for (var i = 0; i < arr1.length; i++) {
+            for (var j = 0; j < arr2.length; j++) {
+                if (arr1[i] == arr2[j]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //控制动态字段的显示与隐藏
+    function change_form(type) {
+        var post = form.val("xw-form");
+        for (var p in post) {
+            var test = p.split("[");
+            if (test.length > 1) {
+                if (!post.hasOwnProperty(test[0])) {
+                    post[test[0]] = [post[p]];
+                } else {
+                    post[test[0]].push(post[p]);
+                }
+            }
+        }
+        $('.layui-form-item').each(function () {
+            var data = $(this).attr('show-set');
+
+            if (data != '[]' && data != undefined) {
+                data = JSON.parse(data);
+                var check = true;
+                for (var n in data) {
+                    var val = post[n] == undefined ? 0 : post[n];
+                    if (typeof (val) == 'object') {
+                        //计算两个数组的交集
+                        var res = intersection(val, data[n]);
+                        if (!res) {
+                            check = false;
+                            break;
+                        }
+                    } else {
+                        if (!in_array(val, data[n])) {
+                            check = false;
+                            break;
+                        }
+                    }
+                }
+                if (!check) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            }
+        });
+        if (type == 1) {
+            parent.layer.iframeAuto(parent.layer_index)
+        }
+    }
+</script>
+{/block}

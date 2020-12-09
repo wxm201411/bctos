@@ -41,7 +41,7 @@ class Update
         if(!empty($downloadPath)) {
             $this->downloadPath = $downloadPath;
         }else{
-            $this->downloadPath = DATA_PATH . '/update/download/';
+            $this->downloadPath = SITE_PATH . '/runtime/';
         }
     }
     

@@ -1,0 +1,93 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    #editor {
+        position: absolute;
+        width: 570px;
+        height: 290px;
+        font-size: 12px;
+        line-height: 22px;
+    }
+    .layui-input-block{
+        margin-left:0;
+    }
+</style>
+<div class="page_message ">
+    <section id="contents">
+        <div class="tab-content">
+            <form id="form" action="{:U('compose')}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <div class="layui-form-mid layui-word-aux">快捷键：Ctrl+F 搜索关键字，Ctrl+S 保存，Ctrl+H 查找替换；<br/>
+                            以下是容器运行需要的docker-compose.yml配置</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="height: 290px;">
+                        <textarea name="index" style="display: none" id="index_content">{$data.index}</textarea>
+                        <div id="editor">{$data.index}</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="offset-sm-2 col-sm-8">
+                        <input type="hidden" name="id" value="{$data.id}">
+                        <button class="layui-btn" lay-submit lay-filter="*">保存并更新镜像和容器</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/ace.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/ext-language_tools.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/theme-monokai.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/mode-yaml.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/ext-themelist.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/theme-chrome.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/ext-searchbox.min.js"></script>
+<script>
+    var index;
+    var time;
+    var lock=false
+    $(function () {
+        require("ace/ext/old_ie");
+        ace.require("ace/ext/language_tools");
+        var editor = ace.edit("editor");
+        editor.$blockScrolling = Infinity;
+        editor.setFontSize(16);
+        editor.session.setMode("ace/mode/yaml");
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true
+        });
+        document.getElementById('editor').style.fontSize = '12px';
+        editor.setTheme("ace/theme/chrome");
+        editor.getSession().on('change', function (e) {
+            var c = editor.getValue();
+            $('#index_content').html(c)
+        });
+
+        form.on('submit(*)', function(data){
+            if(lock==true) return false;
+            lock = true
+            index = layer.load();
+            $.post("{:U('compose')}",data.field)
+            time = window.setInterval(check, 1500);
+            return false;
+        });
+
+        parent.layer.iframeAuto(parent.layer_index)
+    })
+
+    function check() {
+        $.post("{:U('nginx_server_check')}", {id:"{$data.id}"}, function (res) {
+            if (res == 'ok') {
+                layer.close(index);
+                window.clearInterval(time);
+                layer.msg('保存并重启成功');
+                lock = false
+            }
+        })
+    }
+</script>
+{/block}

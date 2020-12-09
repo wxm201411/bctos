@@ -1,0 +1,33 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .layui-input-block{
+        margin-left:0;
+    }
+</style>
+<div class="page_message ">
+    <section id="contents">
+        <div class="tab-content">
+            <form id="form" action="{:U('mysql_root')}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <div class="layui-form-mid layui-word-aux">修改密码后请自行修改使用该账号连接数据库的网站中的数据库密码</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input type="text" name="pwd" required lay-verify="required" value="{$data.pwd}" class="layui-input">
+                    </div>
+                </div>
+                <div>
+                    <div class="offset-sm-2 col-sm-8">
+                        <input type="hidden" name="id" value="{$data.id}">
+                        <input type="hidden" name="old_pwd" value="{$data.pwd}">
+                        <button class="layui-btn submit-btn  ajax-post" id="submit" type="submit" target-form="form-horizontal">保 存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+{/block}

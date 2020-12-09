@@ -1,5 +1,0 @@
-FROM php:7.2-fpm-alpine
-COPY php.ini-production "$PHP_INI_DIR/php.ini"
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
-&& install-php-extensions pdo_mysql ssh2 pcntl gd memcached opcache redis

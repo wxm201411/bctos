@@ -1,0 +1,18 @@
+version: "3.8"
+networks:
+  default:
+    external:
+      name: bctos
+services:
+  mysql-mariadb100:
+    hostname: mysql-mariadb100
+    container_name: mysql-mariadb100
+    image: mariadb:10.0
+    restart: unless-stopped
+    ports:
+      - 3310:3306
+    volumes:
+      - /bctos/server/mysql-mariadb100/mysql-data:/var/lib/mysql
+      - /bctos/server/mysql-mariadb100/my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: bctos_panel

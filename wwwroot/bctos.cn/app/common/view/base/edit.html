@@ -20,7 +20,7 @@
            <div class="offset-sm-2">
               {notempty name="data.id"} <input type="hidden" name="id" value="{$data.id}">{/notempty}
                &nbsp;
-            <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">{$submit_name|default='确 定'}</button>
+            <button class="btn submit-btn ajax-post {$iframeClass|default=''}" id="submit" type="submit" target-form="form-horizontal">{$submit_name|default='确 定'}</button>
            </div>
           </div>
       </form>

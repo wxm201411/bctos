@@ -35,9 +35,9 @@ class Images extends WebBase
         $this->assign('search_button', $dataTable->config['search_button']);
         $this->assign('check_all', $dataTable->config['check_all']);
 
-//        $this->assign('top_more_button', [
-//            ['title' => '删除全部镜像', 'url' => U('del?id=-1'), 'class' => 'ajax-get'],
-//        ]);
+        $this->assign('top_more_button', [
+            ['title' => '下载镜像', 'url' => U('download'), 'class' => 'download'],
+        ]);
 
         // 解析列表规则
         $list_data = $this->listGrid($model, $dataTable);
@@ -97,5 +97,15 @@ class Images extends WebBase
             }
         }
         return $this->success('删除镜像成功');
+    }
+
+    function download()
+    {
+        $title = input('title');
+        if (empty($title)) {
+            return $this->error();
+        }
+        ssh_execute("docker pull " . $title);
+        return $this->success('下载成功');
     }
 }

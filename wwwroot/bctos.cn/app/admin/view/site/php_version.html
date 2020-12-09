@@ -1,0 +1,77 @@
+{extend name="common@base/common" /} {block name="body"}
+<div class="page_message ">
+    <section id="contents"> {include file="common@base/_nav" /}
+        <div class="tab-content">
+            <!-- 表单 -->
+            <form id="form" action="{:U('phpVersion')}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="margin-left: 0">
+                        <div class="layui-form-mid layui-word-aux">切换成功后可能有缓存，需要刷新一两次才能看到效果</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline" style="width: 300px">
+                        <div class="layui-input-block" style="margin-left: 0">
+                            <input type="hidden" name="id" value="{$data.id}"/>
+                            {volist name="data.versions" id="vo"}
+                            <input type="radio" name="php_version" value="{$vo}" title="{$vo}" {eq name="data['php_version']" value="$vo" }checked{/eq}>
+                            {/volist}
+                            <input type="radio" name="php_version" value="0" title="纯静态" {eq name="data['php_version']" value="0" }checked{/eq}>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="margin-left: 0">
+                        <button class="layui-btn submit-btn  ajax-post" id="submit" type="submit" target-form="form-horizontal">切 换</button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="margin-left: 0">
+                        <div class="layui-form-mid layui-word-aux">请根据您的程序要求选择版本<br/>
+                            如果你需要的PHP版本没有在选项中，请先下载相应的镜像并启动它<br/>
+                            PHP的版本不是超高越好，如果程序使用了高版本已经弃用的方法就会报错<br/>
+                            PHP的扩展是不相通的，每个版本需要单独安装扩展
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+<script>
+    $(function () {
+
+        form.on('switch(force)', function (data) {
+            $.post("{:U('forceCert')}", {id: "{:input('id/d')}", checked: data.elem.checked ? 1 : 0}, function (res) {
+                if (res.code == 0) {
+                    updateAlert(res.msg, 'alert-success')
+                } else {
+                    updateAlert(res.msg)
+                }
+            })
+        });
+
+        form.on('switch(colse)', function (data) {
+            if (!data.elem.checked) {
+                layer.confirm('关闭后HTTPS将无法访问，确定要关闭吗?', function (index) {
+                    closeCert(0)
+                    layer.close(index);
+                });
+            } else {
+                closeCert(1)
+            }
+        });
+    })
+
+    function closeCert(checked) {
+        $.post("{:U('closeCert')}", {id: "{:input('id/d')}", checked: checked}, function (res) {
+            if (res.code == 0) {
+                updateAlert(res.msg, 'alert-success')
+            } else {
+                updateAlert(res.msg)
+            }
+        })
+    }
+</script>
+{/block}

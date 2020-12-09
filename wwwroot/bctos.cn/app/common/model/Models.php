@@ -210,7 +210,7 @@ sql;
         $type = gettype($model);
         if ($type != 'array' && $type != 'object') {
             if (is_numeric($model)) {
-                $model = $this->find($model);
+                $model = $this->where('id', $model)->find();
             } else {
                 $map['name'] = $model;
                 $model = $this->where($map)->find();
@@ -239,6 +239,12 @@ sql;
             isset($g['raw']) || $g['raw'] = 0;
             isset($g['come_from']) || $g['come_from'] = 0;
             isset($g['href']) || $g['href'] = [];
+            if (!empty($g['href'])) {
+                foreach ($g['href'] as &$h) {
+                    isset($h['show_set']) || $h['show_set'] = [];
+                }
+            }
+            isset($g['can_edit']) || $g['can_edit'] = 0;
         }
         foreach ($obj->fields as $n => &$f) {
             $f = $this->fillField($n, $f);
@@ -265,7 +271,11 @@ sql;
         isset($f['remark']) || $f['remark'] = '';
         isset($f['is_show']) || $f['is_show'] = 0;
         isset($f['is_must']) || $f['is_must'] = 0;
-        isset($f['extra']) || $f['extra'] = '';
+        if (isset($f['extra'])) {
+            $f['extra'] = str_replace("：", ":", $f['extra']);
+        } else {
+            $f['extra'] = '';
+        }
 
         if (empty($f['value']) && strpos($f['field'], 'int') !== false) {
             $f['value'] = 0;
@@ -329,7 +339,7 @@ sql;
         }
         $type = gettype($model);
         if ($type != 'array' && $type != 'object') {
-            $model = $this->find($model);
+            $model = $this->where('id', $model)->find();
         }
 
         $old = $this->getFileInfo($model);
@@ -368,7 +378,7 @@ sql;
         }
 
         $list_grid_str = $this->wp_var_export($list_grid, 1);
-
+//dump($list_grid_str);exit;
         $fieldsStr = $this->dealFieldStr($fields);
         $content = <<<str
 <?php
@@ -717,6 +727,7 @@ sql;
                     $res['title'] = $vo;
                     $res['come_from'] = $from = $data['come_from'][$k];
                     $res['width'] = $data['width'][$k];
+                    $res['can_edit'] = $data['can_edit'][$k];
                     if ($from == 1) {
                         $name = $j == 0 ? 'urls' : 'urls' . $j;
                         $j++;
@@ -728,10 +739,18 @@ sql;
                                 $title = $vv;
                                 $url = $data['url_url'][$k][$kk];
                                 if (!empty($title) && !empty($url)) {
-                                    $res['href'][] = [
-                                        'title' => $title,
-                                        'url' => $url
-                                    ];
+                                    $arr = ['title' => $title, 'url' => $url];
+
+                                    $show = $data['show_set'][$k][$kk];
+                                    if (!empty($show)) {
+                                        $arr['show_set'] = json_decode(urldecode($show), true);
+                                    }
+                                    $class = $data['class'][$k][$kk];
+                                    if (!empty($class)) {
+                                        $arr['class'] = $class;
+                                    }
+
+                                    $res['href'][] = $arr;
                                 }
                             }
                         }
@@ -748,7 +767,7 @@ sql;
             $list_grid = $meta_table->list_grid;
             $fields = $meta_table->fields;
         }
-        // dump ( $data );
+        //dump($list_grid);exit;
         $res = $this->buildFile($data, $fields, $list_grid, $config);
         return $res;
     }

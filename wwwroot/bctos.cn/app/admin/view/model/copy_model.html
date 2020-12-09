@@ -1,0 +1,47 @@
+{extend name="common@base/common" /}
+
+{block name="body"}
+	<!-- 标签页导航 -->
+	<div class="wrap">
+		<div class="tab-content">
+			<!-- 表单 -->
+			<form id="form" action="{:U('copyModel')}" method="post" class="form-horizontal doc-modal-form">
+				<!-- 基础 -->
+				<div id="tab1" class="tab-pane in tab1">
+					<div class="layui-form-item">
+						<label class="item-label">模型标识<span class="check-tips">（请输入模型标识，全部小写，可以用下划线）</span></label>
+						<div class="controls">
+							<input type="text" class="text input-large" name="name" value="">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="item-label">模型名称<span class="check-tips">（请输入模型的中文名称）</span></label>
+						<div class="controls">
+							<input type="text" class="text input-large" name="title" value="">
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="item-label">所属应用</label>
+						<div class="controls">
+							<select name="addon">
+								<option value="">无</option>
+                                {volist name="list" id="m"}
+								<option value="{$key}">{$m}</option>
+                                {/volist}
+							</select>
+						</div>
+					</div>
+
+				<!-- 按钮 -->
+				<div class="layui-form-item">
+					<label class="item-label"></label>
+					<div class="controls edit_sort_btn">
+						<input type="hidden" name="id" value="{:input('id')}">
+						<button class="btn submit-btn ajax-post iframe" type="submit" target-form="form-horizontal">确 定</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{/block}

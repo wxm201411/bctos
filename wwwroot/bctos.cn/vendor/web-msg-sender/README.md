@@ -42,7 +42,7 @@ php start.php status
 ====
 ```javascript
 // 引入前端文件
-<script src='//cdn.bootcss.com/socket.io/1.3.7/socket.io.js'></script>
+<script src='https://cdn.bootcss.com/socket.io/1.3.7/socket.io.js'></script>
 <script>
 // 初始化io对象
 var socket = io('http://'+document.domain+':2120');

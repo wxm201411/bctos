@@ -660,7 +660,7 @@ class Base extends BaseController
         return $data;
     }
 
-    protected function parseDataByField($val, $field, $id = 0, $model = [])
+    protected function parseDataByField($val, $field, $id = 0, $model = [], $grid = [])
     {
         $has_chang = false;
         if (empty($field)) {
@@ -679,9 +679,8 @@ class Base extends BaseController
             case 'bool':
                 $url = U('switchAjaxUpdate', ['table' => $model['name'], 'field' => $field['name'], 'id' => $id]);
                 $checked = $val ? 'checked' : '';
-
                 $extra = parse_field_attr($field['extra']);
-                if (isset($GLOBALS['forbit_audit'])) {
+                if (isset($GLOBALS['forbit_audit']) || $grid['can_edit'] == 0) {
                     $val = isset($extra[$val]) ? $extra[$val] : $val;
                 } elseif (count($extra) == 2) {
                     isset($extra[0]) || $extra[0] = '否';
@@ -783,7 +782,7 @@ class Base extends BaseController
         return ['value' => $val, 'has_chang' => $has_chang];
     }
 
-    protected function parseDataByFieldByApi($val, $field, $id = 0, $model = [])
+    protected function parseDataByFieldByApi($val, $field, $id = 0, $model = [], $grid = [])
     {
         $has_chang = true;
         if (empty($field)) {
@@ -797,6 +796,7 @@ class Base extends BaseController
             case 'datetime':
                 $val = date('H:i', $val);
                 break;
+            case 'bool':
             case 'select':
             case 'radio':
                 if (!empty($field['extra'])) {
@@ -937,27 +937,56 @@ class Base extends BaseController
         foreach ($grid as $name => $g) {
             $val = $db_val = isset($data[$name]) ? $data[$name] : '';
             $field = isset($fields[$name]) ? $fields[$name] : '';
-
             if (isset($g['href']) && !empty($g['href'])) {
                 // 链接支持
                 $valArr = [];
-                foreach ($g['href'] as $link) {
+                foreach ($g['href'] as $h => $link) {
+
+                    //新的动态标题控制方式
+                    if (isset($link['show_set']) && !empty($link['show_set'])) {
+                        $check = true;
+                        foreach ($link['show_set'] as $set_f => $set_val) {
+                            if (empty($set_val)) continue;
+                            $set_d = isset($original_data[$set_f]) ? $original_data[$set_f] : '';
+                            if (is_array($set_d)) {
+                                //计算两个数组的交集
+                                $res = array_intersect($set_d, $set_val);
+                                if (!$res) {
+                                    $check = false;
+                                    break;
+                                }
+                            } else {
+                                if (!in_array($set_d, $set_val)) {
+                                    $check = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!$check) {
+                            unset($g['href'][$h]);
+                            continue;
+                        }
+                    }
+
                     $href = $link['url'];
 
                     $show = $link['title'];
-                    if (strpos($show, ':') !== false) {
-                        // 支持标题随状态变化，设置格式：is_show:0|上架,1|下架
-                        list ($show_filed, $show) = explode(':', $show, 2);
-                        $show_val = $original_data[$show_filed];
-                        $showArr = explode(',', $show);
-                        foreach ($showArr as $arr) {
-                            list ($v, $t) = explode('|', $arr);
-                            if ($v == $show_val) {
-                                $show = $t;
-                                break;
-                            }
-                        }
-                    }
+                    //旧的动态标题控制方式
+//                    if (strpos($show, ':') !== false) {
+//                        // 支持标题随状态变化，设置格式：is_show:0|上架,1|下架
+//                        list ($show_filed, $show) = explode(':', $show, 2);
+//                        $show_val = $original_data[$show_filed];
+//                        $showArr = explode(',', $show);
+//                        foreach ($showArr as $arr) {
+//                            list ($v, $t) = explode('|', $arr);
+//                            if ($v == $show_val) {
+//                                $show = $t;
+//                                break;
+//                            }
+//                        }
+//                    }
+
                     // 增加跳转方式处理 weiphp
                     $target = '_self';
                     if (preg_match('/target=(\w+)/', $href, $matches)) {
@@ -1016,7 +1045,7 @@ class Base extends BaseController
                 $data[$name . '_db'] = $db_val;
             } else {
                 // get_name_by_status方法不再用，下面按字段类型自动做数据转换，不再需要人工转换
-                $valArr = IS_AJAX ? $this->parseDataByFieldByApi($val, $field, $id, $model) : $this->parseDataByField($val, $field, $id, $model);
+                $valArr = IS_AJAX ? $this->parseDataByFieldByApi($val, $field, $id, $model, $g) : $this->parseDataByField($val, $field, $id, $model, $g);
                 $val = $valArr['value'];
                 $valArr['has_chang'] && $data[$name . '_db'] = $db_val;
             }
@@ -1074,10 +1103,7 @@ class Base extends BaseController
         }
 
         $wp_where = wp_where($map);
-        $data = M($name)->field($db_field)
-            ->where($wp_where)
-            ->order($order)
-            ->paginate($row);
+        $data = M($name)->field($db_field)->where($wp_where)->order($order)->paginate($row);
 
         $list = $this->parsePageData($data, $dataTable, $list_data);
         return $list;
@@ -1094,7 +1120,19 @@ class Base extends BaseController
         if ($obj === false) {
             throw new \think\Exception('数据模型获取失败', 10006);
         }
-        $fields = array_keys($obj->list_grid);
+        //把动态显示需要的判断字段也加入到查询字段中
+        foreach ($obj->list_grid as $f => $h) {
+            $fields[] = $f;
+            if (isset($h['href']) && !empty($h['href'])) {
+                foreach ($h['href'] as $url) {
+                    if (isset($url['show_set']) && !empty($url['show_set'])) {
+                        foreach ($url['show_set'] as $set => $show) {
+                            $fields[] = $set;
+                        }
+                    }
+                }
+            }
+        }
         $model_fields = array_keys($obj->fields);
 
         in_array('id', $model_fields) || array_push($model_fields, 'id');
@@ -1459,8 +1497,6 @@ class Base extends BaseController
             // 删除字段缓存文件
             // dump ( $data );
             $model = $dao->field(true)->find($model_id);
-            $cache_name = config('database.connections.mysql.database') . '.' . preg_replace('/\W+|\_+/', '', $model['name']);
-            S($cache_name, null, DATA_PATH . '_fields/');
 
             $list[$name] = $data;
             // dump ( $newList );

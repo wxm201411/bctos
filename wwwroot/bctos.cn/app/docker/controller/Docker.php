@@ -7,6 +7,9 @@ use app\common\controller\WebBase;
 //PC运营管理端的控制器
 class Docker extends WebBase
 {
+    var $canNotStop = ['panel', 'php72', 'mysql57', 'nginx'];
+    var $canNotStopIds = "docker ps -a | sed '/\(panel\|php72\|mysql57\|nginx\)/d' | awk '{print $1}'|sed '1d'";
+
     public function initialize()
     {
         parent::initialize();
@@ -61,13 +64,16 @@ class Docker extends WebBase
             $vo['PORTS'] = $arr[5];
             $vo['NAMES'] = $arr[6];
 
-            if (substr($vo['STATUS'], 0, 2) == 'Up') {
-                $vo['urls'] = '<a class="ajax-get" target="_self" href="' . urldecode(U('stop?id=' . $vo['id'])) . '">停止</a>';
+            if (in_array($vo['NAMES'], $this->canNotStop)) {
+                $vo['urls'] = '不可操作';
             } else {
-                $vo['urls'] = '<a class="ajax-get" target="_self" href="' . urldecode(U('start?id=' . $vo['id'])) . '">启动</a>';
+                if (substr($vo['STATUS'], 0, 2) == 'Up') {
+                    $vo['urls'] = '<a class="ajax-get" target="_self" href="' . urldecode(U('stop?id=' . $vo['id'])) . '">停止</a>';
+                } else {
+                    $vo['urls'] = '<a class="ajax-get" target="_self" href="' . urldecode(U('start?id=' . $vo['id'])) . '">启动</a>';
+                }
+                $vo['urls'] .= ' <a class="tr-del" data-url="' . urldecode(U('del?id=' . $vo['id'])) . '">删除</a>';
             }
-            $vo['urls'] .= ' <a class="tr-del" data-url="' . urldecode(U('del?id=' . $vo['id'])) . '">删除</a>';
-
 
             $data[] = $vo;
         }
@@ -80,10 +86,11 @@ class Docker extends WebBase
     function stop()
     {
         $id = input('id', '-1');
+
         if ($id == -1) {
-            ssh2("docker stop $(docker ps -q)");
+            ssh2("docker stop $({$this->canNotStopIds})");
         } else {
-            ssh2("docker stop " . $id);
+            ssh2("docker stop $id");
         }
 
         return $this->success('停止成功');
@@ -93,7 +100,7 @@ class Docker extends WebBase
     {
         $id = input('id', '-1');
         if ($id == -1) {
-            ssh2("docker start $(docker ps -aq)");
+            ssh2("docker start $({$this->canNotStopIds})");
         } else {
             ssh2("docker start " . $id);
         }
@@ -104,7 +111,7 @@ class Docker extends WebBase
     {
         $id = input('id', '-1');
         if ($id == -1) {
-            ssh2("docker stop $(docker ps -aq);docker rm $(docker ps -aq)");
+            ssh2("docker stop $({$this->canNotStopIds});docker rm $({$this->canNotStopIds})");
         } else {
             ssh2("docker stop {$id};docker rm {$id}");
         }

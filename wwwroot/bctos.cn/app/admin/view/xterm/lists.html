@@ -1,0 +1,139 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    tbody td {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .search-input.date {
+        height: 30px;
+    }
+
+    #contents {
+        padding-top: .1px;
+    }
+
+    .layui-tab {
+        margin: 0;
+    }
+
+    .data-table {
+        margin: 0;
+    }
+
+    .layui-tab-title {
+        display: inline-block;
+    }
+
+    .icon-tab {
+        margin: 0 20px;
+        bottom: 0px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #1E9FFF;
+    }
+
+    .add-btn {
+        float: right;
+        margin-top: 10px;
+    }
+
+    .iframe-box {
+        width: 100%;
+        height: 100%;
+        min-height: 600px;
+        border-width: 0px;
+    }
+
+    .icon-th {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1E9FFF;
+    }
+</style>
+<div class="page_message">
+    <section id="contents">
+        <div class="layui-row">
+            <div class="layui-col-md9">
+                <div class="layui-tab layui-tab-card" lay-allowClose="true" lay-filter="xterm">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">本地服务器</li>
+                    </ul>
+                    <a class="add-btn"><i class="layui-icon layui-icon-addition icon-tab"></i></a>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <iframe src="{:U('xterm')}" class="iframe-box" id="iframe_1"></iframe>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md3">
+                <!-- 数据列表 -->
+                {php}$now_by = I('by','asc'); if($now_by=='asc'){ $next_by = 'desc'; $by_icon = '<i class="layui-icon layui-icon-upload-circle"></i>'; } else { $next_by = 'asc'; $by_icon = '<i class="layui-icon layui-icon-download-circle"></i>'; }{/php}
+                <div class="data-table">
+                    <div class="table-striped">
+                        <table cellspacing="1" style="table-layout: fixed">
+                            <!-- 表头 -->
+                            <thead>
+                            <tr>
+                                <th>常用命令</th>
+                                <th width="50px"><a class="add-command"><i class="layui-icon layui-icon-addition icon-th"></i></a></th>
+                            </tr>
+                            </thead>
+
+                            <!-- 列表 -->
+                            <tbody>
+                            {notempty name="$list_data"} {volist name="list_data" id="data"}
+                            <tr>
+                                <td style="overflow: auto;white-space: normal "><a class="command-li" rel="{$data.status_db}">{$data.command|raw}</a></td>
+                                <td>{$data.urls|raw}</td>
+                            </tr>
+                            {/volist}{/notempty}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="page"> {$_page|raw|default=''}</div>
+            </div>
+        </div>
+
+
+    </section>
+</div>
+
+{/block} {block name="script"}
+<script type="text/javascript">
+    layui.use('element', function () {
+        var element = layui.element;
+
+        $('.add-btn').click(function () {
+            var num = $('.layui-tab-title li').length + 1
+            var url = "{:U('xterm')}"
+            element.tabAdd('xterm', {
+                title: '本地服务器' + num
+                , content: '<iframe src="' + url + '" class="iframe-box" id="iframe_' + num + '"></iframe>' //支持传入html
+                , id: 'xterm_' + num
+            });
+            element.tabChange('xterm', 'xterm_' + num);
+            return false
+        })
+        $('.command-li').click(function () {
+            var val = $(this).text()
+            if ($(this).attr('rel') == '1') {
+                val = val + "\n"
+            }
+            $(".layui-tab-content .layui-show iframe")[0].contentWindow.sendData(val)
+        })
+        $('.add-command').click(function () {
+            layer_index = layer.open({
+                type: 2,
+                title: '新增常用命令',
+                area: ['600px', '335px'],
+                content: "{:U('add?only_body=1')}"
+            });
+        })
+    });
+</script>
+{/block}

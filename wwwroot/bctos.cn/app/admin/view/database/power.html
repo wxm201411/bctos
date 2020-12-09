@@ -1,0 +1,138 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .layui-form {
+        padding: 20px 10px;
+    }
+</style>
+<div class="page_message">
+    <section id="contents">
+        {include file="common@base/_nav" /}
+        <!-- 数据列表 -->
+        <form class="layui-form" lay-filter="xw-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限</label>
+                <div class="layui-input-block">
+                    <select name="{$field.name}" lay-filter="{$field.name}">
+                        {volist name="field.extra_array" id="vo"}
+                        <option value="{$key}" {eq name="data[$field['name']]" value="$key"} selected {/eq}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item" show-set="{$field2.show_set|json_encode}">
+                <label class="layui-form-label">指定IP </label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" name="ip" value="{$data.ip}">
+                    <div class="layui-form-mid layui-word-aux">多个IP以逗号分开</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input type="hidden" name="id" value="{:input('id')}"/>
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">确定修改</button>
+                    <a class="layui-btn layui-btn-primary" href="javascript:close();">关闭</a>
+                </div>
+            </div>
+        </form>
+
+        <script>
+
+            //Demo
+            layui.use('form', function () {
+                var form = layui.form;
+                //监听提交
+                form.on('submit(formDemo)', function (data) {
+                    var load_index = layer.load();
+                    $.post("{:U('power')}", data.field, function (res) {
+                        if (res.code == 0) {
+                            parent.layer.closeAll()
+                            parent.layer.msg(res.msg)
+                            parent.window.location.reload();
+                        } else {
+                            layer.msg(res.msg)
+                            layer.close(load_index)
+                        }
+                    })
+                    return false;
+                });
+            });
+
+            function close() {
+                parent.layer.closeAll()
+            }
+
+            $(function () {
+                change_form();
+                $('.layui-form').show();
+                layui.form.on('select', function (data) {
+                    change_form();
+                });
+            })
+
+            function in_array(search, array) {
+                for (var i in array) {
+                    if (array[i] == search) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function intersection(arr1, arr2) {
+                for (var i = 0; i < arr1.length; i++) {
+                    for (var j = 0; j < arr2.length; j++) {
+                        if (arr1[i] == arr2[j]) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            //控制动态字段的显示与隐藏
+            function change_form() {
+                var post = form.val("xw-form");
+                for (var p in post) {
+                    var test = p.split("[");
+                    if (test.length > 1) {
+                        if (!post.hasOwnProperty(test[0])) {
+                            post[test[0]] = [post[p]];
+                        } else {
+                            post[test[0]].push(post[p]);
+                        }
+                    }
+                }
+                $('.layui-form-item').each(function () {
+                    var data = $(this).attr('show-set');
+
+                    if (data != '[]' && data != undefined) {
+                        data = JSON.parse(data);
+                        var check = true;
+                        for (var n in data) {
+                            var val = post[n] == undefined ? 0 : post[n];
+                            if (typeof (val) == 'object') {
+                                //计算两个数组的交集
+                                var res = intersection(val, data[n]);
+                                if (!res) {
+                                    check = false;
+                                    break;
+                                }
+                            } else {
+                                if (!in_array(val, data[n])) {
+                                    check = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!check) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    }
+                });
+            }
+        </script>
+    </section>
+</div>
+{/block}

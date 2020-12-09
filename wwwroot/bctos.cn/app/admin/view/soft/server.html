@@ -1,0 +1,58 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .layui-input-block {
+        margin-left: 0;
+    }
+</style>
+<div class="page_message ">
+    <section id="contents">
+        <div class="tab-content">
+            <form class="layui-form" lay-filter="xw-form">
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <div class="layui-form-mid layui-word-aux">重启或停止会导致依赖{$data.title}的网站访问受影响，请慎重操作</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 100px">当前状态</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="switch" lay-skin="switch" lay-text="已开启|未启动" value="1" disabled {if condition="$status" } checked {/if}>
+                    </div>
+                </div>
+                <div>
+                    <div class="offset-sm-2 col-sm-8 btns">
+                        <button type="button" class="layui-btn layui-btn-danger stop-btn" onclick="setStatus('stop')" style="display: {if condition="$status"} {else /} none{/if}">停 止</button>
+                        <button type="button" class="layui-btn restart-btn" onclick="setStatus('restart')" style="display: {if condition="$status"} {else /} none{/if}">重 启</button>
+                        <button type="button" class="layui-btn layui-btn-normal start-btn" onclick="setStatus('start')" style="display: {if condition="$status"}none {else /} {/if}">启 动</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+<script>
+    var lock = false
+    function setStatus(type) {
+        if (lock == true) return false;
+        lock = true
+        var index = layer.load();
+        $.post("{:U('server')}", {type, id: "{$data['id']}"}, function () {
+            $('.btns .layui-btn').hide();
+            layer.close(index);
+            if (type == 'stop') {
+                $('.btns .start-btn').show();
+                layer.msg('已停止服务');
+                form.val("xw-form", {"switch": 0});
+            }else{
+                $('.btns .stop-btn').show();
+                $('.btns .restart-btn').show();
+                type == 'start' ? layer.msg('已启动服务') : layer.msg('已完成重启服务');
+                form.val("xw-form", {"switch": 1});
+            }
+
+            lock = false
+        })
+    }
+</script>
+{/block}

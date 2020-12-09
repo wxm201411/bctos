@@ -1,0 +1,160 @@
+{extend name="common@base/common" /}
+
+{block name="body"}
+<style>
+    .layui-form{
+        padding: 10px;
+    }
+</style>
+<form action="" class="form-horizontal layui-form" lay-filter="xw-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">样 式(class) </label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" value="{:input('class_val')}" name="class_val" placeholder="class-name">
+        </div>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>显示控制</legend>
+        <div class="layui-field-box">
+            <div class="form-group">
+                <div style="margin: 15px 0; " class="specTable data-table">
+                    <table cellspacing="1" cellpadding="0">
+                        <thead>
+                        <tr>
+                            <th align="center" style="width: 150px">字段</th>
+                            <th align="center">显示条件，不选择表示隐藏</th>
+                            <th align="center" style="width: 50px">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="list_data_tbody">
+                        {php} $kk = 0; foreach($showSet as $n=>$v){ $kk += 1;{/php}
+                        <tr class="list_tr" rel="{$kk}">
+
+                            <td align="center">
+                                <div class="select_field">
+                                    <select name="field[{$kk}]" class="select_field_event" rel="{$kk}">
+                                        <option value="id">请选择</option>
+                                        {volist name="fields" id="vo"}
+                                        <option value="{$key}" {eq name="key" value="$n" }selected{/eq} >{$vo.title}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                {php} $field = $fields[$n]; {/php}
+                                {volist name="field.extra_array" id="vo"}
+                                <input type="checkbox" value="{$key}" name="{$field.name}[]" {in name="key" value="$v" }checked {/in}
+                                toggle-data="{$vo|get_hide_attr}"
+                                title="{$vo|clean_hide_attr}">
+                                {/volist}
+                            </td>
+                            <td><a href="javascript:void(0);" onclick="remove_tr(this)">删除</a></td>
+                        </tr>
+                        {php} } {/php}
+                        <tr class="more_tr">
+                            <td colspan="3"><a href="javascript:add_tr()">+增加条件</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <!-- 按钮 -->
+    <div class="form-item cf">
+        <label class="item-label"></label>
+        <div class="controls edit_sort_btn">
+            <button class="btn submit-btn" lay-submit lay-filter="*" target-form="form-horizontal">确 定</button>
+        </div>
+    </div>
+</form>
+<table style="display: none">
+    <tr id="default_tr">
+
+        <td align="center">
+            <div class="select_field">
+                <select name="field[sort_id]" class="select_field_event" rel="sort_id">
+                    <option value="id">请选择</option>
+                    {volist name="fields" id="vo"}
+                    <option value="{$key}">{$vo.title}</option>
+                    {/volist}
+                </select>
+            </div>
+        </td>
+        <td></td>
+        <td><a href="javascript:void(0);" onclick="remove_tr(this)">删除</a></td>
+    </tr>
+</table>
+<div style="display: none">
+    <div id="condition_id"></div>
+    {volist name="fields" id="field"}
+    <div id="condition_{$key}">
+        {volist name="field.extra_array" id="vo"}
+        <input type="checkbox" value="{$key}" name="{$field.name}[]" title="{$vo}">
+        {/volist}
+    </div>
+    {/volist}
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    function layui_funs(form) {
+        form.on('select', function (data) {
+            var name = data.value;
+
+            re = new RegExp("sort_id", "g");
+            var sort_id = $(data.elem).attr('rel')
+            //console.log('sort_id', sort_id);
+
+            var html = $('#condition_' + name).html().replace(re, sort_id);
+            //console.log('html', html);
+
+            $(data.elem).parents('td').next().html(html);
+            form.render(); //更新全部
+        });
+        form.render();
+
+        form.on('submit(*)', function(data){
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            var class_val = data.field.class_val
+            $.post("{:U('showSet?model_id='.input('model_id'))}", data.field ,function (res) {
+                parent.setInput(res.msg, res.data, class_val)
+                parent.layer.closeAll()
+            })
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    }
+
+    //增加问题
+    var tr_sort_id = 0;
+
+    function add_tr() {
+        var list_count = 0;
+        $('.list_tr').each(function () {
+            list_count += 1;
+            var sort_id = $(this).attr('rel');
+            if (sort_id > tr_sort_id) tr_sort_id = sort_id;
+        });
+
+        tr_sort_id += 1;
+
+        re = new RegExp("sort_id", "g");
+        str = $('#default_tr').html().replace(re, tr_sort_id);
+        //console.log(str);
+        var html = '<tr class="list_tr" rel="' + tr_sort_id + '">' + str + '</tr>';
+        if (list_count == 0)
+            $('#list_data_tbody tr').before(html);
+        else
+            $('.list_tr:last').after(html);
+
+        form.render(); //更新全部
+    }
+
+    //删除问题
+    function remove_tr(_this) {
+        $(_this).parent().parent().remove();
+    }
+</script>
+{/block}

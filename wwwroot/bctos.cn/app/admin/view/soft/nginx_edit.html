@@ -1,0 +1,175 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .layui-form-label {
+        width: 230px;
+    }
+    .layui-input-inline {
+        width: 80px !important;
+    }
+    .layui-input {
+        width: 80px;
+    }
+    .layui-word-aux{
+        font-size: 12px;
+    }
+</style>
+<div class="page_message ">
+    <section id="contents">
+        <div class="tab-content">
+            <form id="form" action="{:U('nginx_edit')}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">worker_connections</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="worker_connections" required lay-verify="required" class="layui-input" value="{$data.worker_connections}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">最大并发链接数</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">keepalive_timeout</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="keepalive_timeout" required lay-verify="required" class="layui-input" value="{$data.keepalive_timeout}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">连接超时时间</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">worker_processes</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="worker_processes" required lay-verify="required" class="layui-input" value="{$data.worker_processes}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">处理进程,auto表示自动,数字表示进程数</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">client_max_body_size</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="client_max_body_size" required lay-verify="required" class="layui-input" value="{$data.client_max_body_size}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">MB，最大上传文件</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">server_names_hash_bucket_size</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="server_names_hash_bucket_size" required lay-verify="required" class="layui-input" value="{$data.server_names_hash_bucket_size}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">服务器名字的hash表大小</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">client_header_buffer_size</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="client_header_buffer_size" required lay-verify="required" class="layui-input" value="{$data.client_header_buffer_size}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">KB，客户端请求头buffer大小</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">gzip</label>
+                    <div class="layui-input-inline">
+                        <input type="hidden" name="gzip" value="off" /><!--解决开关关闭状态下值不能提交到后台问题-->
+                        <input type="checkbox" name="gzip" lay-skin="switch" lay-text="开启|关闭" value="on" {eq name="data.gzip" value="on"}checked {/eq} />
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">是否开启压缩传输</div>
+                </div>
+                <div class="layui-form-item" show-set='{"gzip":["on"]}'>
+                    <label class="layui-form-label">gzip_min_length</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="gzip_min_length" required lay-verify="required" class="layui-input" value="{$data.gzip_min_length}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">KB，最小压缩文件</div>
+                </div>
+                <div class="layui-form-item" show-set='{"gzip":["on"]}'>
+                    <label class="layui-form-label">gzip_comp_level</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="gzip_comp_level" required lay-verify="required" class="layui-input" value="{$data.gzip_comp_level}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">压缩率</div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input type="hidden" name="id" value="{$data.id}">
+                        <button class="layui-btn  ajax-post" id="submit" type="submit" target-form="form-horizontal">保存并重启</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+<script type="text/javascript">
+    $(function () {
+        change_form();
+        $('.layui-form').show();
+        layui.form.on('select', function (data) {
+            change_form();
+        });
+        layui.form.on('checkbox', function (data) {
+            change_form();
+        });
+        layui.form.on('switch', function (data) {
+            change_form();
+        });
+        layui.form.on('radio', function (data) {
+            change_form();
+        });
+    });
+
+    function in_array(search, array) {
+        for (var i in array) {
+            if (array[i] == search) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function intersection(arr1, arr2){
+        for(var i=0; i<arr1.length;i++){
+            for(var j=0; j< arr2.length;j++){
+                if(arr1[i]==arr2[j]){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //控制动态字段的显示与隐藏
+    function change_form() {
+        var post = form.val("xw-form");
+        for (var p in post) {
+            var test = p.split("[");
+            if (test.length > 1) {
+                if (!post.hasOwnProperty(test[0])) {
+                    post[test[0]] = [post[p]];
+                } else {
+                    post[test[0]].push(post[p]);
+                }
+            }
+        }
+        $('.layui-form-item,.layui-inline').each(function () {
+            var data = $(this).attr('show-set');
+
+            if (data != '[]' && data != undefined) {
+                data = JSON.parse(data);
+                var check = true;
+                for (var n in data) {
+                    var val = post[n]==undefined ? 0:post[n];
+                    if (typeof (val) == 'object') {
+                        //计算两个数组的交集
+                        var res = intersection(val, data[n]);
+                        if (!res) {
+                            check = false;
+                            break;
+                        }
+                    } else {
+                        if (!in_array(val, data[n])) {
+                            check = false;
+                            break;
+                        }
+                    }
+                }
+                if (!check) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            }
+        });
+    }
+</script>
+{/block}

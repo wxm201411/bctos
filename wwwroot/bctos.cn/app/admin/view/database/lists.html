@@ -1,0 +1,168 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    tbody td {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .search-input.date {
+        height: 30px;
+    }
+
+    #contents {
+        padding-top: .1px;
+    }
+</style>
+<div class="page_message">
+    <section id="contents">
+        {include file="common@base/_nav" /} {if condition="$add_button || $del_button || $search_button || !empty($top_more_button)|| !empty($muti_search)"}
+        <div class="table-bar">
+            <div class="fl">
+                <div class="tools" style="margin-bottom: 10px">
+                    <a class="layui-btn add-site">新增数据库</a>
+                    <a class="layui-btn layui-btn-primary syc-server">获取服务器的数据库</a>
+                </div>
+            </div>
+            <!-- 高级搜索 -->
+            {if condition="$search_button"}
+            <div class="search-form fr cf">
+                <div class="sleft">
+                    {php}empty($search_key) && $search_key=$model['search_key'];empty($search_key) && $search_key='title';unset($get_param[$search_key]);empty($placeholder) && $placeholder='请输入内容搜索';{/php} {php} isset($model['name']) && $get_param['model']=$model['name'];
+                    isset($search_url) || $search_url = U(MODULE_NAME.'/'.CONTROLLER_NAME.'/lists', $get_param);{/php}
+                    <input type="text" name="{$search_key}" class="search-input" value="{:input($search_key)}" placeholder="{$placeholder}">
+                    <a class="sch-btn" href="javascript:;" id="search" url="{$search_url}"><i class="btn-search"></i></a></div>
+            </div>
+            {/if}
+        </div>
+        {/if}
+        <!-- 数据列表 -->
+        {php}$now_by = I('by','asc'); if($now_by=='asc'){ $next_by = 'desc'; $by_icon = '<i class="layui-icon layui-icon-upload-circle"></i>'; } else { $next_by = 'asc'; $by_icon = '<i class="layui-icon layui-icon-download-circle"></i>'; }{/php}
+        <div class="data-table">
+            <div class="table-striped">
+                <table cellspacing="1" style="table-layout: fixed">
+                    <!-- 表头 -->
+                    <thead>
+                    <tr>
+                        {if condition="$check_all"}
+                        <th style="width: 40px" class="row-selected row-selected"><input autocomplete="off" type="checkbox" id="checkAll" class="check-all regular-checkbox"><label for="checkAll"></label></th>
+                        {/if} {notempty name="$list_grids"} {volist name="list_grids" id="field"}
+                        <th {php} if(isset($field['width']) && !empty($field['width'])) { is_numeric($field['width']) && $field['width'] .= '%'; echo 'width="'.$field['width'].'"'; } {/php}>
+                        {notempty name="field.is_sort"} {php} $get_param['order'] = $field['name']; $get_param['by'] = $next_by; $show_by = ''; $now_order = I('order'); if($now_order==$field['name']){ $show_by = $by_icon; } $order_url = U(MODULE_NAME.'/'.CONTROLLER_NAME.'/'.ACTION_NAME,
+                        $get_param); {/php}
+                        <a href="{$order_url}" class="desc">{$field.title} {$show_by|raw}</a> {else /} {$field.title} {/notempty}
+                        </th>
+                        {/volist}{/notempty}
+                    </tr>
+                    </thead>
+
+                    <!-- 列表 -->
+                    <tbody>
+                    {notempty name="$list_data"} {volist name="list_data" id="data"}
+                    <tr>
+                        {if condition="$check_all"}
+                        <td><input autocomplete="off" class="ids regular-checkbox" type="checkbox" value="{$data['id']}" name="ids[]" id="check_{$data['id']}"><label for="check_{$data['id']}"></label></td>
+                        {/if}
+                        {volist name="list_grids" id="grid"}
+                        <td style="overflow: auto;white-space: normal ">{$data[$key]|raw}</td>
+                        {/volist}
+                    </tr>
+                    {/volist}{/notempty}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="page"> {$_page|raw|default=''}</div>
+    </section>
+</div>
+<div id="edit-block2" style="display: none;"></div>
+{/block} {block name="script"}
+<script type="text/javascript">
+    var edit_id = 0
+    layui.use('element', function () {
+        var element = layui.element;
+    });
+
+    $(function () {
+        $('.add-site').click(function () {
+            layer_index = layer.open({
+                type: 2,
+                title: '新增数据库',
+                area: ['600px', '460px'],
+                content: "{:U('add?only_body=1')}"
+            });
+
+        })
+        $('.syc-server').click(function () {
+            layer.load();
+            $.post("{:U('sycServer')}", {}, function () {
+                window.location.reload();
+            })
+        })
+        $('.root-pwd').click(function () {
+            edit_id = $(this).attr('rel')
+            var reg = new RegExp('555123', "g")
+            var url = "{:U('pwd?only_body=1&id=555123')}"
+            url = url.replace(reg, edit_id)
+            console.log(url)
+            layer_index = layer.open({
+                type: 2,
+                title: '修改数据库账号密码',
+                area: ['400px', '280px'],
+                content: url
+            });
+        })
+
+        $('.power-set').click(function () {
+            edit_id = $(this).attr('rel')
+            var title = $(this).attr('title')
+            var reg = new RegExp('555123', "g")
+            var url = "{:U('power?only_body=1&id=555123')}"
+            url = url.replace(reg, edit_id)
+            console.log(url)
+            layer_index = layer.open({
+                type: 2,
+                title: '设置权限 - ' + title,
+                area: ['420px', '350px'],
+                content: url
+            });
+        })
+        $('.backup').click(function () {
+            edit_id = $(this).attr('rel')
+            var title = $(this).attr('title')
+            var reg = new RegExp('555123', "g")
+            var url = "{:U('SiteBackup/lists?only_body=1&type=0&site_id=555123')}"
+            url = url.replace(reg, edit_id)
+
+            layer_index = layer.open({
+                type: 2,
+                title: '备份数据库 - ' + title,
+                area: ['750px', '300px'],
+                content: url
+            });
+        })
+        //搜索功能
+        $("#search").click(function () {
+            var url = $(this).attr('url');
+            var str = $('.search-input').val()
+            var query = $('.search-input').attr('name') + '=' + str.replace(/(^\s*)|(\s*$)/g, "");
+
+            if (url.indexOf('?') > 0) {
+                url += '&' + query;
+            } else {
+                url += '?' + query;
+            }
+
+            url = change_search_url(url);
+            window.location.href = url;
+        });
+
+        //回车自动提交
+        $('.search-form').find('input').keyup(function (event) {
+            if (event.keyCode === 13) {
+                $("#search").click();
+            }
+        });
+    })
+</script>
+{/block}

@@ -1,0 +1,42 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .layui-form-label {
+        width: 100px;
+    }
+    .layui-input-inline {
+        width: 180px !important;
+    }
+    .tab-content{
+        min-height: 400px;
+    }
+
+</style>
+<div class="page_message ">
+    <section id="contents">
+        <div class="tab-content">
+            <form id="form" action="{:U('nginx_version')}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+                <div class="layui-form-item">
+                    <div class="layui-form-mid layui-word-aux">如果版本对应的镜像不存在，会自动下载再切换，需要时间稍长，请耐心等待</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">选择版本</label>
+                    <div class="layui-input-inline">
+                        <select name="image" lay-filter="image">
+                            {volist name="images" id="vo"}
+                            <option value="{$vo}" {eq name="data['image']" value="$vo" }selected{/eq}>{$vo}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input type="hidden" name="id" value="{$data.id}">
+                        <button class="layui-btn  ajax-post" id="submit" type="submit" target-form="form-horizontal">切换并重启</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </section>
+</div>
+{/block}

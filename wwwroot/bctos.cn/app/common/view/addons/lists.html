@@ -34,7 +34,7 @@
         <!-- 多维过滤 -->
         {notempty name="muti_search"}
         <form class="muti_search cf">
-          <div class="" style="line-height: 30px;">
+          <div style="line-height: 30px;">
           {volist name='muti_search' id='vo'}
           {switch name="vo.type"}
                 {case value="select"}
@@ -54,13 +54,13 @@
                 {case value="checkbox"}
                     <span>{$vo.title}：</span>
                     {volist name='vo.options' id='option'}
-                    <input autocomplete="off"  type="checkbox" name="{$option.name}" class="" value="{$option.value}" {eq name='option.default_value' value='option.value'}checked{/eq} >{$option.title}
+                    <input autocomplete="off"  type="checkbox" name="{$option.name}>" value="{$option.value}" {eq name='option.default_value' value='option.value'}checked{/eq} >{$option.title}
                     {/volist}
                 {/case}
                 {case value="radio"}
                     <span>{$vo.title}：</span>
                     {volist name='vo.options' id='option'}
-                    <input type="radio" name="{$option.name}" class="" value="{$option.value}" {eq name='option.default_value' value='option.value'}checked{/eq} >{$option.title}
+                    <input type="radio" name="{$option.name}>" value="{$option.value}" {eq name='option.default_value' value='option.value'}checked{/eq} >{$option.title}
                     {/volist}
                 {/case}
 

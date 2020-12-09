@@ -7,8 +7,10 @@
         form.on('switch(switch-ajax-update)', function (data) {
             var url = data.elem.getAttribute('url')
             var value = data.elem.checked ? 1 : 0
+            var load = layer.load();
             $.post(url, {value}, function (res) {
-                if (res.code == 1) {
+                layer.close(load);
+                if (res.msg) {
                     layer.msg(res.msg)
                 }
             })
@@ -17,8 +19,9 @@
             var url = data.elem.getAttribute('url');
             var remark_url = data.elem.getAttribute('remark_url');
             var value = data.value
-
+            var load = layer.load();
             $.post(url, {value}, function (res) {
+                layer.close(load);
                 if (res.code == 1) {
                     layer.msg(res.msg)
                 } else {
@@ -28,8 +31,10 @@
                         maxlength: 140, //可输入文本的最大长度，默认500
                     }, function (value, index, elem) {
                         layer.close(index);
+                        load = layer.load();
                         $.post(remark_url, {value}, function (res) {
-                            if (res.code == 1) {
+                            layer.close(load);
+                            if (res.msg) {
                                 layer.msg(res.msg)
                             }
                         })
@@ -77,7 +82,9 @@
             }
         }
         if ((target = $(this).attr('href')) || (target = $(this).attr('url'))) {
+            var index = layer.load()
             $.get(target).success(function (data) {
+                layer.close(index)
                 if (data.code == 0) {
                     if (data.url) {
                         updateAlert(data.msg + ' 页面即将自动跳转~', 'alert-success');
@@ -108,16 +115,12 @@
         }
         return false;
     });
-    $('.switch-bool').click(function () {
-        var obj = $(this)
-        if (obj.hasClass('confirm')) {
-            if (!confirm('确认要执行该操作吗?')) {
-                return false;
-            }
-        }
+    function switch_bool(obj){
         var url = obj.attr('data-url')
         var data = obj.attr('data-param')
+        var load = layer.load();
         $.post(url, data, function (res) {
+            layer.close(load);
             if (res.code == 0) {
                 obj.text(res.data)
                 updateAlert(res.msg, 'alert-success');
@@ -125,26 +128,39 @@
                 updateAlert(res.msg, 'alert-error');
             }
         });
+    }
+    $('.switch-bool').click(function () {
+        var obj = $(this)
+        if (obj.hasClass('confirm')) {
+            layer.confirm('确认要执行该操作吗?', {icon: 3, title: '确认提示'}, function (index) {
+                switch_bool(obj);
+                layer.close(index);
+            });
+        }else{
+            switch_bool(obj);
+        }
     });
     $('.tr-del').click(function () {
         var obj = $(this)
 
-        if (!confirm('确认要删除吗?')) {
-            return false;
-        }
+        layer.confirm('确认要删除吗?', {icon: 3, title: '删除提示'}, function (index) {
+            var url = obj.attr('data-url')
+            var data = obj.attr('data-param')
+            var load = layer.load()
+            $.post(url, data, function (res) {
+                layer.close(load);
+                if (res.code == 0) {
+                    updateAlert(res.msg, 'alert-success');
+                    obj.closest('tr').remove();
+                } else if (res.code == 2) {
+                    updateAlert(res.msg, 'alert-success');
+                    window.location.reload();
+                } else {
+                    updateAlert(res.msg, 'alert-error');
+                }
+            });
 
-        var url = obj.attr('data-url')
-        var data = obj.attr('data-param')
-        $.post(url, data, function (res) {
-            if (res.code == 0) {
-                updateAlert(res.msg, 'alert-success');
-                obj.closest('tr').remove();
-            } else if (res.code == 2) {
-                updateAlert(res.msg, 'alert-success');
-                window.location.reload();
-            } else {
-                updateAlert(res.msg, 'alert-error');
-            }
+            layer.close(index);
         });
     });
     //ajax post submit请求
@@ -201,11 +217,15 @@
                 query = form.find('input,select,textarea').serialize();
             }
             $(that).addClass('disabled').attr('autocomplete', 'off').prop('disabled', true);
+            var load = layer.load();
             $.post(target, query).success(function (data) {
+                layer.close(load);
                 if (data.code == 0) {
-                    if ($(that).hasClass('dialog_submit')) {
+                    if ($(that).hasClass('iframe')) {
+                        parent.layer.closeAll()
+                        parent.location.reload();
+                    } else if ($(that).hasClass('dialog_submit')) {
                         //对话框中的提交动作
-
                         if (data.url) {
                             window.parent.location.href = data.url;
                         } else {
@@ -257,37 +277,9 @@
         }
     });
     /**顶部警告栏*/
-    var content = $('#main');
-    var top_alert = $('#top-alert');
-    top_alert.find('.close').on('click', function () {
-        top_alert.removeClass('block').slideUp(200);
-        // content.animate({paddingTop:'-=55'},200);
-    });
-
     window.updateAlert = function (text, c) {
-        text = text || 'default';
-        c = c || false;
-        if (text != 'default') {
-            top_alert.find('.alert-content').text(text);
-            if (top_alert.hasClass('block')) {
-            } else {
-                top_alert.addClass('block').slideDown(200);
-                // content.animate({paddingTop:'+=55'},200);
-            }
-        } else {
-            if (top_alert.hasClass('block')) {
-                top_alert.removeClass('block').slideUp(200);
-                // content.animate({paddingTop:'-=55'},200);
-            }
-        }
-        if (c != false) {
-            top_alert.removeClass('alert-error alert-warn alert-info alert-success').addClass(c);
-        }
-        setTimeout(function () {
-            if ($('#top-alert').is(":visible")) {
-                $('#top-alert').find('.close').click();
-            }
-        }, 2000)
+        var icon = c==false || c=='alert-error' ? 2:1
+        layer.msg(text, {icon});
     };
 
     //按钮组
@@ -490,7 +482,9 @@ function showAddToBlack(x, y, t, url) {
             //console.log(url);
             var data = {word: word + ""};
             if (confirm('确认要将“' + word + '”加入黑名单吗?')) {
+                var load = layer.load();
                 $.post(url, data, function (d) {
+                    layer.close(load);
                     if (d.result == 'success') {
                         updateAlert(d.msg, 'alert-success');
                     } else {
@@ -1451,4 +1445,11 @@ function change_search_url(url) {
     // url = change_search_url(url);
     url = url.replace(/\?&[\d\w]*=&|[\d\w]*=&|&[\d\w]*=$|[=?&]/g, '/');
     return url;
+}
+function msg(res) {
+    if(res.code==1){
+        layer.msg(res.msg, {icon: 5})
+    }else{
+        layer.msg(res.msg, {icon: 6})
+    }
 }

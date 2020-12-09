@@ -21,31 +21,40 @@ class UserTable {
       'headimgurl' => [
           'title' => '头像',
           'function' => 'url_img_html',
-          'raw' => 1
+          'raw' => 1,
+          'can_edit' => 0
       ],
       'login_name' => [
-          'title' => '登录账号'
+          'title' => '登录账号',
+          'can_edit' => 0
       ],
       'login_password' => [
-          'title' => '登录密码'
+          'title' => '登录密码',
+          'can_edit' => 0
       ],
       'nickname' => [
-          'title' => '用户昵称'
+          'title' => '用户昵称',
+          'can_edit' => 0
       ],
       'sex' => [
-          'title' => '性别'
+          'title' => '性别',
+          'can_edit' => 0
       ],
       'group' => [
-          'title' => '分组'
+          'title' => '分组',
+          'can_edit' => 0
       ],
       'score' => [
-          'title' => '金币值'
+          'title' => '金币值',
+          'can_edit' => 0
       ],
       'status' => [
-          'title' => '状态'
+          'title' => '状态',
+          'can_edit' => 0
       ],
       'is_audit' => [
-          'title' => '审核'
+          'title' => '审核',
+          'can_edit' => 0
       ],
       'urls' => [
           'title' => '操作',
@@ -53,17 +62,21 @@ class UserTable {
           'href' => [
               '0' => [
                   'title' => '设置登录账号',
-                  'url' => 'set_login?uid=[uid]'
+                  'url' => 'set_login?uid=[uid]',
+                  'show_set' => [ ]
               ],
               '1' => [
                   'title' => '详细资料',
-                  'url' => 'detail?uid=[uid]'
+                  'url' => 'detail?uid=[uid]',
+                  'show_set' => [ ]
               ],
               '2' => [
                   'title' => '编辑',
-                  'url' => '[EDIT]'
+                  'url' => '[EDIT]',
+                  'show_set' => [ ]
               ]
-          ]
+          ],
+          'can_edit' => 0
       ]
   ];
 
@@ -319,6 +332,60 @@ class UserTable {
           'field' => 'float NULL',
           'type' => 'string',
           'value' => 0
+      ],
+      'experience' => [
+          'title' => '经验值',
+          'field' => 'int(10) NULL',
+          'type' => 'string',
+          'value' => 0
+      ],
+      'salt' => [
+          'title' => 'DZ密码加密KEY',
+          'field' => 'varchar(30) NULL',
+          'type' => 'string'
+      ],
+      'social_id' => [
+          'title' => '社区ID',
+          'field' => 'int(10) NULL',
+          'type' => 'string',
+          'value' => 1
+      ],
+      'social_rule' => [
+          'title' => '社区角色',
+          'field' => 'int(10) NULL',
+          'type' => 'string',
+          'value' => 0
+      ],
+      'weiba_id' => [
+          'title' => '吧主权限，版块id',
+          'field' => 'text NULL',
+          'type' => 'string'
+      ],
+      'userid' => [
+          'title' => '加密用户标识',
+          'field' => 'varchar(50) NULL',
+          'type' => 'string'
+      ],
+      'industry' => [
+          'title' => '行业',
+          'field' => 'varchar(255) NULL',
+          'type' => 'string'
+      ],
+      'hobby' => [
+          'title' => '爱好',
+          'field' => 'varchar(100) NULL',
+          'type' => 'string'
+      ],
+      'birthday' => [
+          'title' => 'birthday',
+          'field' => 'int(10) NULL',
+          'type' => 'string',
+          'value' => 0
+      ],
+      'area' => [
+          'title' => 'area',
+          'field' => 'varchar(255) NULL',
+          'type' => 'string'
       ]
   ];   
 }

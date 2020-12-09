@@ -1,0 +1,75 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    #editor {
+        position: absolute;
+        width: 570px;
+        height: 400px;
+        font-size: 12px;
+        line-height: 22px;
+    }
+    .layui-input-block{
+        margin-left:0;
+    }
+</style>
+<div class="page_message ">
+    <section id="contents">
+        <div class="tab-content">
+            <form id="form" action="{:U('conf?id='.input('id/d'))}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <div class="layui-form-mid layui-word-aux">快捷键：Ctrl+F 搜索关键字，Ctrl+S 保存，Ctrl+H 查找替换</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="height: 400px;">
+                        <textarea name="index" style="display: none" id="index_content">{$data.index}</textarea>
+                        <div id="editor">{$data.index}</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <div class="layui-form-mid layui-word-aux">默认的入口文档，每行一个，优先级由上至下</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="offset-sm-2 col-sm-8">
+
+                        <button class="layui-btn layui-btn-normal  ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/ace.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/ext-language_tools.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/theme-monokai.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/mode-nginx.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/ext-themelist.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/theme-chrome.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.9/ext-searchbox.min.js"></script>
+<script>
+    $(function () {
+        require("ace/ext/old_ie");
+        ace.require("ace/ext/language_tools");
+        var editor = ace.edit("editor");
+        editor.$blockScrolling = Infinity;
+        editor.setFontSize(16);
+        editor.session.setMode("ace/mode/nginx");
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true
+        });
+        document.getElementById('editor').style.fontSize = '12px';
+        editor.setTheme("ace/theme/chrome");
+        editor.getSession().on('change', function (e) {
+            var c = editor.getValue();
+            $('#index_content').html(c)
+        });
+    })
+
+
+</script>
+{/block}

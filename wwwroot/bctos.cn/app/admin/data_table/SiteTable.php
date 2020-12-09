@@ -27,24 +27,20 @@ class SiteTable {
           'title' => '状态',
           'is_sort' => 1
       ],
+      'backup_at' => [
+          'title' => '最近备份时间'
+      ],
       'path' => [
           'title' => '网站目录'
       ],
       'remark' => [
           'title' => '备注'
       ],
-      'ssl_pem' => [
-          'title' => '证书'
-      ],
       'urls' => [
           'title' => '操作',
           'come_from' => 1,
           'href' => [
               '0' => [
-                  'title' => '设置',
-                  'url' => '[EDIT]'
-              ],
-              '1' => [
                   'title' => '删除',
                   'url' => '[DELETE]'
               ]
@@ -65,33 +61,9 @@ class SiteTable {
           'title' => '状态',
           'type' => 'bool',
           'field' => 'tinyint(2) NULL',
-          'extra' => '0:禁用
-1:启用',
-          'value' => 0,
-          'extra_array' => [
-              '0' => '禁用',
-              '1' => '启用'
-          ],
-          'extra_array_id' => [
-              '0' => 0,
-              '1' => 1,
-              '2' => 0,
-              '3' => 1,
-              '4' => 0,
-              '5' => 1,
-              '6' => 0,
-              '7' => 1
-          ],
-          'extra_array_title' => [
-              '0' => '禁用',
-              '1' => '启用',
-              '2' => '禁用',
-              '3' => '启用',
-              '4' => '禁用',
-              '5' => '启用',
-              '6' => '禁用',
-              '7' => '启用'
-          ]
+          'extra' => '0:停用
+1:运行',
+          'value' => 1
       ],
       'remark' => [
           'title' => '备注',
@@ -199,17 +171,17 @@ big5:big5',
           'title' => 'PHP版本',
           'type' => 'select',
           'field' => 'char(50) NULL',
-          'extra' => 'php-72:PHP7.2',
-          'value' => 'php-72',
+          'extra' => 'php72:PHP7.2',
+          'value' => 'php72',
           'is_show' => 1,
           'extra_array' => [
-              'php-72' => 'PHP7.2'
+              'php72' => 'PHP7.2'
           ],
           'extra_array_id' => [
-              '0' => 'php-72',
-              '1' => 'php-72',
-              '2' => 'php-72',
-              '3' => 'php-72'
+              '0' => 'php72',
+              '1' => 'php72',
+              '2' => 'php72',
+              '3' => 'php72'
           ],
           'extra_array_title' => [
               '0' => 'PHP7.2',
@@ -226,20 +198,12 @@ big5:big5',
       'public_path' => [
           'title' => '运行目录',
           'type' => 'string',
-          'field' => 'varchar(255) NULL'
+          'field' => 'varchar(30) NULL'
       ],
-      'ssl_key' => [
-          'title' => '密钥(KEY)',
-          'type' => 'file',
-          'field' => 'int(10) UNSIGNED NULL',
-          'value' => 0,
-          'validate_file_size' => 10485760
-      ],
-      'ssl_pem' => [
-          'title' => '证书(PEM格式)',
-          'type' => 'file',
-          'field' => 'int(10) UNSIGNED NULL',
-          'value' => 0,
+      'ssl' => [
+          'title' => '证书',
+          'type' => 'textarea',
+          'field' => 'text NULL',
           'validate_file_size' => 10485760
       ],
       'backup_at' => [
@@ -247,6 +211,45 @@ big5:big5',
           'type' => 'datetime',
           'field' => 'int(10) NULL',
           'value' => 0
+      ],
+      'open_basedir' => [
+          'title' => '防跨站攻击',
+          'type' => 'bool',
+          'field' => 'tinyint(2) NULL',
+          'extra' => '0：关闭
+1：开启',
+          'value' => 1
+      ],
+      'recode_log' => [
+          'title' => '写访问日志',
+          'type' => 'bool',
+          'field' => 'tinyint(2) NULL',
+          'extra' => '0：否
+1：是',
+          'value' => 1
+      ],
+      'rewrite_mod' => [
+          'title' => '伪静态模板',
+          'type' => 'string',
+          'field' => 'varchar(30) NULL'
+      ],
+      'ssl_open' => [
+          'title' => 'SSL状态',
+          'type' => 'bool',
+          'field' => 'tinyint(2) NULL',
+          'extra' => '0：关闭
+1：开启',
+          'value' => 0,
+          'is_show' => 1
+      ],
+      'ssl_force' => [
+          'title' => '强制HTTPS',
+          'type' => 'bool',
+          'field' => 'tinyint(2) NULL',
+          'extra' => '0：不强制
+1：强制',
+          'value' => 0,
+          'is_show' => 1
       ]
   ];   
 }

@@ -28,8 +28,8 @@ class Menu extends Base
             $menu_rule = array_filter(array_unique($menu_rule));
             $map['id'] = ['in', $menu_rule];
         }
+        //dump($map);
         $menus = find_data($this->where(wp_where($map))->order('sort asc, id asc')->select());
-
         // 组装数据
         foreach ($menus as $k => &$me) {
             if ($me['url_type'] == 0) {
@@ -169,7 +169,6 @@ class Menu extends Base
                 }
             }
         }
-        $index_2 = strtolower(MODULE_NAME . '/' . CONTROLLER_NAME . '/*');
         if (isset($menus['core_side_menu'][$default['top']]) && !empty($menus['core_side_menu'][$default['top']])) {
             $menus['core_side_menu'] = $menus['core_side_menu'][$default['top']];
         } else {
@@ -179,6 +178,7 @@ class Menu extends Base
         $new_menu = $menus;
         $new_menu['core_top_menu'] = $menus['core_side_menu'];
         $new_menu['core_side_menu'] = $menus['core_top_menu'];
+
         return $new_menu;
     }
 
@@ -199,9 +199,10 @@ class Menu extends Base
     {
         $id = $this->insertGetId($data);
         D('common/Menu')->clearCache(0);
-        if (isset($data['rule'])) {
-            D('AuthGroup')->saveMenuRule($id, $data['rule']);
+        if (!isset($data['rule'])) {
+            $data['rule'] = [2];
         }
+        D('AuthGroup')->saveMenuRule($id, $data['rule']);
         return $id;
     }
 

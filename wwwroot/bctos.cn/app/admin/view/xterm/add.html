@@ -1,0 +1,27 @@
+ {extend name="common@base/common" /} {block name="body"}
+ <style>
+     .form-group select{
+         margin-left: 0;
+     }
+     .col-lg-8 .uploadrow2{
+         margin-left: -15px;
+     }
+ </style>
+ <div class="page_message">
+     <section id="contents"> {include file="common@base/_nav" /}
+         <div class="tab-content">
+             <!-- 表单 -->
+             {php} isset($post_url) || $post_url = U('add?model='.$model['id'], $get_param);{/php}
+             <form id="form" action="{$post_url}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+                 {include file="common@base/_form" /}
+
+                 <div>
+                     <div class="offset-sm-2 col-sm-8">
+                         <button class="layui-btn layui-btn-normal  ajax-post iframe" id="submit" type="submit" target-form="form-horizontal">{$submit_name|default='确 定'}</button>
+                     </div>
+                 </div>
+             </form>
+         </div>
+</section>
+</div>
+{/block}

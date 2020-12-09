@@ -1,0 +1,19 @@
+version: "3.8"
+networks:
+  default:
+    external:
+      name: bctos
+services:
+  php71:
+    build: /bctos/server/php71
+    hostname: php71
+    container_name: php71
+    image: bctos-php:7.1-fpm-alpine
+    restart: unless-stopped
+    volumes:
+      - /bctos/wwwroot:/bctos/wwwroot
+      - /bctos/logs:/bctos/logs
+      - /bctos/server/php71/php.ini:/usr/local/etc/php/php.ini
+      - /bctos/server/php71/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf
+    cap_add:
+      - SYS_PTRACE

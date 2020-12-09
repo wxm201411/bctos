@@ -9,7 +9,7 @@
     <div class="tab_content" id="tab1" style="padding:20px; display:block">
         <div class="PhotoClip" style="display: none">
             <div id="clipArea"></div>
-            <div class="" style="height:56px;line-height:36px;text-align: center;padding-top:8px;">
+            <div style="height:56px;line-height:36px;text-align: center;padding-top:8px;">
                 <button id="clipBtn" class="layui-btn layui-btn-normal" type='button'>保存封面</button>
                 <span>滚动鼠标滑轮可以缩放图片</span>
             </div>
@@ -210,7 +210,7 @@ function confirmImage(){
 		    });
 		}else{
 			window.parent.$('#cover_id_'+fieldName).parent().find('.upload-img-box').html(
-				'<div class="upload-pre-item2" style="width:100%;height:100px;max-height:100px"><img width="100%" height="100" src="' + src + '"/></div><em class="edit_img_icon">&nbsp;</em>'
+				'<div class="upload-pre-item2" style="width:100%;"><img width="100%" src="' + src + '"/></div><em class="edit_img_icon">&nbsp;</em>'
 			).show();
 
 			window.parent.$('#cover_id_'+fieldName).val(src);

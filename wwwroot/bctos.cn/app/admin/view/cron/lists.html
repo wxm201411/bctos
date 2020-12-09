@@ -1,0 +1,118 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    tbody td {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    #contents {
+        padding-top: .1px;
+    }
+</style>
+<div class="layui-card">
+    <div class="layui-card-header">增加计划任务</div>
+    <div class="layui-card-body">
+        {include file="cron/_form" /}
+    </div>
+</div>
+<div class="page_message">
+    <section id="contents">
+        <!-- 数据列表 -->
+        {php}$now_by = I('by','asc'); if($now_by=='asc'){ $next_by = 'desc'; $by_icon = '<i class="layui-icon layui-icon-upload-circle"></i>'; } else { $next_by = 'asc'; $by_icon = '<i class="layui-icon layui-icon-download-circle"></i>'; }{/php}
+        <div class="data-table">
+            <div class="table-striped">
+                <table cellspacing="1" style="table-layout: fixed">
+                    <!-- 表头 -->
+                    <thead>
+                    <tr>
+                        {if condition="$check_all"}
+                        <th style="width: 40px" class="row-selected row-selected"><input autocomplete="off" type="checkbox" id="checkAll" class="check-all regular-checkbox"><label for="checkAll"></label></th>
+                        {/if} {notempty name="$list_grids"} {volist name="list_grids" id="field"}
+                        <th {php} if( isset( $field[
+                        'width']) && !empty($field['width'])) { is_numeric($field['width']) && $field['width'] .= '%'; echo 'width="'.$field['width'].'"'; } {/php}>
+                        {notempty name="field.is_sort"} {php} $get_param['order'] = $field['name']; $get_param['by'] = $next_by; $show_by = ''; $now_order = I('order'); if($now_order==$field['name']){ $show_by = $by_icon; } $order_url = U(MODULE_NAME.'/'.CONTROLLER_NAME.'/'.ACTION_NAME,
+                        $get_param); {/php}
+                        <a href="{$order_url}" class="desc">{$field.title} {$show_by|raw}</a> {else /} {$field.title} {/notempty}
+                        </th>
+                        {/volist}{/notempty}
+                    </tr>
+                    </thead>
+
+                    <!-- 列表 -->
+                    <tbody>
+                    {notempty name="$list_data"} {volist name="list_data" id="data"}
+                    <tr>
+                        {if condition="$check_all"}
+                        <td><input autocomplete="off" class="ids regular-checkbox" type="checkbox" value="{$data['id']}" name="ids[]" id="check_{$data['id']}"><label for="check_{$data['id']}"></label></td>
+                        {/if}
+                        {volist name="list_grids" id="grid"}
+                        <td style="overflow: auto;white-space: normal ">{$data[$key]|raw}</td>
+                        {/volist}
+                    </tr>
+                    {/volist}{/notempty}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="page"> {$_page|raw|default=''}</div>
+    </section>
+</div>
+{/block} {block name="script"}
+<script type="text/javascript">
+    $(function () {
+        $('.exec-cron').click(function () {
+            var index = layer.load();
+            var url = $(this).attr('href')
+
+            $.post(url, {}, function (res) {
+                layer.close(index);
+                msg(res)
+                setTimeout(function () {
+                    window.location.reload()
+                }, 3000)
+            })
+            return false
+        })
+        $('.edit-cron').click(function () {
+            var url = $(this).attr('href')
+            var title = $(this).parents('tr').find('td').html()
+
+            layer_index = layer.open({
+                type: 2,
+                title: '编辑计划任务 - ' + title,
+                area: ['750px', '600px'],
+                content: url
+            });
+            return false
+        })
+        $('.log-cron').click(function () {
+            var url = $(this).attr('href')
+            var title = $(this).parents('tr').find('td').html()
+
+            layer_index = layer.open({
+                type: 2,
+                title: '任务日志 - ' + title,
+                area: ['850px', '600px'],
+                content: url
+            });
+            return false
+        })
+        $('.log-del').click(function () {
+            var url = $(this).attr('href')
+            var title = $(this).parents('tr').find('td').html()
+            layer.confirm('确定要清空日志吗?', {icon: 3, title: '清空提示'}, function (index) {
+                var index2 = layer.load();
+                $.post(url, {}, function (res) {
+                    layer.close(index2);
+                    msg(res)
+                })
+
+                layer.close(index);
+            });
+
+            return false
+        })
+    });
+</script>
+{/block}

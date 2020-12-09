@@ -303,7 +303,7 @@
         $('.layui-form-item').each(function () {
             var data = $(this).attr('show-set');
 
-            if (data != '[]') {
+            if (data != '[]' && data != undefined) {
                 data = JSON.parse(data);
                 var check = true;
                 for (var n in data) {

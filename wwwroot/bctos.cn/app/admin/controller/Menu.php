@@ -150,7 +150,7 @@ class Menu extends Admin
             $res = D('common/Menu')->updateMenuData($data, ['id' => $id]);
 
             if ($res !== false) {
-                return $this->success('保存' . $model ['title'] . '成功！', U('lists?gid=' . session('menu_gid')));
+                return $this->success('保存成功！', U('lists?gid=' . session('menu_gid')));
             } else {
                 return $this->error($Model->getError());
             }

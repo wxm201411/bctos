@@ -1,66 +1,28 @@
-version: "3.1"
+version: "3.8"
 networks: 
-   default: 
-
+   default:
+      name: bctos
 services: 
-   mysql: 
-      build: 
-         context: .
-         dockerfile: mysql-dockerfile
-      hostname: mysql
-      container_name: mysql
+   panel:
+#      build: .
+      hostname: panel
+      container_name: panel
+      image: wxm201411/panel:latest
+      restart: always
       ports: 
-         - 3307:3306
-      volumes:
-         - ./mysql-data:/var/lib/mysql
-      environment: 
-         MYSQL_ROOT_PASSWORD: 123456
-
-   php: 
-      build: 
-         context: .
-         dockerfile: php-dockerfile
-      hostname: php
-      container_name: php
-      depends_on:
-         - mysql
-      ports: 
-         - 9000:9000
-      volumes:
-         - ./wwwroot:/var/www/html
-   msg: 
-      build: 
-         context: php
-         dockerfile: msg-dockerfile
-      hostname: msg
-      container_name: msg
-      ports: 
+#         - 667:3306
+         - 666:80
+         - 2100:2100
          - 2120:2120
          - 2121:2121
-         - 2123:2123
       volumes:
-         - ./wwwroot:/var/www/html
-   socket: 
-      build: 
-         context: php
-         dockerfile: socket-dockerfile
-      hostname: socket
-      container_name: socket
-      ports: 
-         - 2100:2100
-      volumes:
-         - ./wwwroot:/var/www/html
-
-   nginx: 
-      image: nginx
-      hostname: nginx
-      container_name: nginx
-      depends_on:
-         - php
-      ports: 
-         - 81:80
-      volumes:
-         - ./conf.d:/etc/nginx/conf.d
-         - ./wwwroot:/var/www/html
-      links: 
-         - php
+         - /bctos/server/panel/mysql-data:/var/lib/mysql
+         - /bctos/server/panel/nginx.conf:/etc/nginx/nginx.conf
+         - /bctos/server/panel/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+         - /bctos/server/panel/php-fpm.conf:/etc/php7/php-fpm.conf
+         - /bctos/server/panel/php.ini:/etc/php7/php.ini
+         - /bctos/server/panel/my.cnf:/etc/my.cnf
+         - /bctos:/bctos
+         - /:/myos
+      cap_add:
+         - SYS_PTRACE

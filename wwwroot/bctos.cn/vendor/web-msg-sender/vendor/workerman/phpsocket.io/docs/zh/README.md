@@ -64,7 +64,7 @@ Worker::runAll();
 
 客户端通过下面的方法触发服务端的chat message事件。
 ```javascript
-<script src='//cdn.bootcss.com/socket.io/1.3.7/socket.io.js'></script>
+<script src='https://cdn.bootcss.com/socket.io/1.3.7/socket.io.js'></script>
 <script>
 // 连接服务端
 var socket = io('http://127.0.0.1:3120');

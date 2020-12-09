@@ -1,0 +1,90 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .tab-content {
+        padding: 20px 0;
+    }
+
+    .layui-form-label {
+        width: 100px;
+    }
+
+    .uploadrow_file {
+        width: 34px !important;
+        min-height: 34px !important;
+        top: 10px;
+    }
+
+    .upload_file .upload-img-box {
+        position: absolute;
+        left: 40px;
+    }
+</style>
+<div class="page_message ">
+    <section id="contents">
+        <div class="tab-content">
+            <form id="form" action="{:U('addCert?id='.input('id/d'))}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+                <div class="layui-form-item">
+                    <div class="layui-form-mid layui-word-aux">如开启后无法使用HTTPS访问，请检查：<br/>1、服务器安全组是否正确放行443端口<br/>2、nginx是否开启了443端口，在【软件设置】-【nginx】设置中可看到</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密钥<br/>(key格式) </label>
+                    <div class="layui-input-block">
+                        <div class="upload_file" rel="key">
+                            <div id='upload_file_key' class='uploadrow_file'></div>
+                            <input type="hidden" name="key" value="{$data['key']|default=''}" data-fileexts="key"/>
+                            <div class="upload-img-box">
+                                {notempty name="data['key']"}
+                                <div class="upload-pre-file"><span class="upload_icon_all"></span>{$data['key']|get_table_field=###,'id','name','File'}</div>
+                                {/notempty}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">证书<br/>(pem或crt) </label>
+                    <div class="layui-input-block">
+                        <div class="upload_file" rel="pem">
+                            <div id='upload_file_pem' class='uploadrow_file'></div>
+                            <input type="hidden" name="pem" value="{$data['pem']|default=''}" data-fileexts="pem,crt"/>
+                            <div class="upload-img-box">
+                                {notempty name="data['pem']"}
+                                <div class="upload-pre-file"><span class="upload_icon_all"></span>{$data['pem']|get_table_field=###,'id','name','File'}</div>
+                                {/notempty}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!--                <div class="layui-form-item">-->
+<!--                    <label class="layui-form-label">root根证书<br/>(crt格式) </label>-->
+<!--                    <div class="layui-input-block">-->
+<!--                        <div class="upload_file" rel="root">-->
+<!--                            <div id='upload_file_root' class='uploadrow_file'></div>-->
+<!--                            <input type="hidden" name="root" value="{$data['root']|default=''}" data-fileexts="crt"/>-->
+<!--                            <div class="upload-img-box">-->
+<!--                                {notempty name="data['root']"}-->
+<!--                                <div class="upload-pre-file"><span class="upload_icon_all"></span>{$data['root']|get_table_field=###,'id','name','File'}</div>-->
+<!--                                {/notempty}-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-form-mid layui-word-aux">Apache需要的root_bundle.crt文件，nginx不需要上传</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div>
+                    <div class="offset-sm-2 col-sm-8">
+                        <input type="hidden" name="domain" value="input('domain')"/>
+                        <button class="layui-btn layui-btn-normal  ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+
+<script>
+    $(function () {
+        initUploadFile();
+    })
+
+
+</script>
+{/block}

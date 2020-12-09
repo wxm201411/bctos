@@ -1,0 +1,20 @@
+version: "3.8"
+networks:
+  default:
+    external:
+      name: bctos
+
+services:
+  nginx:
+    hostname: nginx
+    container_name: nginx
+    image: nginx:1.19-alpine
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - /bctos/server/nginx/conf.d:/etc/nginx/conf.d
+      - /bctos/wwwroot:/bctos/wwwroot
+      - /bctos/logs:/bctos/logs
+      - /bctos/server/nginx/rewrite:/etc/nginx/rewrite
+      - /bctos/server/nginx/nginx.conf:/etc/nginx/nginx.conf

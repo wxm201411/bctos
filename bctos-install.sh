@@ -1,21 +1,18 @@
 #!/bin/bash
 LANG=en_US.UTF-8
 
-MYSQL_PWD=${1:-''}
-if [ ! $MYSQL_PWD ];then
-	MYSQL_PWD=$(head /dev/urandom |cksum |md5sum |cut -c 1-9)
-fi
-NGINX_PORT=${2:-'666'}
-MYSQL_PORT=${3:-'3306'}
-PHP_PORT=${4:-'9000'}
+#MYSQL_PWD=${1:-''}
+#if [ ! $MYSQL_PWD ];then
+#	MYSQL_PWD=$(head /dev/urandom |cksum |md5sum |cut -c 1-9)
+#fi
 
 echo "
 +----------------------------------------------------------------------
-| 小韦面板支持 CentOS/Ubuntu/Debian 系统
+| 小韦云面板支持 CentOS/Ubuntu/Debian 系统
 +----------------------------------------------------------------------
 | Copyright © 2020-2099 小韦云科技(https://www.bctos.cn) All rights reserved.
 +----------------------------------------------------------------------
-| 小韦面板安装成功后可通过 http://你的服务器IP:666 进行访问.
+| 小韦云面板安装成功后可通过 http://你的服务器IP:666 进行访问.
 +----------------------------------------------------------------------
 "
 GetSysInfo(){
@@ -35,11 +32,15 @@ GetSysInfo(){
 	echo -e "请截图以上报错信息向官方QQ群求助：884210423"
 }
 
-Red_Error(){
+error_tip(){
 	echo '=================================================';
 	printf '\033[1;31;40m%b\033[0m\n' "$1";
 	GetSysInfo
 	exit 1;
+}
+tips(){
+	echo '=================================================';
+    echo -e "\033[32m $1 \033[0m"
 }
 Get_Ip_Address(){
 	getIpAddress=""
@@ -61,25 +62,25 @@ Get_Ip_Address(){
 
 is64bit=$(getconf LONG_BIT)
 if [ "${is64bit}" != '64' ];then
-	Red_Error "抱歉, 系统不支持32位系统, 请使用64位系统或安装小韦云链!";
+	error_tip "抱歉, 系统不支持32位系统, 请使用64位系统或安装小韦云链!";
 fi
 check=$(lsof -i :$NGINX_PORT | awk 'END {print $1}')
 if [ $check ]; then
-	Red_Error "nginx的端口号： $NGINX_PORT 已被占用，占用的服务是：$check，请关闭此服务或换端口再试";
+	error_tip "nginx的端口号： $NGINX_PORT 已被占用，占用的服务是：$check，请关闭此服务或换端口再试";
 fi
 check=$(lsof -i :$MYSQL_PORT | awk 'END {print $1}')
 if [ $check ]; then
-	Red_Error "mysql的端口号： $MYSQL_PORT 已被占用，占用的服务是：$check，请关闭此服务或换端口再试";
+	error_tip "mysql的端口号： $MYSQL_PORT 已被占用，占用的服务是：$check，请关闭此服务或换端口再试";
 fi
 check=$(lsof -i :$PHP_PORT | awk 'END {print $1}')
 if [ $check ]; then
-	Red_Error "php的端口号： $(PHP_PORT) 已被占用，占用的服务是：$(check)，请关闭此服务或换端口再试";
+	error_tip "php的端口号： $(PHP_PORT) 已被占用，占用的服务是：$(check)，请关闭此服务或换端口再试";
 fi
 
-if [ ! -d "/data" ]; then
-	mkdir /data
+if [ ! -d "/bctos" ]; then
+	mkdir /bctos
 fi	
-cd /data
+cd /bctos
 
 which -v
 if [ $? -ne 0 ]; then
@@ -111,8 +112,8 @@ else
 		git clone https://github.com/wxm201411/bctos.git ./
 	fi
 fi
-if [[ ! -d "conf.d" ]]; then
-	    Red_Error "git clone fail"
+if [[ ! -d "wwwroot" ]]; then
+	    error_tip "git clone fail"
 	else
 		echo "git clone success";
 fi
@@ -138,7 +139,7 @@ EOF
 	systemctl start docker
 fi
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
-    	Red_Error "docker 安装失败"
+    	error_tip "docker 安装失败"
 	else
 		echo "docker install success";
 fi
@@ -152,7 +153,7 @@ if [[  ! ($(which docker-compose) && $(docker-compose --version)) ]]; then
     docker-compose --version
 fi
 if [[  ! ($(which docker-compose) && $(docker-compose --version)) ]]; then
-    	Red_Error "docker-compose 安装失败"
+    	error_tip "docker-compose 安装失败"
 	else
 		echo "docker-compose install success";
 fi
@@ -169,8 +170,8 @@ if [ ! -d libssh2-1.9.0 ];then
 	cd ..
 fi
 
-if [ ! -d "mysql-data" ];then
-	mkdir mysql-data
+if [ ! -d "server/panel/mysql-data" ];then
+	mkdir -p server/panel/mysql-data
 fi
 cd wwwroot/bctos.cn
 if [ ! -d runtime ];then
@@ -182,39 +183,30 @@ fi
 if [ ! -d "public/storage" ];then
 	mkdir -p public/storage
 fi
-#在容器中33表示www-data用户
+#在容器中82表示www-data用户
+groupadd -g 82 www-data
+useradd -u 82 -g 82  www-data
 chown -R 82.82 ./*
 chmod -R +x scripts
 chmod -R 755 public runtime db app
 sed -i "s/123456/${MYSQL_PWD}/" config/database.php
 cd ../..
 echo -e $(ls)
-cp -f docker-compose.yml.bar docker-compose.yml
 
-sed -i "s/80\:/${NGINX_PORT}\:/" docker-compose.yml
-sed -i "s/3306\:/${MYSQL_PORT}\:/" docker-compose.yml
-sed -i "s/9000\:/${PHP_PORT}\:/" docker-compose.yml
-sed -i "s/bctosMysqlPwd/${MYSQL_PWD}/" docker-compose.yml
-docker-compose -f docker-compose.yml up -d
+docker-compose up -d
 echo "==========docker-compose up success=================";
 Get_Ip_Address
 echo "==================================================================
-恭喜! 小韦面板安装成功了!
+恭喜! 小韦云面板安装成功了!
 ==================================================================
-外网面板地址: http://${getIpAddress}:${NGINX_PORT}
-内网面板地址: http://${LOCAL_IP}:${NGINX_PORT}
+外网面板地址: http://${getIpAddress}:666
+内网面板地址: http://${LOCAL_IP}:666
 用户名: admin
 密码: 123
 
-mysql连接信息:
-${getIpAddress}:${MYSQL_PORT}
-用户名: root
-密码: ${MYSQL_PWD}
-
-代码在本机目录：/www/bctos-install/www
-代码在容器目录：/var/www/html
-账号信息保存在：$(pwd)/account.log
-如果你无法访问小韦面板，请检查防火墙/安全组是否有放行面板[${NGINX_PORT}]端口
+代码的目录在：/bctos/wwwroot
+账号信息保存在：/bctos/account.log
+如果你无法访问小韦云面板，请检查防火墙/安全组是否有放行面板[666]端口
 ==================================================================
-" > account.log
-cat account.log
+" > /bctos/account.log
+cat /bctos/account.log

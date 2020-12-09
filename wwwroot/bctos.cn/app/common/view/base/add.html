@@ -15,9 +15,9 @@
              <form id="form" action="{$post_url}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
                  {include file="common@base/_form" /}
 
-                 <div class="">
+                 <div>
                      <div class="offset-sm-2 col-sm-8">
-                         <button class="btn btn-primary submit-btn  ajax-post" id="submit" type="submit" target-form="form-horizontal">{$submit_name|default='确 定'}</button>
+                         <button class="layui-btn layui-btn-normal  ajax-post {$iframeClass|default=''}" id="submit" type="submit" target-form="form-horizontal">{$submit_name|default='确 定'}</button>
                      </div>
                  </div>
              </form>

@@ -1,0 +1,66 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .form-group select {
+        margin-left: 0;
+    }
+
+    .col-lg-8 .uploadrow2 {
+        margin-left: -15px;
+    }
+
+    .layui-form-label {
+        width: auto;
+    }
+
+    .layui-input, .layui-form-select {
+        max-width: 500px;
+    }
+
+    .input-samll {
+        max-width: 200px;
+    }
+
+    .upload_file {
+        padding-left: 0;
+    }
+</style>
+<div class="page_message ">
+    <section id="contents">
+        <div class="tab-content">
+            <form id="form" action="{:U('dir?id='.input('id/d'))}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">网站目录 </label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="path" value="{$data.path}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">运行目录 </label>
+                    <div class="layui-input-block">
+                        <select name="public_path">
+                            <option value=""></option>
+                            {volist name="dirs" id="vo"}
+                            <option value="{$vo}" {eq name="data['public_path']" value="$vo"} selected {/eq}>{$vo}</option>
+                            {/volist}
+                        </select>
+                        <div class="layui-form-mid layui-word-aux">部分程序需要指定二级目录作为运行目录，如ThinkPHP6，Laravel</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"> </label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" value="1" name="open_basedir" title="防跨站攻击(open_basedir)" {eq name="data['open_basedir']" value="1" }checked{/eq}>
+                        <input type="checkbox" value="1" name="recode_log" title="写访问日志" {eq name="data['recode_log']" value="1" }checked{/eq}>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="offset-sm-2 col-sm-8">
+                        <button class="layui-btn layui-btn-normal  ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+{/block}

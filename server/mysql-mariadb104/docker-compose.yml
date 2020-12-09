@@ -1,0 +1,18 @@
+version: "3.8"
+networks:
+  default:
+    external:
+      name: bctos
+services:
+  mysql-mariadb104:
+    hostname: mysql-mariadb104
+    container_name: mysql-mariadb104
+    image: mariadb:10.4
+    restart: unless-stopped
+    ports:
+      - 3314:3306
+    volumes:
+      - /bctos/server/mysql-mariadb104/mysql-data:/var/lib/mysql
+      - /bctos/server/mysql-mariadb104/my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: bctos_panel

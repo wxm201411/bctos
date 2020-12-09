@@ -1,0 +1,18 @@
+{extend name="common@base/common" /} {block name="body"}
+
+<div class="page_message ">
+    <section id="contents">
+        <div id="loading" style="; margin: 30px auto; text-align: center; padding: 30px">{$msg}</div>
+        <div id="btn" style="margin: 10px auto;text-align: center;">
+            <button class="layui-btn layui-btn-normal" onclick="closeBox()">关闭</button>
+        </div>
+    </section>
+</div>
+
+<script>
+    function closeBox() {
+        parent.layer.closeAll()
+        parent.window.location.reload()
+    }
+</script>
+{/block}

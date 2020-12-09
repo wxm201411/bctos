@@ -13,8 +13,7 @@ class BlockTable {
       'search_button' => 1,
       'check_all' => 1,
       'list_row' => 20,
-      'addon' => 'core',
-      'inherit' => ''
+      'addon' => 'core'
   ];
 
     // 列表定义

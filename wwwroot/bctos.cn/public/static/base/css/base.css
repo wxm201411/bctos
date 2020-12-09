@@ -413,3 +413,6 @@ header .logo{
 	float: left;
 }
 
+.table-striped th a {
+	color: #009688;
+}

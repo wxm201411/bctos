@@ -85,6 +85,8 @@ function check_model($name, $module_name = '')
 
 function U($url = '', $vars = '', $suffix = true, $domain = true)
 {
+    if (is_null($url)) return '';
+
     if (strpos($url, '?pbid=') === false && strpos($url, '&pbid=') === false) {
         $pbid = defined('PBID') ? PBID : 0;
         if ($pbid == 0) {
@@ -1643,6 +1645,7 @@ function parse_field_attr($string)
     if (strpos($string, ':')) {
         $value = [];
         foreach ($array as $val) {
+            $val = str_replace("：", ":", $val);
             list ($k, $v) = explode(':', $val);
             $value[$k] = $v;
         }
@@ -6229,16 +6232,33 @@ function get_app_config_file($app, $controller = '')
 
 function ssh2($command, $return_err = false, $show_err = false)
 {
-    set_time_limit(0);
-    if (!function_exists('ssh2_connect')) {
-        return '';
+    $res = ssh_execute($command, $show_err);
+    if ($res['code'] == 1) {
+        if ($return_err) return $res['msg'];
+        if ($show_err) {
+            dump($command);
+            dump($res['msg']);
+            exit;
+        } else {
+            return '';
+        }
     }
+    return $res['msg'];
+}
+
+function ssh_execute($command, $show_err = false)
+{
+    set_time_limit(0);
+
     static $conn;
     if (!$conn) {
         $conn = ssh2_connect(SSH_IP, '22');   //初始化连接
         ssh2_auth_password($conn, 'root', SSH_PAWD);
     }
 
+    //把docker目录换成宿主机的目录 TODO 固定的目录
+    //$command = str_replace('/bctos/wwwroot', '/bctos/wwwroot', $command);
+    file_log($command, 'ssh_execute');
     $stream = ssh2_exec($conn, $command);
 
     $dio_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDIO);  //获得标准输入输出留
@@ -6251,16 +6271,85 @@ function ssh2($command, $return_err = false, $show_err = false)
 
     fclose($stream);
     if (!empty($result_err)) {
-        if ($return_err) return $result_err;
+
         if ($show_err) {
             dump($command);
             dump($result_err);
+            dump($output);
             exit;
+        }
+        if (strpos($result_err, '[notice]') === false && strpos($result_err, '[Warning]') === false) {
+            return ['code' => 1, 'msg' => $result_err];
         } else {
-            return '';
+            return ['code' => 0, 'msg' => $output];
         }
     }
-    return $output;
+    return ['code' => 0, 'msg' => $output];
+}
+
+function ssh_execute_msg($command, $show_err = false)
+{
+    set_time_limit(0);
+
+    static $conn;
+    if (!$conn) {
+        $conn = ssh2_connect(SSH_IP, '22');   //初始化连接
+        ssh2_auth_password($conn, 'root', SSH_PAWD);
+    }
+
+    //把docker目录换成宿主机的目录 TODO 固定的目录
+    //$command = str_replace('/bctos/wwwroot', '/bctos/wwwroot', $command);
+    $command .= " 2>&1";
+    file_log($command, 'ssh_execute');
+    $stream = ssh2_exec($conn, $command);
+    sleep(1);
+    $dio_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDIO);  //获得标准输入输出留
+
+    $time = time();
+    while (true) {
+        $data = stream_get_contents($dio_stream);
+        if (!empty($data)) {
+            web_msg($data);
+            if (strpos($data, "==over==") !== false) {
+                break;
+            } else {
+                $time = time();
+            }
+        }
+        if (empty($data)) {
+            if (time() - $time > 300) {
+                //空转超过5分钟自动结果，防止长期运行
+                web_msg('超时结束==over==error');
+                break;
+            }
+        }
+    }
+
+    fclose($stream);
+}
+
+function web_msg($content)
+{
+    // 指明给谁推送，为空表示向所有在线用户推送
+    $to_uid = 1;
+
+    // 推送的url地址，使用自己的服务器地址
+    $push_api_url = "http://test.cn:2121/";
+    $post_data = array(
+        "type" => "publish",
+        "content" => str_replace("\n", "\r\n", $content),
+        "to" => $to_uid,
+    );
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $push_api_url);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Expect:"));
+    curl_exec($ch);
+    curl_close($ch);
+
 }
 
 function db_config($name, $value = '')

@@ -76,6 +76,9 @@ class Servidorsocket implements MessageComponentInterface
                 $config = $config['connections']['mysql'];
                 $res = "bash -l {$this->web_path}/scripts/sys/update.sh {$config['username']} {$config['password']} {$config['hostname']} {$config['hostport']} {$config['database']}";
                 break;
+            case 'tail':
+                $res = "tail -f";
+                break;
             default:
                 $res = '';
         }
@@ -84,11 +87,17 @@ class Servidorsocket implements MessageComponentInterface
         }
         return $res . "\n";
     }
-
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $data = json_decode($msg, true);
         switch (key($data)) {
+            case 'data':
+                fwrite($this->shell[$from->resourceId], $data['data']['data']);
+                usleep(800);
+                while ($line = fgets($this->shell[$from->resourceId])) {
+                    $from->send(mb_convert_encoding($line, "UTF-8"));
+                }
+                break;
             case 'post':
                 $post = $data['deploy'];
                 //dump($post);
@@ -109,7 +118,7 @@ class Servidorsocket implements MessageComponentInterface
                 stream_set_blocking($stream, true);
                 $output = stream_get_contents($stream);
                 fclose($stream);
-                $this->web_msg($output, $data['get']);
+                $this->web_msg($output);
                 break;
             case 'json':
                 var_export($data['json']);
@@ -135,10 +144,10 @@ class Servidorsocket implements MessageComponentInterface
                 break;
             case 'auth':
                 if ($this->connectSSH(SSH_IP, 22, 'root', SSH_PAWD, $from)) {
-                    $from->send(mb_convert_encoding("Connected....", "UTF-8"));
-                    while ($line = fgets($this->shell[$from->resourceId])) {
-                        $from->send(mb_convert_encoding($line, "UTF-8"));
-                    }
+//                    $from->send(mb_convert_encoding("Connected....", "UTF-8"));
+//                    while ($line = fgets($this->shell[$from->resourceId])) {
+//                        $from->send(mb_convert_encoding($line, "UTF-8"));
+//                    }
                 } else {
                     $from->send(mb_convert_encoding("Error, can not connect to the server. Check the credentials", "UTF-8"));
                     $from->close();

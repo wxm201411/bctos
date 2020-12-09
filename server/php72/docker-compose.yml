@@ -1,0 +1,19 @@
+version: "3.8"
+networks:
+  default:
+    external:
+      name: bctos
+services:
+  php72:
+    build: /bctos/server/php72
+    hostname: php72
+    container_name: php72
+    image: bctos-php:7.2-fpm-alpine
+    restart: unless-stopped
+    volumes:
+      - /bctos/wwwroot:/bctos/wwwroot
+      - /bctos/logs:/bctos/logs
+      - /bctos/server/php72/php.ini:/usr/local/etc/php/php.ini
+      - /bctos/server/php72/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf
+    cap_add:
+      - SYS_PTRACE

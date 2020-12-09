@@ -1,0 +1,13 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .layui-input-block {
+        margin: 5px 10px;
+        background-color: #000;
+        color: #fff;
+        overflow: auto;
+    }
+</style>
+<div class="layui-input-block">
+    {$logs|raw|nl2br}
+</div>
+{/block}

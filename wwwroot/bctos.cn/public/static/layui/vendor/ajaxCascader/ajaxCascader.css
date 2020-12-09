@@ -41,7 +41,7 @@ html #layuicss-ajaxCascader{
 	color: #c0c4cc;
 }
 .cascader-i{
-	position:absolute;
+	/*position:absolute;*/
 	right:15px;
 	margin-top:-7px;
 	pointer-events: none;

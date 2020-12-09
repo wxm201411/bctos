@@ -1,0 +1,12 @@
+version: "3.8"
+networks:
+  default:
+    external:
+      name: bctos
+
+services:
+  memcached16:
+    hostname: memcached16
+    container_name: memcached16
+    image: memcached:1.6-alpine
+    restart: unless-stopped

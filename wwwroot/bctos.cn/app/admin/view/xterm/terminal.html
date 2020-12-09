@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" href="__ROOT__/node/node_modules/xterm/dist/xterm.css"/>
+    <script src="__ROOT__/node/node_modules/xterm/dist/xterm.js"></script>
+    <script src="__ROOT__/node/node_modules/xterm/dist/addons/attach/attach.js"></script>
+    <script src="__ROOT__/node/node_modules/xterm/dist/addons/fit/fit.js"></script>
+    <script type="text/javascript" src="__STATIC__/jquery-2.0.3.min.js"></script>
+</head>
+<body>
+<div id="terminal" style="width:100%; height:100%;visibility:visible;overflow:auto"></div>
+<script>
+    var resizeInterval;
+    var wSocket = new WebSocket("ws:{:SSH_IP}:2100");
+    Terminal.applyAddon(attach);
+    Terminal.applyAddon(fit);
+    var term = new Terminal({
+        cols: 80,
+        rows: 33
+    });
+    term.open(document.getElementById('terminal'));
+
+    function ConnectServer() {
+        wSocket.send(JSON.stringify({"auth": {}}));
+        term.fit();
+        term.focus();
+    }
+
+    wSocket.onopen = function (event) {
+        ConnectServer()
+        term.attach(wSocket, false, false);
+        window.setInterval(function () {
+            wSocket.send(JSON.stringify({"refresh": ""}));
+        }, 700);
+    };
+    wSocket.onerror = function (event) {
+        term.detach(wSocket);
+        alert("Connection Closed");
+    }
+    term.on('data', function (data) {
+        var dataSend = {"data": {"data": data}};
+        // console.log('dataSend', dataSend)
+        wSocket.send(JSON.stringify(dataSend));
+        if (data == "0") {
+            term.write(data);
+        }
+    })
+    window.onresize = function () {
+        clearTimeout(resizeInterval);
+        resizeInterval = setTimeout(resize, 400);
+    }
+
+    function sendData(data) {
+        var dataSend = {"data": {"data": data}};
+        wSocket.send(JSON.stringify(dataSend));
+    }
+
+    function resize() {
+        if (term) {
+            term.fit()
+        }
+    }
+</script>
+</body>
+</html>

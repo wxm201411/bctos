@@ -19,34 +19,44 @@ class AppShopTable {
     // 列表定义
     public $list_grid = [
       'update_at' => [
-          'title' => '更新时间'
+          'title' => '更新时间',
+          'can_edit' => 0
       ],
       'status' => [
-          'title' => '状态'
+          'title' => '状态',
+          'can_edit' => 0
       ],
       'type' => [
-          'title' => '扩展类型'
+          'title' => '扩展类型',
+          'can_edit' => 0
       ],
       'title' => [
-          'title' => '扩展名'
+          'title' => '扩展名',
+          'can_edit' => 0
       ],
       'attach' => [
-          'title' => '安装包'
+          'title' => '安装包',
+          'can_edit' => 0
       ],
       'is_top' => [
-          'title' => '置顶'
+          'title' => '置顶',
+          'can_edit' => 0
       ],
       'view_count' => [
-          'title' => '浏览数'
+          'title' => '浏览数',
+          'can_edit' => 0
       ],
       'logo' => [
-          'title' => '扩展封面'
+          'title' => '扩展封面',
+          'can_edit' => 0
       ],
       'price' => [
-          'title' => '价格'
+          'title' => '价格',
+          'can_edit' => 0
       ],
       'download_count' => [
-          'title' => '下载数'
+          'title' => '下载数',
+          'can_edit' => 0
       ]
   ];
 

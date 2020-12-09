@@ -13,12 +13,15 @@ use QL\QueryList;
 /**
  * 在线升级控制器
  */
+define('DATA_PATH', SITE_PATH . '/runtime/');
+
 class Update extends Admin
 {
     public function index()
     {
         return $this->fetch();
     }
+
     // 清空缓存
     function delcache()
     {
@@ -28,6 +31,7 @@ class Update extends Admin
         @mkdir($cahce_dirs, 0777, true);
         return $this->fetch();
     }
+
     function getRemoteVersion()
     {
         //远程最新版本号

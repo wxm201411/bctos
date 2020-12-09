@@ -2,9 +2,11 @@
 <html>
 <head>
   {include file="common@base/head"/}
-    {block name="style"}<style>
-    body {background-image: url('__STATIC__/base/images/login-bg2.jpg')}
-    .layui-form-switch {height: 24px;padding: 0px 15px;margin: 0 auto;}</style>{/block}
+    {block name="style"}
+    <style>
+    body {background: url(__STATIC__/base/images/bg.png) repeat #6b6b6b;}
+    .layui-form-switch {height: 24px;padding: 0px 15px;margin: 0 auto;}</style>
+    {/block}
 
 </head>
 <body id="login-admin">
@@ -24,7 +26,7 @@
                   {php} } {/php}
                           <form class="login-form layui-form" action="{:U('login',['wpid'=>0])}" method="post" style="display:{php}if(config('app.IS_QRCODE_LOGIN')) echo 'none';{/php} ">
                                   <div class="form_body" id="input_login" >
-                                        <h6>欢迎使用小韦云系统</h6>
+                                        <h6>欢迎使用{:config('app.WEB_SITE_TITLE')}</h6>
                                         <div class="input_panel">
                                           <div class="control-group">
                                               <label class="control-label" for="inputEmail">用户名</label>
@@ -78,7 +80,7 @@
 
                                           {php}if(config('app.USER_ALLOW_REGISTER')) { {/php}
                                           <div class="controls" style="color: #999; text-align: center;">
-                                              还没账号? <a style="width:266px;" class="" href="{:U('User/register')}">立 即 注 册</a>
+                                              还没账号? <a style="width:266px;>" href="{:U('User/register')}">立 即 注 册</a>
                                           </div>
                                           {php} } {/php}
                                       </div>

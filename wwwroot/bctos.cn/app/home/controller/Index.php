@@ -293,7 +293,7 @@ class Index extends Home
                 'wpid' => $GLOBALS ['myinfo'] ['wpid']
             ]);
         } else {
-            $url = U('admin/apps/index');
+            $url = U('admin/site/lists');
         }
         return redirect($url);
 
@@ -1165,22 +1165,28 @@ class Index extends Home
         dump('把数据库中的last_login_time字段更新为：' . NOW_TIME);
     }
 
-    function ming()
+    function getInstallList()
     {
-        if (IS_POST) {
-            $content = session('shell_log');
-            $new = file_get_contents('http://test.cn/shell.log');
-            if ($content === false || input('falt') == 0) {
-                $content = $new;
-            } else {
-                $content = str_replace($content, '', $new);
-            }
-            session('shell_log', $new);
+        $list = find_data(M('install')->where('is_del', 0)->where('is_audit', 1)->select());
+        return json($list);
+    }
 
-
-            return json(['content' => $content]);
-        } else {
-            return $this->fetch();
+    function updateInstallCount()
+    {
+        $id = input('id');
+        $ip = get_client_ip();
+        $day = date('Ymd');
+        $lock = "updateInstallCount_{$id}_{$ip}_{$day}";
+        if (S($lock)) {
+            return $this->success('更新成功!');
         }
+        S($lock, 1, 86400);
+        M('install')->where('id', $id)->inc('install_count')->update();
+        return $this->success('更新成功');
+    }
+    function getServerList()
+    {
+        $list = find_data(M('soft')->select());
+        return json($list);
     }
 }

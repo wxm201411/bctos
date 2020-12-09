@@ -100,6 +100,8 @@ class Cascade extends base
                 array_unshift($tree, ['value' => 0, 'label' => $first_option]);
             } elseif ($arr['type'] == 'extra') {
                 $tree = $this->extra2json($arr['data']);
+            } elseif ($arr['type'] == 'json') {
+                $tree = $this->extra2json($arr['data']);
             } else {
                 $tree = $this->str2json($arr['data']);
             }
@@ -203,7 +205,6 @@ class Cascade extends base
                     }
                 }
 
-                krsort($d);
                 $wareroom[$parent]['children'] = $d;
                 unset($d);
             } else {

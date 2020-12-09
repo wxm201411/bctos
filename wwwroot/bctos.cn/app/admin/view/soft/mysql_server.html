@@ -1,0 +1,53 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .layui-input-block {
+        margin-left: 0;
+    }
+</style>
+<div class="page_message ">
+    <section id="contents">
+        <div class="tab-content">
+            <form class="layui-form" lay-filter="xw-form">
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <div class="layui-form-mid layui-word-aux">重启或停止会导致依赖该数据库版本的网站访问受影响，请慎重操作</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="offset-sm-2 col-sm-8">
+                        <button type="button" class="layui-btn" onclick="restart()">重 启</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+<script>
+    var index;
+    var time;
+    var lock=false
+    function restart() {
+        if(lock==true) return false;
+        lock = true
+        index = layer.load();
+        $.post("{:U('mysql_server')}", {}, function (res) {
+            time = window.setInterval(check, 1500);
+        })
+    }
+
+    function check() {
+        $.post("{:U('mysql_server_check')}", {}, function (res) {
+            if (res == 'ok') {
+                layer.close(index);
+                window.clearInterval(time);
+                layer.msg('重启成功');
+                lock = false
+            }
+        })
+    }
+    $(function () {
+        parent.layer.iframeAuto(parent.layer_index)
+    })
+</script>
+{/block}

@@ -1,0 +1,61 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .layui-form {
+        padding: 20px 10px;
+    }
+    .layui-form-label{
+        width: 100px;
+    }
+    .layui-input-inline{
+        width: 200px;
+    }
+</style>
+<div class="page_message">
+    <section id="contents">
+        {include file="common@base/_nav" /}
+        <!-- 数据列表 -->
+        <form class="layui-form">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="pwd" required lay-verify="required" value="{$pwd}" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">确定修改</button>
+                    <a class="layui-btn layui-btn-primary" href="javascript:close();">关闭</a>
+                </div>
+            </div>
+        </form>
+
+        <script>
+            //Demo
+            layui.use('form', function () {
+                var form = layui.form;
+                //监听提交
+                form.on('submit(formDemo)', function (data) {
+                    var load_index = layer.load();
+                    $.post("{:U('pwd')}", {pwd: data.field.pwd, old_pwd: "{$pwd}", id: "{:input('id')}"}, function (res) {
+                        if (res.code == 0) {
+                            parent.layer.closeAll()
+                            parent.layer.msg(res.msg)
+                            parent.window.location.reload();
+                        } else {
+                            layer.msg(res.msg)
+                            layer.close(load_index)
+                        }
+                    })
+                    return false;
+                });
+            });
+
+            function close() {
+                parent.layer.closeAll()
+            }
+        </script>
+    </section>
+</div>
+{/block}

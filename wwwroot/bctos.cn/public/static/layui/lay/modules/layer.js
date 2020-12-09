@@ -372,8 +372,9 @@
             var o = e.area;
             a = 'style="width: ' + o[0] + "; height: " + o[1] + ';"', delete e.area
         }
-        var s, l = 2 == e.formType ? '<textarea class="layui-layer-input"' + a + "></textarea>" : function () {
-            return '<input type="' + (1 == e.formType ? "password" : "text") + '" class="layui-layer-input">'
+        if(e.placeholder==undefined) e.placeholder = '';
+        var s, l = 2 == e.formType ? '<textarea placeholder="'+e.placeholder+'" class="layui-layer-input"' + a + " ></textarea>" : function () {
+            return '<input type="' + (1 == e.formType ? "password" : "text") + '" class="layui-layer-input" placeholder="'+e.placeholder+'">'
         }(), f = e.success;
         return delete e.success, r.open(i.extend({
             type: 1,

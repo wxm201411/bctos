@@ -1,5 +1,5 @@
 <?php
-$config = require_once "config/database.php";
+$config = require "config/database.php";
 $config = $config['connections']['mysql'];
 return
     [

@@ -50,14 +50,14 @@ class Base extends Model
 
     function error($msg)
     {
-        $data['code'] = 0;
+        $data['code'] = 1;
         $data['msg'] = $msg;
         return $data;
     }
 
     function success($msg, $url = '')
     {
-        $data['code'] = 1;
+        $data['code'] = 0;
         $data['msg'] = $msg;
         $data['url'] = $url;
         return $data;

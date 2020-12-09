@@ -1,0 +1,157 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .form-group select {
+        margin-left: 0;
+    }
+
+    .col-lg-8 .uploadrow2 {
+        margin-left: -15px;
+    }
+
+    .layui-form-label {
+        width: auto;
+    }
+
+    .layui-input, .layui-form-select {
+        max-width: 500px;
+    }
+
+    .input-samll {
+        max-width: 200px;
+    }
+
+    .upload_file {
+        padding-left: 0;
+    }
+</style>
+<div class="page_message ">
+    <section id="contents"> {include file="common@base/_nav" /}
+        <div class="tab-content">
+            <!-- 表单 -->
+            <form id="form" action="{:U('domain')}" method="post" class="form-horizontal form-center layui-form" lay-filter="xw-form">
+                <div class="layui-form-mid layui-word-aux">nginx默认只支持80端口，要自定义端口需要修改nginx的Dockerfile文件并重新安装nginx</div>
+                <div class="layui-form-item">
+                    <div class="layui-inline" style="width: 300px">
+                        <div class="layui-input-inline">
+                            <input type="hidden" name="id" value="{$info.id}"/>
+                            <textarea name="domain" style="width: 300px" class="layui-textarea" placeholder="每个域名一行，默认为80端口&#10;泛解析添加如：*.domain.com&#10;如需加端口格式为：www.bctos.cn:8080"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <button class="layui-btn submit-btn  ajax-post" id="submit" type="submit" target-form="form-horizontal">新 增</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form class="layui-form" lay-filter="xw-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline" style="width: 300px">
+                        <div class="layui-input-inline">
+                            <label class="layui-form-label">强制HTTPS</label>
+                            <input type="checkbox" name="force" lay-skin="switch" lay-text="开启|关闭" lay-filter="force" {eq name="info.ssl_force" value="1" }checked{/eq} >
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <label class="layui-form-label">HTTPS状态</label>
+                            <input type="checkbox" name="colse" lay-skin="switch" lay-text="开启|关闭" lay-filter="colse" {eq name="info.ssl_open" value="1" }checked{/eq} >
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="data-table">
+                <div class="table-striped">
+                    <table cellspacing="1" style="table-layout: fixed">
+                        <!-- 表头 -->
+                        <thead>
+                        <tr>
+                            <th>域名</th>
+                            <th>端口</th>
+                            <th>证书过期时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <!-- 列表 -->
+                        <tbody>
+                        {volist name="lists" id="vo"}
+                        <tr>
+                            <td style="overflow: auto;white-space: normal ">{$vo.title}</td>
+                            <td style="overflow: auto;white-space: normal ">{$vo.port}</td>
+                            <td style="overflow: auto;white-space: normal ">{$vo.time}</td>
+                            <td><a class="cert" rel="{$vo.title}">证书部署</a> | <a class="del" rel="{$key}">删除</a></td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    $(function () {
+        $('.del').click(function () {
+            var that = $(this)
+            var key = that.attr('rel')
+            layer.confirm('您确定要从站点中删除这个域名吗？', function (index) {
+                $.post("{:U('delDomain')}", {key: key, id: "{:input('id/d')}"}, function (res) {
+                    if (res.code == 0) {
+                        that.parent().remove()
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                });
+                layer.close(index);
+            });
+        })
+        $('.cert').click(function () {
+            var that = $(this)
+            var key = that.attr('rel')
+            var url = "{:U('addCert?only_body=1&domain=555key')}"
+            url = url.replace('555key', key)
+            layer_index = layer.open({
+                type: 2,
+                title: '证书部署 - ' + key,
+                area: ['600px', '600px'],
+                content: url
+            });
+        })
+        form.on('switch(force)', function (data) {
+
+            $.post("{:U('forceCert')}", {id: "{:input('id/d')}", checked: data.elem.checked ? 1 : 0}, function (res) {
+                if (res.code == 0) {
+                    updateAlert(res.msg, 'alert-success')
+                } else {
+                    updateAlert(res.msg)
+                    form.val("xw-form", {force: !data.elem.checked})
+                }
+            })
+        });
+
+        form.on('switch(colse)', function (data) {
+            if (!data.elem.checked) {
+                layer.confirm('关闭后HTTPS将无法访问，确定要关闭吗?', function (index) {
+                    closeCert(0)
+                    layer.close(index);
+                });
+            } else {
+                closeCert(1)
+            }
+        });
+    })
+
+    function closeCert(checked) {
+        $.post("{:U('closeCert')}", {id: "{:input('id/d')}", checked: checked}, function (res) {
+            if (res.code == 0) {
+                updateAlert(res.msg, 'alert-success')
+            } else {
+                updateAlert(res.msg)
+                form.val("xw-form", {colse: !checked})
+            }
+        })
+    }
+</script>
+{/block}

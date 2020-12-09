@@ -1,0 +1,57 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .layui-input-block {
+        margin-left: 0;
+    }
+</style>
+<div class="page_message ">
+    <section id="contents">
+        <div class="tab-content">
+            <form class="layui-form" lay-filter="xw-form">
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <div class="layui-form-mid layui-word-aux">关闭网站后会显示一个网站停止的界面</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 100px">当前状态</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="switch" lay-skin="switch" lay-text="运行中|已关闭" value="1" disabled {if condition="$status" } checked {/if}>
+                    </div>
+                </div>
+                <div>
+                    <div class="offset-sm-2 col-sm-8 btns">
+                        <button type="button" class="layui-btn layui-btn-danger stop-btn" onclick="setStatus('stop')" style="display: {if condition="$status"} {else /} none{/if}">关 闭</button>
+                        <button type="button" class="layui-btn layui-btn-normal start-btn" onclick="setStatus('start')" style="display: {if condition="$status"}none {else /} {/if}">启 动</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+<script>
+    var lock = false
+    function setStatus(type) {
+        if (lock == true) return false;
+        lock = true
+        var index = layer.load();
+        $.post("{:U('server')}", {type, id: "{$data['id']}"}, function () {
+            $('.btns .layui-btn').hide();
+            layer.close(index);
+            if (type == 'stop') {
+                form.val("xw-form", {"switch": 0});
+                $('.btns .start-btn').show();
+                layer.msg('已停止网站');
+
+            }else{
+                form.val("xw-form", {"switch": 1});
+                $('.btns .stop-btn').show();
+                layer.msg('已启动网站') ;
+            }
+
+            lock = false
+        })
+    }
+</script>
+{/block}

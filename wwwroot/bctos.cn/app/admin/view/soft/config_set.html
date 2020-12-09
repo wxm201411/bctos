@@ -1,0 +1,24 @@
+{extend name="common@base/common" /} {block name="body"}
+{php}$param = ['only_body'=>1,'id'=>$data['id']];{/php}
+<div style="width: 120px;">
+    <ul class="layui-nav layui-nav-tree layui-nav-side" style="width: 120px; font-size: 12px;">
+        <li class="layui-nav-item layui-this" url="{:U('server',$param)}"><a>服 务</a></li>
+        <li class="layui-nav-item" url="{:U('docker_log',$param)}"><a>容器日志</a></li>
+        <li class="layui-nav-item" url="{:U('dockerfile',$param)}"><a>镜像配置</a></li>
+        <li class="layui-nav-item" url="{:U('compose',$param)}"><a>容器配置</a></li>
+    </ul>
+</div>
+<div style="float: right">
+    <iframe class="leftIframe" src="{:U('server',$param)}" style="width: 630px; height: 485px" frameborder="0"></iframe>
+</div>
+<script>
+    $('.layui-nav li').click(function () {
+        $(".layui-nav .layui-this").removeClass("layui-this")
+        $(this).addClass('layui-this')
+        var url = $(this).attr('url')
+        $('.leftIframe').attr('src', url).load(function () {
+            parent.layer.iframeAuto(parent.layer_index)
+        });
+    })
+</script>
+{/block}

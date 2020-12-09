@@ -19,13 +19,16 @@ class AuthGroupTable {
     // 列表定义
     public $list_grid = [
       'title' => [
-          'title' => '分组名称'
+          'title' => '分组名称',
+          'can_edit' => 0
       ],
       'description' => [
-          'title' => '描述'
+          'title' => '描述',
+          'can_edit' => 0
       ],
       'qr_code' => [
-          'title' => '二维码'
+          'title' => '二维码',
+          'can_edit' => 0
       ],
       'urls' => [
           'title' => '操作',
@@ -33,13 +36,16 @@ class AuthGroupTable {
           'href' => [
               '0' => [
                   'title' => '导出用户',
-                  'url' => 'export?id=[id]'
+                  'url' => 'export?id=[id]',
+                  'show_set' => [ ]
               ],
               '1' => [
                   'title' => '编辑',
-                  'url' => '[EDIT]'
+                  'url' => '[EDIT]',
+                  'show_set' => [ ]
               ]
-          ]
+          ],
+          'can_edit' => 0
       ]
   ];
 
@@ -134,14 +140,14 @@ class AuthGroupTable {
 1:是',
           'value' => 0
       ],
-      'token' => [
-          'title' => 'Token',
-          'field' => 'varchar(100) NULL',
-          'type' => 'string'
-      ],
       'menu_rule' => [
           'title' => '菜单权限',
           'field' => 'text NULL',
+          'type' => 'string'
+      ],
+      'pbid' => [
+          'title' => 'pbid',
+          'field' => 'int(10) NULL',
           'type' => 'string'
       ]
   ];   

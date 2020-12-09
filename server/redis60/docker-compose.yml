@@ -1,0 +1,14 @@
+version: "3.8"
+networks:
+  default:
+    external:
+      name: bctos
+
+services:
+  redis60:
+    hostname: redis60
+    container_name: redis60
+    image: redis:6.0-alpine
+    restart: unless-stopped
+    volumes:
+      - /bctos/server/redis60/data:/data
