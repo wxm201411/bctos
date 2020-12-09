@@ -17,13 +17,15 @@ echo "备份完成"
 showMsg "使用git下载并更新代码"
 git pull
 
-cd wwwroot/bctos.cn
 showMsg "更新数据库"
-vendor/bin/phinx migrate
+tag=$(git tag | awk 'END {print}')
+docker exec panel sh -c "cd /bctos/wwwroot/bctos.cn;vendor/bin/phinx migrate;php think update ${tag}"
 
-rm -rf runtime/*
+rm -rf wwwroot/bctos.cn/runtime/*
 echo "清空缓存完毕"
-php think update $(git tag | awk 'END {print}')
-showMsg "升级更新完成"
+
+
 echo "备份代码文件在： "~/"bctos_backup_"$nowTime".tar.gz"
 echo "备份数据库文件在："~/"bctos_backup_"$nowTime".sql"
+
+showMsg "升级更新完成"

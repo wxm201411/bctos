@@ -1057,6 +1057,9 @@ CREATE TABLE `wp_public_config`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 131 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
+INSERT INTO `wp_public_config` VALUES (131, 0, 'remote_tag', '0.0.2', 1607499457);
+INSERT INTO `wp_public_config` VALUES (132, 0, 'local_tag', '0.0.2', 1607499458);
+
 DROP TABLE IF EXISTS `wp_public_follow`;
 CREATE TABLE `wp_public_follow`  (
   `openid` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,

@@ -134,6 +134,10 @@ if [[ ! -d "wwwroot" ]]; then
 	else
 		tips "代码下载成功"
 fi
+tips "设置防火墙，让容器可以访问外网"
+firewall-cmd --zone=public --add-masquerade --permanent
+firewall-cmd --reload
+
 # 安装docker
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
 	tips "安装docker软件"
@@ -152,6 +156,7 @@ if [[ ! ($(which docker) && $(docker --version)) ]]; then
   "dsn": ["114.114.114.114","8.8.8.8"]
 }
 EOF
+
 
     systemctl enable docker
 	systemctl start docker

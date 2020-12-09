@@ -39,6 +39,7 @@ class Update extends Admin
         if (!$remote_tag) {
             $remote_tag = QueryList::get(GITHUB_URL)->find('.commit-title a')->eq(0)->text();
         }
+        $remote_tag = trim($remote_tag);
         $db_remote = db_config('remote_tag');
         if (!$remote_tag) {
             $local_tag = $db_remote;
@@ -47,6 +48,7 @@ class Update extends Admin
         }
 
         $local_tag = ssh2('cd ' . SITE_PATH . "; git tag | awk 'END {print}'");
+        $local_tag = trim($local_tag);
         $db_local = db_config('local_tag');
         if (!$local_tag) {
             $local_tag = $db_local;
