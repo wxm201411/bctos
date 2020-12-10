@@ -141,13 +141,13 @@ firewall-cmd --reload
 # 安装docker
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
 	tips "安装docker软件"
-	yum install -y containerd-1.4.3-1.fc34.x86_64.rpm
 	yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
     #curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
     #curl -sSL https://get.daocloud.io/docker | sh
     yum install -y yum-utils device-mapper-persistent-data lvm2
     yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-    yum install -y docker-ce docker-ce-cli containerd.io
+    yum install -y containerd.io-1.2.6-3.3.fc30.x86_64.rpm
+    yum install -y docker-ce docker-ce-cli
 
 	mkdir -p /etc/docker
 	tee /etc/docker/daemon.json <<-'EOF'
@@ -170,7 +170,7 @@ fi
 function version_lt() { test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" != "$1"; }
 function install_compose() {
     tips "安装docker-compose"
-    curl -L https://get.daocloud.io/docker/compose/releases/download/1.27.4/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+    curl -L https://get.daocloud.io/docker/compose/releases/download/1.24.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
     ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
     docker-compose version

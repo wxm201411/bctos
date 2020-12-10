@@ -27,7 +27,7 @@ class Soft extends Admin
             if ($id) {
                 $d = $data['docker'];
                 $yml = <<<EOF
-version: "3.8"
+version: "3.1"
 networks:
   default:
     external:
