@@ -8,7 +8,7 @@ services:
 #      build: .
       hostname: panel
       container_name: panel
-      image: wxm201411/panel:latest
+      image: registry.cn-hangzhou.aliyuncs.com/wxm201411/panel:latest
       restart: always
       ports: 
 #         - 667:3306
