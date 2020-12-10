@@ -139,7 +139,7 @@ firewall-cmd --zone=public --add-masquerade --permanent
 firewall-cmd --reload
 
 # 安装docker
-if [[ ! ($(which docker) && $(docker --version)) ]]; then
+function install_docker(){
 	tips "安装docker软件"
 	yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine docker-ce-19.03.12 docker-ce-cli-19.03.12
     yum install -y yum-utils device-mapper-persistent-data lvm2
@@ -151,6 +151,18 @@ if [[ ! ($(which docker) && $(docker --version)) ]]; then
 
     systemctl enable docker
 	systemctl start docker
+}
+if [[ ! ($(which docker) && $(docker --version)) ]]; then
+    install_docker
+else
+    tips "docker已经安装过!";
+    oldVersion=$(docker -v|sed -r 's/.*version//'|sed -r 's/,.*//'|sed 's/ //g')
+    tips "docker安装版本是：$oldVersion";
+    needVersion="19.03.12"
+    if [[ $oldVersion != $needVersion ]]; then
+        tips "docker安装版本不符合，需要更新";
+        install_docker
+    fi
 fi
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
     	error_tips "docker 安装失败，可能是网络异常，请重试"
@@ -158,12 +170,11 @@ if [[ ! ($(which docker) && $(docker --version)) ]]; then
 		tips "docker 安装成功";
 fi
 # 安装docker-compose
-function version_lt() { test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" != "$1"; }
 function install_compose() {
     tips "安装docker-compose"
     curl -L https://get.daocloud.io/docker/compose/releases/download/1.27.0-rc3/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
-    ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+    [ -f /usr/bin/docker-compose ] || ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
     docker-compose version
 }
 if [[  ! ($(which docker-compose) && $(docker-compose version)) ]]; then
@@ -173,9 +184,9 @@ else
     tips "docker-compose已经安装过!";
     oldVersion=$(docker-compose -v|sed -r 's/.*version//'|sed -r 's/,.*//'|sed 's/ //g')
     tips "docker-compose安装版本是：$oldVersion";
-    needVersion="1.27.4"
-    if version_lt $oldVersion $needVersion; then
-        tips "docker-compose安装版本太旧，需要更新";
+    needVersion="1.27.0-rc3"
+    if [[ $oldVersion != $needVersion ]]; then
+        tips "docker-compose安装版本不符合，需要更新";
         install_compose
     fi
 fi
