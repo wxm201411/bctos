@@ -1,7 +1,8 @@
 version: "3.1"
-networks: 
+networks:
    default:
       name: bctos
+
 services: 
    panel:
 #      build: .
