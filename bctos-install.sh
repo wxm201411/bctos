@@ -120,7 +120,7 @@ if [[  $(which podman) ]]; then
 fi
 
 tips "从gitee下载代码"
-if [ -d conf.d ];then
+if [ -d wwwroot ];then
 	git pull
 else
 	git clone https://gitee.com/bctos_cn/bctos.git ./
@@ -141,7 +141,7 @@ firewall-cmd --reload
 # 安装docker
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
 	tips "安装docker软件"
-	yum install -y containerd.io-1.2.6-3.3.fc30.x86_64.rpm
+	yum install -y containerd-1.4.3-1.fc34.x86_64.rpm
 	yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
     #curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
     #curl -sSL https://get.daocloud.io/docker | sh
@@ -152,7 +152,7 @@ if [[ ! ($(which docker) && $(docker --version)) ]]; then
 	mkdir -p /etc/docker
 	tee /etc/docker/daemon.json <<-'EOF'
 {
-  "registry-mirrors": ["https://u1fynok0.mirror.aliyuncs.com"],
+  "registry-mirrors": ["http://f1361db2.m.daocloud.io","https://u1fynok0.mirror.aliyuncs.com"],
   "dsn": ["114.114.114.114","8.8.8.8"]
 }
 EOF
@@ -176,11 +176,15 @@ function install_compose() {
     docker-compose version
 }
 if [[  ! ($(which docker-compose) && $(docker-compose version)) ]]; then
+    tips "docker-compose还没有安装过";
     install_compose
 else
-    oldVersion=$(docker-compose version|grep docker-py|sed 's/docker-py version: //'|sed 's/ //g')
+    tips "docker-compose已经安装过!";
+    oldVersion=$(docker-compose -v|sed -r 's/.*version//'|sed -r 's/,.*//'|sed 's/ //g')
+    tips "docker-compose安装版本是：$oldVersion";
     needVersion="1.27.4"
     if version_lt $oldVersion $needVersion; then
+        tips "docker-compose安装版本太旧，需要更新";
         install_compose
     fi
 fi
