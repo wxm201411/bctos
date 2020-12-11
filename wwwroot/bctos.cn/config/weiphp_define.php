@@ -51,7 +51,7 @@ define('MODEL_INSERT', 1); // 插入模型数据
 define('MODEL_UPDATE', 2); // 更新模型数据
 define('MODEL_BOTH', 3);// 包含上面两种方式
 
-define('REMOTE_BASE_URL', 'http://localhost/xiaowei/public');
+define('REMOTE_BASE_URL', 'https://www.bctos.cn');
 
 //只有PC版,不需要公众号
 define('ONLY_WEB', true);
