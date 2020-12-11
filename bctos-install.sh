@@ -10,7 +10,7 @@ LANG=en_US.UTF-8
 function installSoft(){
     if [[  !($(which $1) && $($1 --version)) ]]; then
         echo "============Install $1 begin================================="
-        yum -y install $1
+        sudo yum -y install $1
         echo "============Install $1 end, return status: $?==================="
     fi
 }
@@ -101,14 +101,14 @@ fi
 #fi
 
 if [ ! -d "/bctos" ]; then
-	mkdir /bctos
+	sudo mkdir /bctos
 fi	
 cd /bctos
 
 which -v
 if [ $? -ne 0 ]; then
     tips "安装which"
-	yum -y install which
+	sudo yum -y install which
 fi
 installSoft wget
 installSoft curl
@@ -116,7 +116,7 @@ installSoft git
 
 if [[  $(which podman) ]]; then
     tips "移除podman"
-    yum -y remove podman
+    sudo yum -y remove podman
 fi
 
 tips "从gitee下载代码"
@@ -141,16 +141,20 @@ firewall-cmd --reload
 # 安装docker
 function install_docker(){
 	tips "安装docker软件"
-	yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine docker-ce-19.03.12 docker-ce-cli-19.03.12
-    yum install -y yum-utils device-mapper-persistent-data lvm2
-    yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-    yum install -y containerd.io-1.2.6-3.3.fc30.x86_64.rpm
-    yum install -y docker-ce-19.03.12 docker-ce-cli-19.03.12
+	sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine docker-ce-19.03.12 docker-ce-cli-19.03.12
+    sudo yum install -y sudo yum-utils device-mapper-persistent-data lvm2
+    sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+    sudo yum install -y containerd.io-1.2.6-3.3.fc30.x86_64.rpm
+    sudo yum install -y docker-ce-19.03.12 docker-ce-cli-19.03.12
 
-	mkdir -p /etc/docker
-
-    systemctl enable docker
-	systemctl start docker
+	sudo mkdir -p /etc/docker
+    sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://u1fynok0.mirror.aliyuncs.com"]
+}
+EOF
+    sudo systemctl enable docker
+	sudo systemctl start docker
 }
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
     install_docker
@@ -173,7 +177,7 @@ fi
 function install_compose() {
     tips "安装docker-compose"
     curl -L https://get.daocloud.io/docker/compose/releases/download/1.27.0-rc3/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
     [ -f /usr/bin/docker-compose ] || ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
     docker-compose version
 }
@@ -198,8 +202,8 @@ fi
 docker ps -a
 if [ $? -ne 0 ]; then
     tips "启动docker服务";
-	systemctl enable docker
-	systemctl start docker
+	sudo systemctl enable docker
+	sudo systemctl start docker
 fi
 
 if [ ! -d libssh2-1.9.0 ];then
@@ -211,30 +215,30 @@ if [ ! -d libssh2-1.9.0 ];then
 fi
 tips "初始化代码目录和权限";
 if [ ! -d "server/panel/mysql-data" ];then
-	mkdir -p server/panel/mysql-data
+	sudo mkdir -p server/panel/mysql-data
 fi
-chmod +x /bctos/server/panel/entrypoint.sh
-chmod -R 777 /bctos/wwwroot/bctos.cn/public/kod/
+sudo chmod +x /bctos/server/panel/entrypoint.sh
+sudo chmod -R 777 /bctos/wwwroot/bctos.cn/public/kod/
 cd wwwroot/bctos.cn
 if [ ! -d runtime ];then
-	mkdir runtime
+	sudo mkdir runtime
 fi
 if [ ! -d "db/migrations" ];then
-	mkdir -p db/migrations
+	sudo mkdir -p db/migrations
 fi
 if [ ! -d "public/storage" ];then
-	mkdir -p public/storage
+	sudo mkdir -p public/storage
 fi
 #在容器中82表示www-data用户
 if [ -z $(cat /etc/passwd|grep www-data) ];then
     tips "增加www-data用户";
-    groupadd -g 82 www-data
-    useradd -u 82 -g 82  www-data
+    sudo groupadd -g 82 www-data
+    sudo useradd -u 82 -g 82  www-data
 fi
 
-chown -R 82.82 ./*
-chmod -R +x scripts
-chmod -R 755 public runtime db app
+sudo chown -R 82.82 ./*
+sudo chmod -R +x scripts
+sudo chmod -R 755 public runtime db app
 
 tips "替换配置文件中的密码";
 Get_Ip_Address
@@ -247,7 +251,7 @@ tips "代码准备完毕，目录如下：";
 ls -l
 
 tips "下载面板镜像，使用docker-compose启动面板容器";
-docker-compose up -d
+sudo docker-compose up -d
 if [ $? -ne 0 ]; then
     error_tips "镜像下载成功失败，请先手工下载试试：docker pull wxm201411/panel"
 else
