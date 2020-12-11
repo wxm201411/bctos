@@ -16,7 +16,7 @@ class Site extends Admin
 
         $cronArr = M('cron')->where('type', 1)->column('id', 'site_id');
 
-        $this->assign('page_tips', "使用小韦云面板创建站点时会自动设置PHP容器默认的www-data用户。并自动在<a href='" . U('admin/cron/lists') . "'>[计划任务]</a>中添加定时备份网站任务，您可以自定义备份参数");
+        $this->assign('page_tips', "创建站点时会自动创建相应的数据库。并自动在<a href='" . U('admin/cron/lists') . "'>[计划任务]</a>中添加定时备份网站任务，您可以自定义备份参数。更多帮助请看 <a href='https://www.bctos.cn/doc/2' target='_blank'>教程</a>");
         $model = $this->getModel();
         $list_data = $this->getModelList($model);
         foreach ($list_data['list_data'] as &$vo) {
@@ -36,8 +36,31 @@ class Site extends Admin
     function check_web()
     {
         //静默启动WEB全部服务
-        ssh_execute(SITE_PATH . '/scripts/sys/initWebDocker.sh');
+        $res = ssh_execute(SITE_PATH . '/scripts/sys/initWebDocker.sh');
+        if ($res['code'] == 2) {
+            return $this->error('root');
+        } elseif ($res['code'] == 1) {
+            return $this->error($res['msg']);
+        }
         return $this->success('启动成功');
+    }
+
+    function editRootPwd()
+    {
+        $pwd = input('password');
+        if (empty($pwd)) {
+            return $this->error('请先输入密码');
+        }
+
+        //尝试修改文件
+        $res = ssh_execute("cd /bctos/wwwroot/bctos.cn/config;sed -i -r \"/SSH_PAWD/{s/,.*/, '{$pwd}');/}\" weiphp_define.php", false, $pwd);
+        if ($res['code'] == 2) {
+            return $this->error('密码不正确，请重试');
+        } elseif ($res['code'] == 1) {
+            return $this->error($res['msg']);
+        }
+
+        return $this->success('修改成功');
     }
 
     function parseDomain($domain = '')

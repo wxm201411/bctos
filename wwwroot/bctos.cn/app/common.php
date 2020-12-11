@@ -6246,14 +6246,19 @@ function ssh2($command, $return_err = false, $show_err = false)
     return $res['msg'];
 }
 
-function ssh_execute($command, $show_err = false)
+function ssh_execute($command, $show_err = false, $ssh_pawd = null)
 {
     set_time_limit(0);
 
     static $conn;
     if (!$conn) {
-        $conn = ssh2_connect(SSH_IP, '22');   //初始化连接
-        ssh2_auth_password($conn, 'root', SSH_PAWD);
+        try {
+            $conn = ssh2_connect(SSH_IP, '22');   //初始化连接
+            $ssh_pawd = $ssh_pawd == null ? SSH_PAWD : $ssh_pawd;
+            ssh2_auth_password($conn, 'root', $ssh_pawd);
+        } catch (\Exception $e) {
+            return ['code' => 2, 'msg' => $e->getMessage()];
+        }
     }
 
     //把docker目录换成宿主机的目录 TODO 固定的目录

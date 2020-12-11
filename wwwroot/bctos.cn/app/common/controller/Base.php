@@ -219,6 +219,16 @@ class Base extends BaseController
             error_reporting(E_ERROR | E_PARSE);
         }
 
+        //判断是否需要获取软件更新信息
+        $need_check_update = 0;
+        $key = "need_check_update_" . date('Ymd');
+        $lock = S($key);
+        if ($lock === false) {
+            $need_check_update = 1;
+            S($key, 1, 86400); //每天只检查一次
+        }
+        $this->assign('need_check_update', $need_check_update);
+
         //其它一些社区初始化变量
         $this->assign('initNums', 0);
         $this->assign('attachConfig', ['attach_max_size' => 2]);

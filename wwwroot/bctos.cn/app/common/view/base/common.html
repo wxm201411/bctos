@@ -68,12 +68,14 @@ empty( $forward ) && cookie('__forward__', $_SERVER['REQUEST_URI']);
             // 不存在
             $('.main_body').removeClass('admin-body')
         }
+        {if condition="$need_check_update == 1"}
         $.get("{:U('admin/update/getRemoteVersion')}",{},function(res){
             if(res!=0){
                 $('#update_remind').slideDown();
                 cookie_close_version = res;
             }
         });
+        {/if}
     });
     function set_cookie_close_version(){
         $.get("{:U('admin/update/set_cookie_close_version')}",{cookie_close_version:cookie_close_version},function(){

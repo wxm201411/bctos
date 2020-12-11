@@ -278,7 +278,7 @@
     });
     /**顶部警告栏*/
     window.updateAlert = function (text, c) {
-        var icon = c==false || c=='alert-error' ? 2:1
+        var icon = c==true || c=='alert-success' ? 1:2
         layer.msg(text, {icon});
     };
 

@@ -87,10 +87,26 @@
         </ul>
     </div>
     <div style="float: right">
-        <iframe class="leftIframe" src="###" style="width: 630px; height: 685px" frameborder="0"></iframe>
+        <iframe class="leftIframe" src="" style="width: 630px; height: 685px" frameborder="0"></iframe>
     </div>
 </div>
 <div id="edit-block2" style="display: none;"></div>
+<div id="root-pwd" style="display: none">
+    <form action="{:U('editRootPwd')}" method="post" class="form-horizontal form-center layui-form" lay-filter="pwd-form">
+        <div style="color: red; margin: 30px 20px; padding-bottom: 10px;">服务器root密码不正确，面板无法进行安装网站和软件配置等操作，请先配置</div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="password" required lay-verify="required" placeholder="请输入root密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn ajax-post" type="submit" target-form="form-horizontal">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
 {/block} {block name="script"}
 <script type="text/javascript">
     var edit_id=0
@@ -99,7 +115,16 @@
     });
 
     $(function () {
-        $.post("{:U('check_web')}");
+        $.post("{:U('check_web')}",{},function (res) {
+            if(res.msg=="root"){
+                layer_index = layer.open({
+                    type: 1,
+                    title: false,
+                    area: ['300px', '260px'],
+                    content: $('#root-pwd')
+                });
+            }
+        });
         $('.add-site').click(function () {
             layer_index = layer.open({
                 type: 2,
