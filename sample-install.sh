@@ -20,7 +20,7 @@ tips "您的软件准备开始安装"
 
 if [ ! -d "/bctos/wwwroot" ];then
     tips "还没安装小韦云面板，先安装它"
-    wget -O install.sh https://www.bctos.cn/install/bctos-install.sh && chmod +x install.sh && ./install.sh
+    git clone https://gitee.com/bctos_cn/bctos.git /bctos && chmod +x /bctos/panel-install.sh && /bctos/panel-install.sh
 else
     tips  "已经安装了小韦云面板"
 fi
