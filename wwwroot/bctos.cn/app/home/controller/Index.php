@@ -855,6 +855,11 @@ class Index extends Home
         return $this->fetch();
     }
 
+    function panel()
+    {
+        return $this->fetch();
+    }
+
     function dinzi()
     {
         return $this->fetch();

@@ -14,24 +14,40 @@ tips(){
 	echo '=================================================';
     echo -e "\033[32m $1 \033[0m"
 }
+GetSysInfo(){
+	if [ -s "/etc/redhat-release" ];then
+		SYS_VERSION=$(cat /etc/redhat-release)
+	elif [ -s "/etc/issue" ]; then
+		SYS_VERSION=$(cat /etc/issue)
+	fi
+	SYS_INFO=$(uname -a)
+	SYS_BIT=$(getconf LONG_BIT)
+	MEM_TOTAL=$(free -m|grep Mem|awk '{print $2}')
+	CPU_INFO=$(getconf _NPROCESSORS_ONLN)
 
+	echo -e ${SYS_VERSION}
+	echo -e Bit:${SYS_BIT} Mem:${MEM_TOTAL}M Core:${CPU_INFO}
+	echo -e ${SYS_INFO}
+	echo -e "请截图以上报错信息向官方QQ群求助：884210423"
+}
 
-tips "您的软件准备开始安装"
+Get_Ip_Address(){
+	getIpAddress=""
+	getIpAddress=$(curl -sS --connect-timeout 10 -m 60 https://www.bctos.cn/ip.php)
+	if [ -z "${getIpAddress}" ] || [ "${getIpAddress}" = "0.0.0.0" ]; then
+		isHosts=$(cat /etc/hosts|grep 'www.bctos.cn')
+		if [ -z "${isHosts}" ];then
+			echo "" >> /etc/hosts
+			echo "47.106.212.16 www.bctos.cn" >> /etc/hosts
+			getIpAddress=$(curl -sS --connect-timeout 10 -m 60 https://www.bctos.cn/ip.php)
+			if [ -z "${getIpAddress}" ];then
+				sed -i "/bctos.cn/d" /etc/hosts
+			fi
+		fi
+	fi
 
-if [ ! -d "/bctos/wwwroot" ];then
-    tips "还没安装小韦云面板，先安装它"
-    git clone https://gitee.com/bctos_cn/bctos.git /bctos && chmod +x /bctos/panel-install.sh && /bctos/panel-install.sh
-else
-    tips  "已经安装了小韦云面板"
-fi
-cd /bctos
-if [ -z $(docker ps --format '{{.Names}}'|grep panel) ];then
-    tips "启动小韦云面板"
-    docker-compose down
-    docker-compose up -d
-else
-    tips  "小韦云面板已经在运行中"
-fi
+	LOCAL_IP=$(ip addr | grep -E -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -E -v "^127\.|^255\.|^0\." | head -n 1)
+}
 
 domain=''
 function domain_input(){
@@ -56,11 +72,35 @@ if [[ $domain == '' ]];then
     domain='default'
 fi
 
+tips "您的软件准备开始安装"
+
+if [ ! -d "/bctos/wwwroot" ];then
+    tips "还没安装小韦云面板，先安装它"
+    git clone https://gitee.com/bctos_cn/bctos.git /bctos && chmod +x /bctos/panel-install.sh && /bctos/panel-install.sh
+else
+    tips  "已经安装了小韦云面板"
+fi
+cd /bctos
+if [ -z $(docker ps --format '{{.Names}}'|grep panel) ];then
+    tips "启动小韦云面板"
+    docker-compose down
+    docker-compose up -d
+else
+    tips  "小韦云面板已经在运行中"
+fi
+
+
+
 tips "从官网下载配置的参数"
 php=null
 try_count=0
 function download_conf(){
-    eval `curl -sS --connect-timeout 10 -m 60 https://www.bctos.cn/index.php?s=/home/index/param/id/${soft_id}`
+    config=$(curl -sS --connect-timeout 10 -m 60 https://www.bctos.cn/index.php?s=/home/index/param/id/${soft_id})
+    for v in $config
+        do
+            echo $v
+            eval "$v"
+    done
     if [[ $php == "null" && $try_count != 3 ]];then
         tips "下载配置的失败，重试中"
         sleep 1
@@ -68,12 +108,12 @@ function download_conf(){
         download_conf
     fi
 }
+download_conf
 if [[ $php == "null" ]];then
     error_tips "下载配置的失败，可能官网系统繁忙，请稍等再试"
 else
     tips "配置下载成功"
 fi
-
 
 
 tips "先检查所需要的容器服务是否存在，不存在的话先更新面板"
@@ -157,6 +197,10 @@ fi
 
 tips "伪静态文件生成，网站nginx文件生成"
 cd /bctos/server/nginx
+if [ ! -d rewrite ];then
+    mkdir rewrite
+    chmod 777 rewrite
+fi
 if [ -f /bctos/wwwroot/bctos.cn/runtime/$domain".rewrite.conf" ];then
     mv /bctos/wwwroot/bctos.cn/runtime/$domain".rewrite.conf" ./rewrite/$domain".rewrite.conf"
 else
@@ -172,11 +216,18 @@ chmod -R 777 rewrite
 chmod -R 777 conf.d
 
 tips "启动所需的容器"
-
-[[ $mysql != 'not' ]] && [ -z $(docker ps --format '{{.Names}}'|grep $mysql) ] && $(cd /bctos/server/$mysql; docker-compose up -d; need_start=1)
-[[ $redis != 'not' ]] && [ -z $(docker ps --format '{{.Names}}'|grep $redis) ] && $(cd /bctos/server/$redis; docker-compose up -d; need_start=1)
-[[ $memcached != 'not' ]] && [ -z $(docker ps --format '{{.Names}}'|grep $memcached) ] && $(cd /bctos/server/$memcached; docker-compose up -d; need_start=1)
-[[ $php != 'not' ]] && [ -z $(docker ps --format '{{.Names}}'|grep $php) ] && $(cd /bctos/server/$php; docker-compose up -d; need_start=1)
+function setUpDocker(){
+    if [[ $1 != 'not' ]] && [ -z $(docker ps --format '{{.Names}}'|grep $1) ];then
+        tips "启动容器：$1"
+         cd /bctos/server/$1
+         docker-compose up -d
+         need_start=1
+     fi
+}
+setUpDocker $mysql
+setUpDocker $redis
+setUpDocker $memcached
+setUpDocker $php
 sleep 2;
 tips "增加网站 下载源码"
 cd /bctos/wwwroot
