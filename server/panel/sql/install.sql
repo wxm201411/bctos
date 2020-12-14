@@ -650,6 +650,7 @@ CREATE TABLE `wp_install`  (
   `admin_passwd` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'admin_passwd',
   `rm_file` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'rm_file',
   `download_type` char(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'git' COMMENT 'download_type',
+  `bctos_id` int(10) NULL DEFAULT NULL COMMENT 'bctos_id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '一键部署' ROW_FORMAT = DYNAMIC;
 
