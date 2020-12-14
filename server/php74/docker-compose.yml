@@ -5,10 +5,10 @@ networks:
       name: bctos
 services:
   php74:
-    build: /bctos/server/php74
+#    build: /bctos/server/php74
     hostname: php74
     container_name: php74
-    image: bctos-php:7.4-fpm-alpine
+    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/php74:latest
     restart: unless-stopped
     volumes:
       - /bctos/wwwroot:/bctos/wwwroot

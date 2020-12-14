@@ -5,10 +5,10 @@ networks:
       name: bctos
 services:
   php80:
-    build: /bctos/server/php80
+#    build: /bctos/server/php80
     hostname: php80
     container_name: php80
-    image: bctos-php:8.0-rc-fpm-alpine
+    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/php80:latest
     restart: unless-stopped
     volumes:
       - /bctos/wwwroot:/bctos/wwwroot

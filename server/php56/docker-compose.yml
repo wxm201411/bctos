@@ -5,10 +5,10 @@ networks:
       name: bctos
 services:
   php56:
-    build: /bctos/server/php56
+#    build: /bctos/server/php56
     hostname: php56
     container_name: php56
-    image: bctos-php:5.6-fpm-alpine
+    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/php56:latest
     restart: unless-stopped
     volumes:
       - /bctos/wwwroot:/bctos/wwwroot

@@ -5,10 +5,10 @@ networks:
       name: bctos
 services:
   php73:
-    build: /bctos/server/php73
+#    build: /bctos/server/php73
     hostname: php73
     container_name: php73
-    image: bctos-php:7.3-fpm-alpine
+    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/php73:latest
     restart: unless-stopped
     volumes:
       - /bctos/wwwroot:/bctos/wwwroot
