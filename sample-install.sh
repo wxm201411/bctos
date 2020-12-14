@@ -52,7 +52,7 @@ Get_Ip_Address(){
 domain=''
 function domain_input(){
     tips "请输入网站,为空时表示使用IP访问"
-    read -s -p "访问域名：" domain
+    read -p "访问域名：" domain
     echo -e ""
     domain=$(echo $domain|sed 's/https:\/\///'|sed 's/http:\/\///'|sed 's/^\///'|sed 's/\/$//'|sed 's/ //g')
     if [[ $domain != '' && -d /bctos/wwwroot/$domain ]];then
