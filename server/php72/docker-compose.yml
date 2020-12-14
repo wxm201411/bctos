@@ -5,10 +5,10 @@ networks:
       name: bctos
 services:
   php72:
-    build: /bctos/server/php72
+#    build: /bctos/server/php72
     hostname: php72
     container_name: php72
-    image: bctos-php:7.2-fpm-alpine
+    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/php72:latest
     restart: unless-stopped
     volumes:
       - /bctos/wwwroot:/bctos/wwwroot
