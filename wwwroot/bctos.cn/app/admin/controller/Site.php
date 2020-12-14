@@ -37,6 +37,7 @@ class Site extends Admin
     {
         //静默启动WEB全部服务
         $res = ssh_execute(SITE_PATH . '/scripts/sys/initWebDocker.sh');
+        dump($res);exit;
         if ($res['code'] == 2) {
             return $this->error('root');
         } elseif ($res['code'] == 1) {

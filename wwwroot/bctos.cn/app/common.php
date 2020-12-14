@@ -6253,9 +6253,12 @@ function ssh_execute($command, $show_err = false, $ssh_pawd = null)
     static $conn;
     if (!$conn) {
         try {
-            $conn = ssh2_connect(SSH_IP, '22');   //初始化连接
-            $ssh_pawd = $ssh_pawd == null ? SSH_PAWD : $ssh_pawd;
-            ssh2_auth_password($conn, 'root', $ssh_pawd);
+            $conn = ssh2_connect(SSH_IP, '22', ['hostkey' => 'ssh-rsa']);   //初始化连接
+            //$ssh_pawd = $ssh_pawd == null ? SSH_PAWD : $ssh_pawd;
+            //ssh2_auth_password($conn, 'root', $ssh_pawd);
+            if (!ssh2_auth_pubkey_file($conn, 'root', SITE_PATH . '/config/.ssh/id_rsa.pub', SITE_PATH . '/config/.ssh/id_rsa', 'bctos')) {
+                return ['code' => 2, 'msg' => 'Public Key Authentication Failed'];
+            }
         } catch (\Exception $e) {
             return ['code' => 2, 'msg' => $e->getMessage()];
         }
@@ -6299,7 +6302,10 @@ function ssh_execute_msg($command, $show_err = false)
     static $conn;
     if (!$conn) {
         $conn = ssh2_connect(SSH_IP, '22');   //初始化连接
-        ssh2_auth_password($conn, 'root', SSH_PAWD);
+//        ssh2_auth_password($conn, 'root', SSH_PAWD);
+        if (!ssh2_auth_pubkey_file($conn, 'root', SITE_PATH . '/config/.ssh/id_rsa.pub', SITE_PATH . '/config/.ssh/id_rsa', 'bctos')) {
+            return ['code' => 2, 'msg' => 'Public Key Authentication Failed'];
+        }
     }
 
     //把docker目录换成宿主机的目录 TODO 固定的目录

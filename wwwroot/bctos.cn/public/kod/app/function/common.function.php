@@ -1154,7 +1154,10 @@ function ssh_execute($command, $show_err = false)
     if (!$conn) {
         require_once "../../config/weiphp_define.php";
         $conn = ssh2_connect(SSH_IP, '22');   //初始化连接
-        ssh2_auth_password($conn, 'root', SSH_PAWD);
+        //ssh2_auth_password($conn, 'root', SSH_PAWD);
+        if (!ssh2_auth_pubkey_file($conn, 'root', SITE_PATH . '/config/.ssh/id_rsa.pub', SITE_PATH . '/config/.ssh/id_rsa', 'bctos')) {
+            return ['code' => 2, 'msg' => 'Public Key Authentication Failed'];
+        }
     }
 
     //把docker目录换成宿主机的目录 TODO 固定的目录

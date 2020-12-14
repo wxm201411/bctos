@@ -61,14 +61,19 @@ function domain_input(){
     fi
 }
 tips "判断默认网站是否已经安装"
-default_path=$(cat /bctos/server/nginx/conf.d/default.conf |egrep ' root '| sed 's/root//g'|sed 's/ //g')
-if [[ $default_path == "/bctos/wwwroot/default;" ]];then
-    tips "未安装，直接把当前网站设置为默认网站"
+if [ -d /bctos ];then
+    default_path=$(cat /bctos/server/nginx/conf.d/default.conf |egrep ' root '| sed 's/root//g'|sed 's/ //g')
+    if [[ $default_path == "/bctos/wwwroot/default;" ]];then
+        tips "未安装，直接把当前网站设置为默认网站"
+        domain='default'
+    else
+        tips "已安装，需要用户输入域名"
+        domain_input
+    fi
+    if [[ $domain == '' ]];then
+        domain='default'
+    fi
 else
-    tips "已安装，需要用户输入域名"
-    domain_input
-fi
-if [[ $domain == '' ]];then
     domain='default'
 fi
 

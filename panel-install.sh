@@ -34,19 +34,19 @@ tips "
 | 小韦云面板安装成功后可通过 http://你的服务器IP:666 进行访问.
 +----------------------------------------------------------------------
 "
-SSH_PAWD=''
-function inputPwd(){
-    tips "面板需要使用服务器的root账号来部署网站或文件管理"
-    read -s -p "请输入root密码：" SSH_PAWD
-    echo -e ""
-    read -s -p "再次输入root密码：" SSH_PAWD2
-    echo -e ""
-    if [[ $SSH_PAWD != $SSH_PAWD2 ]];then
-        tips "两次输入的密码不相同，请重试"
-        inputPwd
-    fi
-}
-inputPwd
+#SSH_PAWD=''
+#function inputPwd(){
+#    tips "面板需要使用服务器的root账号来部署网站或文件管理"
+#    read -s -p "请输入root密码：" SSH_PAWD
+#    echo -e ""
+#    read -s -p "再次输入root密码：" SSH_PAWD2
+#    echo -e ""
+#    if [[ $SSH_PAWD != $SSH_PAWD2 ]];then
+#        tips "两次输入的密码不相同，请重试"
+#        inputPwd
+#    fi
+#}
+#inputPwd
 
 GetSysInfo(){
 	if [ -s "/etc/redhat-release" ];then
@@ -236,15 +236,30 @@ if [ -z $(cat /etc/passwd|grep www-data) ];then
     sudo useradd -u 82 -g 82  www-data
 fi
 
+if [ ! -f "config/.ssh/id_rsa" ];then
+    tips "生成SSH2需要的密钥";
+
+    mkdir -p config/.ssh
+    ssh-keygen -f config/.ssh/id_rsa -N bctos
+    cp config/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub
+    sudo chown -R 82.82 config/.ssh
+    chmod -R 755 config/.ssh
+
+    cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+    chmod 600 /root/.ssh/authorized_keys
+    chmod 700 /root/.ssh
+fi
+
 sudo chown -R 82.82 ./*
 sudo chmod -R +x scripts
 sudo chmod -R 755 public runtime db app
+
 
 tips "替换配置文件中的密码";
 Get_Ip_Address
 sed -i "s/123456/${MYSQL_PWD}/" config/database.php
 sed -i "s/192\.168\.0\.8/${LOCAL_IP}/" config/weiphp_define.php
-sed -i "/SSH_PAWD/{s/123/${SSH_PAWD}/}" config/weiphp_define.php
+#sed -i "/SSH_PAWD/{s/123/${SSH_PAWD}/}" config/weiphp_define.php
 cd ../..
 
 tips "代码准备完毕，目录如下：";

@@ -189,7 +189,9 @@ class Servidorsocket implements MessageComponentInterface
     public function connectSSH($server, $port, $user, $password, $from)
     {
         $this->connection[$from->resourceId] = ssh2_connect($server, $port);
-        if (ssh2_auth_password($this->connection[$from->resourceId], $user, $password)) {
+        if (ssh2_auth_pubkey_file($this->connection[$from->resourceId], $user, SITE_PATH . '/config/.ssh/id_rsa.pub', SITE_PATH . '/config/.ssh/id_rsa', 'bctos')) {
+            return true;
+        }elseif (ssh2_auth_password($this->connection[$from->resourceId], $user, $password)) {
             //$conn->send("Authentication Successful!\n");
             $this->shell[$from->resourceId] = ssh2_shell($this->connection[$from->resourceId], 'xterm', null, self::COLS, self::ROWS, SSH2_TERM_UNIT_CHARS);
             sleep(1);
