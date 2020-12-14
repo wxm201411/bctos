@@ -24,6 +24,14 @@ if [ ! -d "/bctos/wwwroot" ];then
 else
     tips  "已经安装了小韦云面板"
 fi
+cd /bctos
+if [ -z $(docker ps --format '{{.Names}}'|grep panel) ];then
+    tips "启动小韦云面板"
+    docker-compose down
+    docker-compose up -d
+else
+    tips  "小韦云面板已经在运行中"
+fi
 
 domain=''
 function domain_input(){
