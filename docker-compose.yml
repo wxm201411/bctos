@@ -19,7 +19,7 @@ services:
       volumes:
          - /bctos/server/panel/mysql-data:/var/lib/mysql
          - /bctos/server/panel/nginx.conf:/etc/nginx/nginx.conf
-         - /bctos/server/panel/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+         - /bctos/server/panel/conf.d/localhost.conf:/etc/nginx/conf.d/default.conf
          - /bctos/server/panel/php-fpm.conf:/etc/php7/php-fpm.conf
          - /bctos/server/panel/php.ini:/etc/php7/php.ini
          - /bctos/server/panel/my.cnf:/etc/my.cnf

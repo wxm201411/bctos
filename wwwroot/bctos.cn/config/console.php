@@ -7,6 +7,7 @@ return [
     'commands' => [
         'canal' => 'app\command\Canal',
         'update' => 'app\command\Update',
-        'cron_time' => 'app\command\CronTime'
+        'cron_time' => 'app\command\CronTime',
+        'sample_install' => 'app\command\SampleInstall'
     ],
 ];

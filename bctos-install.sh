@@ -102,7 +102,7 @@ fi
 
 if [ ! -d "/bctos" ]; then
 	sudo mkdir /bctos
-fi	
+fi
 cd /bctos
 
 which -v
@@ -253,7 +253,7 @@ ls -l
 tips "下载面板镜像，使用docker-compose启动面板容器";
 sudo docker-compose up -d
 if [ $? -ne 0 ]; then
-    error_tips "镜像下载成功失败，请先手工下载试试：docker pull wxm201411/panel"
+    error_tips "镜像下载成功失败，请先手工下载试试：docker pull registry.cn-hangzhou.aliyuncs.com/wxm201411/panel"
 else
     tips "服务启动成功";
 fi

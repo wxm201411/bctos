@@ -117,9 +117,6 @@ str;
         // dump($data);exit;
         M('install')->where('id', $id)->update(['status' => 1]);
 
-        //自动增加定时任务
-        D('Cron')->addCronAuto(1, $id, $data['title'], $path);
-
         foreach ($data as &$vo) {
             if (empty($vo)) {
                 $vo = '-';

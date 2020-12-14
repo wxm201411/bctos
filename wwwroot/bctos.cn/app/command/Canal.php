@@ -1,6 +1,4 @@
 <?php
-declare (strict_types=1);
-
 namespace app\command;
 
 use Com\Alibaba\Otter\Canal\Protocol\Column;

@@ -1184,9 +1184,130 @@ class Index extends Home
         M('install')->where('id', $id)->inc('install_count')->update();
         return $this->success('更新成功');
     }
+
     function getServerList()
     {
         $list = find_data(M('soft')->select());
         return json($list);
+    }
+
+    function param()
+    {
+        $id = input('id/d', 0);
+        $data = find_data(M('install')->where('id', $id)->find());
+        foreach ($data as &$vo) {
+            if (empty($vo)) {
+                $vo = '-';
+            }
+        }
+        $db_pwd = uniqid();
+        $content = <<<str
+mysql='{$data['database']}'
+redis='{$data['redis']}'
+memcached='{$data['memcached']}'
+php='{$data['php_version']}'
+php_func='{$data['php_func']}'
+php_ext='{$data['php_ext']}'
+download_type='{$data['download_type']}'
+download_url='{$data['download_url']}'
+db_file='{$data['db_file']}'
+redis_file='{$data['redis_file']}'
+memcached_file='{$data['memcached_file']}'
+rm_file=='{$data['rm_file']}'
+db_set='{$data['db_set']}'
+db_pwd='{$db_pwd}'
+str;
+        echo $content;
+    }
+
+    function rewrite()
+    {
+        $id = input('id/d', 0);
+        $data = find_data(M('install')->where('id', $id)->find());
+        echo trim($data['rewrite']);
+    }
+
+    function conf()
+    {
+        $id = input('id/d', 0);
+        $domain = input('domain');
+        $data = find_data(M('install')->where('id', $id)->find());
+        if ($data['php_version'] == 'not') {
+            $phpConf = <<<str
+#    location ~ \.php$ {
+#        fastcgi_pass   {$data['php_version']}:9000;
+#        fastcgi_index  index.php;
+#        fastcgi_param  SCRIPT_FILENAME  \$document_root\$fastcgi_script_name;
+#        include        fastcgi_params;
+#    }
+str;
+
+        } else {
+            $phpConf = <<<str
+    location ~ \.php$ {
+        fastcgi_pass   {$data['php_version']}:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  \$document_root\$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+str;
+        }
+
+        //运行目录
+        $data['public_path'] = trim(trim($data['public_path'], '/'));
+        $public_path = '';
+        if (!empty($data['public_path'])) {
+            $public_path = '/' . $data['public_path'];
+        }
+        //入口文件
+        $index = 'index.html index.php';
+        if (!empty($data['index_file'])) {
+            $index = $data['index_file'];
+        }
+        $path = "/bctos/wwwroot/{$domain}";
+        $server_name = $domain == 'default' ? 'localhost' : $domain;
+        //增加nginx配置文件
+        $content = <<<str
+server {
+    listen 80;
+    server_name  {$server_name};
+    root   {$path}{$public_path};
+    index  {$index};
+
+    #伪静态规则
+    include /etc/nginx/rewrite/{$domain}.rewrite.conf;
+    
+{$phpConf}
+
+    location ~ /\.ht {
+        deny  all;
+    }
+    location ~ \.well-known{
+        allow all;
+    }
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+    {
+        expires      30d;
+        error_log off;
+        access_log /dev/null;
+    }
+    location ~ .*\.(js|css)?$
+    {
+        expires      12h;
+        error_log off;
+        access_log /dev/null; 
+    }
+    access_log  /bctos/logs/{$data['title']}.log;
+    error_log  /bctos/logs/{$data['title']}.error.log;    
+}
+str;
+        echo $content;
+    }
+
+    function installData()
+    {
+        $id = input('id/d', 0);
+        $data = find_data(M('install')->where('id', $id)->find());
+        return json($data);
     }
 }
