@@ -33,7 +33,7 @@ class SampleInstall extends Command
         $path = "/bctos/wwwroot/{$domain}";
         $db_name = str_replace('.', '_', $domain);
         $db = ['database' => $data['database'], 'db_name' => $db_name, 'db_user' => $db_name, 'db_passwd' => $db_pwd, 'db_set' => $data['db_set']];
-        $site = ['domain' => $domain, 'path' => $path, 'php_version' => $data['php_version'], 'title' => $domain, 'public_path' => $data['public_path'], 'rewrite_mod' => $data['rewrite_mod'], 'create_at' => NOW_TIME];
+        $site = ['domain' => $domain, 'path' => $path, 'php_version' => $data['php_version'], 'title' => $domain, 'public_path' => $data['public_path'], 'rewrite_mod' => $data['rewrite_mod'], 'create_at' => time()];
         $site_id = M('site')->insertGetId(array_merge($db, $site));
         if ($data['database'] != 'not') {
             $db['power'] = '%';
