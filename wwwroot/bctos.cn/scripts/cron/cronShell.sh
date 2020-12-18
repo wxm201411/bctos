@@ -15,7 +15,7 @@ sed -i 's/\r//' $sh
 res=$(eval $sh)
 
 # 更新备份时间
-docker exec panel sh -c "cd /bctos/wwwroot/bctos.cn;php think cron_time ${id} 0 cronShell"
+docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;php think cron_time ${id} 0 cronShell'"
 
 function timediff() {
     start_time=$1

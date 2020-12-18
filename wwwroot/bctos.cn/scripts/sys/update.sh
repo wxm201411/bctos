@@ -19,7 +19,7 @@ git pull
 
 showMsg "更新数据库"
 tag=$(git tag | awk 'END {print}')
-docker exec panel sh -c "cd /bctos/wwwroot/bctos.cn;vendor/bin/phinx migrate;php think update ${tag}"
+docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;vendor/bin/phinx migrate;php think update ${tag}'"
 
 rm -rf wwwroot/bctos.cn/runtime/*
 echo "清空缓存完毕"

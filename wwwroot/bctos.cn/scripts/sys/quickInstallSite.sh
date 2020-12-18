@@ -143,7 +143,7 @@ if [[ $download_type == "git" ]];then
     git clone $download_url $domain
 fi
 if [[ $download_type == "composer" ]];then
-    docker exec panel sh -c "cd /bctos/wwwroot;composer create-project $download_url $domain"
+    docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot;composer create-project $download_url $domain'"
 fi
 
 [ ! -d $domain ] && mkdir $domain

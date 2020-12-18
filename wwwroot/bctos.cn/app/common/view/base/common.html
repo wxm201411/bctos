@@ -18,17 +18,17 @@ empty( $forward ) && cookie('__forward__', $_SERVER['REQUEST_URI']);
     <div class="sidebar">
         <!-- 左侧栏用户信息 -->
         <div class="user-info">
-            <div class="user-info-name">{$myinfo.nickname}<i class="pl_5 fa fa-sort-down"></i>
+            <div class="user-info-name"><i class="layui-icon layui-icon-user"></i> {$myinfo.nickname} <i class="pl_5 fa fa-sort-down"></i>
                 <div class="user-info-dropdown">
-                    <a href="{:U('home/User/profile')}">修改密码</a>
-                    <a href="{:U('home/User/logout')}">退出</a>
+                    <a href="{:U('home/User/profile')}"><i class="layui-icon layui-icon-edit"></i> 修改密码</a>
+                    <a href="{:U('home/User/logout')}"><i class="layui-icon layui-icon-return"></i> 退出</a>
                 </div>
             </div>
         </div>
         <div id="sidenav">
             <ul class="sidenav_sub">
                 {volist name='top_menu.core_side_menu' id='vo'}
-                <li class="{$vo.class}" data-id="{$vo.id}"><a href="{$vo.url}" target="{$vo.target}"> {$vo.title} </a><b class="active_arrow"></b></li>
+                <li class="{$vo.class}" data-id="{$vo.id}"><a href="{$vo.url}" target="{$vo.target}"><i class="{$vo.icon}"></i> {$vo.title} </a><b class="active_arrow"></b></li>
                 {/volist}
                 <div class="bar"></div>
             </ul>

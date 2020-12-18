@@ -48,6 +48,7 @@ class Menu extends Base
             }
             $param['side'] = $cate['id'] = $m['id'];
             $cate['title'] = $m['title'];
+            $cate['icon'] = $m['icon'];
             $param['top'] = $cate['pid'] = intval($m['pid']);
 
             $cate['url'] = $m['url'];
@@ -67,6 +68,7 @@ class Menu extends Base
             // dump($m);
             $param['top'] = $cate['id'] = $m['id'];
             $cate['title'] = $m['title'];
+            $cate['icon'] = $m['icon'];
             $cate['pid'] = 0;
 
             $cate['url'] = $m['url'];

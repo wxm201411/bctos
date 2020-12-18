@@ -14,7 +14,7 @@ fi
 chronyc sourcestats -v > /dev/null
 
 # 更新备份时间
-docker exec panel sh -c "cd /bctos/wwwroot/bctos.cn;php think cron_time ${id} 0 cronTime"
+docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;php think cron_time ${id} 0 cronTime'"
 
 function timediff() {
     start_time=$1

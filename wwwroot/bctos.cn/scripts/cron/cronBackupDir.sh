@@ -37,8 +37,9 @@ do
 done
 
 # 更新备份时间
-docker exec panel sh -c "cd /bctos/wwwroot/bctos.cn;php think cron_time ${id} ${size} ${file} '${delFiles}'"
-
+set +x
+docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;php think cron_time ${id} ${size} ${file} \"${delFiles}\"'"
+set -x
 function timediff() {
     start_time=$1
     end_time=$2

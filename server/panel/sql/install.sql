@@ -798,7 +798,7 @@ CREATE TABLE `wp_menu`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 899 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-INSERT INTO `wp_menu` VALUES (1, '0', '开发功能', 1, '', 'admin/Apps/index', '', 1, 99, 0, '_self', NULL);
+INSERT INTO `wp_menu` VALUES (1, '0', '开发功能', 1, '', 'admin/Apps/index', 'layui-icon layui-icon-util', 1, 99, 0, '_self', NULL);
 INSERT INTO `wp_menu` VALUES (2, '1', '应用管理', 1, '', 'admin/Apps/index', NULL, 0, 1, 0, '_self', NULL);
 INSERT INTO `wp_menu` VALUES (3, '1', '数据模型', 1, '', 'admin/Model/index', NULL, 0, 2, 0, '_self', NULL);
 INSERT INTO `wp_menu` VALUES (4, '1', '菜单管理', 1, '', 'admin/Menu/lists', NULL, 0, 3, 0, '_self', NULL);
@@ -806,15 +806,15 @@ INSERT INTO `wp_menu` VALUES (7, '1', '网站设置', 1, '', 'admin/Config/group
 INSERT INTO `wp_menu` VALUES (8, '1', '配置管理', 1, '', 'admin/Config/index', NULL, 0, 7, 0, '_self', NULL);
 INSERT INTO `wp_menu` VALUES (12, '1', '清除缓存', 1, '', 'admin/Update/delcache', NULL, 0, 11, 0, '_self', NULL);
 INSERT INTO `wp_menu` VALUES (852, '1', '权限配置', 1, '', 'admin/rules/index', '', 1, 8, 0, '_self', '2');
-INSERT INTO `wp_menu` VALUES (882, '0', '容器管理', 0, 'docker', '', '', 0, 4, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (882, '0', '容器管理', 0, 'docker', '', 'layui-icon layui-icon-component', 0, 4, 0, '_self', '2');
 INSERT INTO `wp_menu` VALUES (888, '1', '在线升级', 1, '', 'admin/Update/index', '', 0, 8, 0, '_self', '2');
-INSERT INTO `wp_menu` VALUES (889, '0', '网站', 1, '', 'admin/site/lists', '', 0, 0, 0, '_self', '2');
-INSERT INTO `wp_menu` VALUES (890, '0', '数据库', 1, '', 'admin/database/lists', '', 0, 0, 0, '_self', '2');
-INSERT INTO `wp_menu` VALUES (891, '0', '文件', 1, '', 'admin/site/files', '', 0, 0, 0, '_blank', '2');
-INSERT INTO `wp_menu` VALUES (892, '0', '终端', 1, '', 'admin/xterm/lists', '', 0, 0, 0, '_self', '2');
-INSERT INTO `wp_menu` VALUES (893, '0', '计划任务', 1, '', 'admin/cron/lists', '', 0, 0, 0, '_self', '2');
-INSERT INTO `wp_menu` VALUES (894, '0', '软件设置', 1, '', 'admin/Soft/lists', '', 0, 0, 0, '_self', '2');
-INSERT INTO `wp_menu` VALUES (898, '0', '一键部署', 1, '', 'admin/install/lists', NULL, 0, 0, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (889, '0', '网站', 1, '', 'admin/site/lists', 'layui-icon layui-icon-website', 0, 0, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (890, '0', '数据库', 1, '', 'admin/database/lists', 'layui-icon layui-icon-engine', 0, 0, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (891, '0', '文件', 1, '', 'admin/site/files', 'layui-icon layui-icon-file-b', 0, 0, 0, '_blank', '2');
+INSERT INTO `wp_menu` VALUES (892, '0', '终端', 1, '', 'admin/xterm/lists', 'layui-icon layui-icon-layer', 0, 0, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (893, '0', '计划任务', 1, '', 'admin/cron/lists', 'layui-icon layui-icon-date', 0, 0, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (894, '0', '软件设置', 1, '', 'admin/Soft/lists', 'layui-icon layui-icon-set', 0, 0, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (898, '0', '一键部署', 1, '', 'admin/install/lists', 'layui-icon layui-icon-app', 0, 0, 0, '_self', '2');
 
 DROP TABLE IF EXISTS `wp_message`;
 CREATE TABLE `wp_message`  (

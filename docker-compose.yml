@@ -11,7 +11,7 @@ services:
       image: registry.cn-hangzhou.aliyuncs.com/wxm201411/panel:latest
       restart: always
       ports: 
-#         - 667:3306
+         - 667:3306
          - 666:80
          - 2100:2100
          - 2120:2120

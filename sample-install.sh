@@ -233,6 +233,9 @@ setUpDocker $mysql
 setUpDocker $redis
 setUpDocker $memcached
 setUpDocker $php
+#if [[ $php != "php72" ]];then
+#    setUpDocker php72
+#fi
 sleep 2;
 tips "增加网站 下载源码"
 cd /bctos/wwwroot
@@ -253,6 +256,13 @@ if [[ $download_type == "wget" ]];then
     installSoft unzip
     unzip install.zip
     rm -f install.zip
+
+    #判断如果只有一个目录，需要取消这个目录
+    if [[ $(ls|wc -l) == 1 ]];then
+        dir=$(ls|head -1)
+        mv $dir/* ./
+        rm -rf $dir
+    fi
 fi
 
 if [[ $(ls -A) == '' ]];then
@@ -319,8 +329,7 @@ if [ -f install.sh ];then
 fi
 
 tips "数据库增加记录"
-docker exec panel sh -c "cd /bctos/wwwroot/bctos.cn;php think sample_install ${soft_id} ${domain} ${db_name}"
-
+docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;php think sample_install ${soft_id} ${domain} ${db_name}'"
 
 if [[ $rm_file != '-' ]];then
     tips "清空安装文件"

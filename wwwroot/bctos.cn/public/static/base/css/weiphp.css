@@ -3419,7 +3419,6 @@ h5 {
 .user-info-head,
 .user-info-name {
 	vertical-align: middle;
-    width:100px;
 }
 .user-info-head img {
 	border-radius: 50%;
@@ -3781,4 +3780,7 @@ object.swfupload {
 }
 .lists-select .layui-input, .layui-select, .layui-textarea{
     border-width:0px;
+}
+.sidebar .layui-icon{
+    padding-right: 10px;
 }

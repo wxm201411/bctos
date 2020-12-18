@@ -11,7 +11,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 RUN chmod 777 /bctos/server/panel/entrypoint.sh \
-&& addgroup -g 82 -S www-data; 	adduser -u 82 -D -S -G www-data www-data \
+&& addgroup -g 82 -S www-data; 	adduser -u 82 -D -s "/bin/sh" -G www-data www-data \
 && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
 && apk update \
 && apk add --no-cache curl tzdata \

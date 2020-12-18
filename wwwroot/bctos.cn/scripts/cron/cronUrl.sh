@@ -11,7 +11,7 @@ fi
 res=$(curl -I -s $url)
 
 # 更新备份时间
-docker exec panel sh -c "cd /bctos/wwwroot/bctos.cn;php think cron_time ${id} 0 cronUrl"
+docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;php think cron_time ${id} 0 cronUrl'"
 
 function timediff() {
     start_time=$1
