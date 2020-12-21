@@ -258,9 +258,7 @@ str;
         $lists = json_decode($content, true);
         if (empty($lists)) return $this->error('没有需要更新的');
 
-        $dao = M('install');
-
-        $has = $dao->column('id', 'bctos_id');
+        $has = M('install')->column('id', 'bctos_id');
         $add = [];
 
         foreach ($lists as $vo) {
@@ -268,7 +266,7 @@ str;
             unset($vo['status'], $vo['id']);
             if (isset($has[$t])) {
                 //更新
-                $dao->where('bctos_id', $t)->update($vo);
+                M('install')->where('bctos_id', $t)->update($vo);
             } else {
                 //新增
                 $vo['bctos_id'] = $t;
@@ -276,8 +274,9 @@ str;
             }
         }
         if (!empty($add)) {
-            $dao->insertAll($add);
+            M('install')->insertAll($add);
         }
+
         return $this->success('更新成功');
     }
 }

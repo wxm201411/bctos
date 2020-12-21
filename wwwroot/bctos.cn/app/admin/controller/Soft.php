@@ -650,9 +650,7 @@ EXPOSE 443' > Dockerfile;" . 'sed -i "/80:80/a\\\\$(grep \'80:80\' docker-compos
         $lists = json_decode($content, true);
         if (empty($lists)) return $this->error('没有需要更新的');
 
-        $dao = M('soft');
-
-        $has = $dao->column('id', 'docker');
+        $has = M('soft')->column('id', 'docker');
         $add = [];
 
         foreach ($lists as $vo) {
@@ -660,14 +658,14 @@ EXPOSE 443' > Dockerfile;" . 'sed -i "/80:80/a\\\\$(grep \'80:80\' docker-compos
             $t = $vo['docker'];
             if (isset($has[$t])) {
                 //更新
-                $dao->where('id', $has[$t])->update($vo);
+                M('soft')->where('id', $has[$t])->update($vo);
             } else {
                 //新增
                 $add[] = $vo;
             }
         }
         if (!empty($add)) {
-            $dao->insertAll($add);
+            M('soft')->insertAll($add);
         }
         return $this->success('更新成功');
     }
