@@ -180,27 +180,13 @@ str;
             if ($dao->where('title', $data['title'])->where('is_del', 0)->value('id')) {
                 return $this->error('保存失败，该软件名称已经存在');
             }
+            //$data['is_audit'] = 1;
             $id = $dao->insertGetId($data);
             if ($id) {
                 return $this->success('保存成功', U('lists'));
             } else {
                 return $this->error('保存失败，请通知管理员处理');
             }
-
-//            $content = json_encode($data);
-//
-//            //告诉浏览器这是一个文件流格式的文件
-//            Header("Content-type: application/octet-stream");
-//            //请求范围的度量单位
-//            Header("Accept-Ranges: bytes");
-//            //Content-Length是指定包含于请求或响应中数据的字节长度
-//            Header("Accept-Length: " . strlen($content));
-//            //用来告诉浏览器，文件是可以当做附件被下载，下载后的文件名称为$file_name该变量的值。
-//            Header("Content-Disposition: attachment; filename=bctos_install.json");
-//
-//            //读取文件内容并直接输出到浏览器
-//            echo $content;
-//            exit ();
         } else {
             $fields = get_model_attribute($model);
             $data = default_form_value($fields);
@@ -274,17 +260,18 @@ str;
 
         $dao = M('install');
 
-        $has = $dao->column('id', 'title');
+        $has = $dao->column('id', 'bctos_id');
         $add = [];
 
         foreach ($lists as $vo) {
+            $t = $vo['id'];
             unset($vo['status'], $vo['id']);
-            $t = $vo['title'];
             if (isset($has[$t])) {
                 //更新
-                $dao->where('id', $has[$t])->update($vo);
+                $dao->where('bctos_id', $t)->update($vo);
             } else {
                 //新增
+                $vo['bctos_id'] = $t;
                 $add[] = $vo;
             }
         }

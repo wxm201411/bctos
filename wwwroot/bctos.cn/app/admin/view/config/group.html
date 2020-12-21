@@ -22,7 +22,7 @@
 		{volist name="list" id="config"}
 		<div class="form-item">
 			<label class="item-label">{$config.title|raw}{if condition="!empty($config['remark'])"}<span class="check-tips">（{$config.remark}）</span>{/if} </label>
-			<div class="controls">
+			<div class="controls" style="overflow: visible;">
 			{switch name="config.type"}
 			{case value="0"}
 			<input type="text" class="text input-small" name="{$config.name}" value="{$config.value}">

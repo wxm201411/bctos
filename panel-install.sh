@@ -8,7 +8,7 @@ LANG=en_US.UTF-8
 
 # 需要用的软件
 function installSoft(){
-    if [[  !($(which $1) && $($1 --version)) ]]; then
+    if [[  ! $(which $1) ]]; then
         echo "============Install $1 begin================================="
         sudo yum -y install $1
         echo "============Install $1 end, return status: $?==================="

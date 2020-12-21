@@ -3,7 +3,13 @@ LANG=en_US.UTF-8
 
 
 soft_id=$1
-
+function installSoft(){
+    if [[  ! $(which $1) ]]; then
+        echo "============Install $1 begin================================="
+        yum -y install $1
+        echo "============Install $1 end, return status: $?==================="
+    fi
+}
 error_tips(){
 	echo '=================================================';
 	echo -e  "\033[31m $1  \033[0m";
@@ -120,7 +126,6 @@ else
     tips "配置下载成功"
 fi
 
-
 tips "先检查所需要的容器服务是否存在，不存在的话先更新面板"
 cd /bctos/server
 server_check=1
@@ -214,9 +219,8 @@ fi
 if [ -f /bctos/wwwroot/bctos.cn/runtime/$domain".conf" ];then
     mv /bctos/wwwroot/bctos.cn/runtime/$domain".conf" ./conf.d/$domain".conf"
 else
-    curl -sS --connect-timeout 10 -m 60 https://www.bctos.cn/index.php?s=/home/index/conf/id/${soft_id}/domain/${domain} > ./conf.d/$domain".conf"
+    curl -sS --connect-timeout 10 -m 60 https://www.bctos.cn/index.php?s=/home/index/conf/domain/${domain}/id/${soft_id} > ./conf.d/$domain".conf"
 fi
-
 chmod -R 777 rewrite
 chmod -R 777 conf.d
 
@@ -233,9 +237,6 @@ setUpDocker $mysql
 setUpDocker $redis
 setUpDocker $memcached
 setUpDocker $php
-#if [[ $php != "php72" ]];then
-#    setUpDocker php72
-#fi
 sleep 2;
 tips "增加网站 下载源码"
 cd /bctos/wwwroot
@@ -254,7 +255,7 @@ if [[ $download_type == "wget" ]];then
     wget -O install.zip $download_url
 
     installSoft unzip
-    unzip install.zip
+    unzip -q install.zip
     rm -f install.zip
 
     #判断如果只有一个目录，需要取消这个目录
@@ -274,7 +275,7 @@ fi
 ls -l
 if [ -f composer.json ] && [ ! -f composer.lock ]; then
     tips "发现composer.json，执行composer install"
-    docker exec panel sh -c "/bctos/wwwroot/${domain};composer install"
+    docker exec panel sh -c "cd /bctos/wwwroot/${domain};composer install"
 fi
 cd ..
 chown -R 82.82 $domain
@@ -306,8 +307,9 @@ EOF
 fi
 
 if [[ $mysql != 'not' ]] && [ -f install.sql ];then
-    tips "发现install.sql，执行数据库导入"
+    tips "发现install.sql，执行数据库导入,时间可能较长，请耐心等待"
     docker exec -i  ${mysql} sh -c "exec mysql -uroot -p${root_pwd} ${db_name}" < ./install.sql
+    tips "导入数据库完成"
 fi
 
 if [[ $mysql != 'not' ]] && [[ $db_file != '-' ]];then
@@ -325,15 +327,20 @@ fi
 if [ -f install.sh ];then
     tips "发现install.sh文件，执行它"
     chmod +x install.sh
-    ./install.sh $domain
+    ./install.sh $domain $mysql
 fi
 
-tips "数据库增加记录"
+tips "网站增加小韦云面板中，方便管理"
 docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;php think sample_install ${soft_id} ${domain} ${db_name}'"
 
 if [[ $rm_file != '-' ]];then
     tips "清空安装文件"
-    rm -rf $rm_file
+    array=(${rm_file//#@#/ })
+    for var in ${array[@]}
+    do
+        tips "删除：${var}"
+       rm -rf $var
+    done
 fi
 
 tips "nginx重载配置"

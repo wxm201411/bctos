@@ -92,7 +92,7 @@
         if(type==1){
             _parent.html('已安装')
         }else{
-            _that.show()
+            // _that.show()
             _parent.html('安装失败')
         }
     }
@@ -110,7 +110,7 @@
                 value:'t2.cn',
                 placeholder: '如：www.bctos.cn'
             }, function (value, index, elem) {
-                _that.hide()
+                // _that.hide()
                 _parent.html('安装中')
 
                 layer.close(index);
@@ -124,7 +124,7 @@
                 layer_index = layer.open({
                     type: 2,
                     title: '执行日志',
-                    area: ['800px', '550px'],
+                    area: ['800px', '600px'],
                     content: url
                 });
             });

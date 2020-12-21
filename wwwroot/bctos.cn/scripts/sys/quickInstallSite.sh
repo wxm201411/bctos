@@ -17,7 +17,7 @@ db_pwd=${15:-'123456'}
 
 # 需要用的软件
 function installSoft(){
-    if [[  !($(which $1) && $($1 --version)) ]]; then
+    if [[  ! $(which $1) ]]; then
         echo "============Install $1 begin================================="
         yum -y install $1
         echo "============Install $1 end, return status: $?==================="
@@ -38,7 +38,7 @@ installSoft wget
 installSoft git
 
 
-tips "第一，先检查所需要的容器服务是否存在，不存在的话先更新面板"
+tips "先检查所需要的容器服务是否存在，不存在的话先更新面板"
 cd /bctos/server
 server_check=1
 [[ server_check -eq 1 ]] && [[ $mysql != 'not' ]] && [ -z $(find . -type d -name $mysql) ] && server_check=0
@@ -56,7 +56,7 @@ fi
 
 
 if [[ $php != 'not' ]];then
-    tips "第二，设置PHP禁用函数，设置PHP扩展，重新运行PHP容器"
+    tips "设置PHP禁用函数，设置PHP扩展，重新运行PHP容器"
     cd /bctos/server/$php
 
     if [[ $php_func != '-' ]];then
@@ -117,8 +117,12 @@ if [[ $php != 'not' ]];then
     fi
 fi
 
-tips "第三，伪静态文件生成，网站nginx文件生成"
+tips "伪静态文件生成，网站nginx文件生成"
 cd /bctos/server/nginx
+if [ ! -d rewrite ];then
+    mkdir rewrite
+    chmod 777 rewrite
+fi
 if [ -f /bctos/wwwroot/bctos.cn/runtime/$domain".rewrite.conf" ];then
     mv /bctos/wwwroot/bctos.cn/runtime/$domain".rewrite.conf" ./rewrite/$domain".rewrite.conf"
 else
@@ -128,14 +132,21 @@ mv /bctos/wwwroot/bctos.cn/runtime/$domain".conf" ./conf.d/$domain".conf"
 chmod -R 777 rewrite
 chmod -R 777 conf.d
 
-tips "第五，启动所需的容器"
-
-[[ $mysql != 'not' ]] && [ -z $(docker ps --format '{{.Names}}'|grep $mysql) ] && $(cd /bctos/server/$mysql; docker-compose up -d; need_start=1)
-[[ $redis != 'not' ]] && [ -z $(docker ps --format '{{.Names}}'|grep $redis) ] && $(cd /bctos/server/$redis; docker-compose up -d; need_start=1)
-[[ $memcached != 'not' ]] && [ -z $(docker ps --format '{{.Names}}'|grep $memcached) ] && $(cd /bctos/server/$memcached; docker-compose up -d; need_start=1)
-[[ $php != 'not' ]] && [ -z $(docker ps --format '{{.Names}}'|grep $php) ] && $(cd /bctos/server/$php; docker-compose up -d; need_start=1)
+tips "启动所需的容器"
+function setUpDocker(){
+    if [[ $1 != 'not' ]] && [ -z $(docker ps --format '{{.Names}}'|grep $1) ];then
+        tips "启动容器：$1"
+         cd /bctos/server/$1
+         docker-compose up -d
+         need_start=1
+     fi
+}
+setUpDocker $mysql
+setUpDocker $redis
+setUpDocker $memcached
+setUpDocker $php
 sleep 2;
-tips "第四，增加网站 下载源码"
+tips "增加网站 下载源码"
 cd /bctos/wwwroot
 
 [ -d $domain ] && rm -rf /bctos/wwwroot/$domain
@@ -143,7 +154,7 @@ if [[ $download_type == "git" ]];then
     git clone $download_url $domain
 fi
 if [[ $download_type == "composer" ]];then
-    docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot;composer create-project $download_url $domain'"
+    docker exec panel sh -c "cd /bctos/wwwroot;composer create-project $download_url $domain"
 fi
 
 [ ! -d $domain ] && mkdir $domain
@@ -152,8 +163,15 @@ if [[ $download_type == "wget" ]];then
     wget -O install.zip $download_url
 
     installSoft unzip
-    unzip install.zip
+    unzip -q install.zip
     rm -f install.zip
+
+    #判断如果只有一个目录，需要取消这个目录
+    if [[ $(ls|wc -l) == 1 ]];then
+        dir=$(ls|head -1)
+        mv $dir/* ./
+        rm -rf $dir
+    fi
 fi
 
 if [[ $(ls -A) == '' ]];then
@@ -165,7 +183,7 @@ fi
 ls -l
 if [ -f composer.json ] && [ ! -f composer.lock ]; then
     tips "发现composer.json，执行composer install"
-    docker exec panel sh -c "/bctos/wwwroot/${domain};composer install"
+    docker exec panel sh -c "cd /bctos/wwwroot/${domain};composer install"
 fi
 cd ..
 chown -R 82.82 $domain
@@ -197,8 +215,9 @@ EOF
 fi
 
 if [[ $mysql != 'not' ]] && [ -f install.sql ];then
-    tips "发现install.sql，执行数据库导入"
+    tips "发现install.sql，执行数据库导入,时间可能较长，请耐心等待"
     docker exec -i  ${mysql} sh -c "exec mysql -uroot -p${root_pwd} ${db_name}" < ./install.sql
+    tips "导入数据库完成"
 fi
 
 if [[ $mysql != 'not' ]] && [[ $db_file != '-' ]];then
@@ -216,13 +235,18 @@ fi
 if [ -f install.sh ];then
     tips "发现install.sh文件，执行它"
     chmod +x install.sh
-    ./install.sh $domain
+    ./install.sh $domain $mysql
 fi
 
 
 if [[ $rm_file != '-' ]];then
     tips "清空安装文件"
-    rm -rf $rm_file
+    array=(${rm_file//#@#/ })
+    for var in ${array[@]}
+    do
+        tips "删除：${var}"
+       rm -rf $var
+    done
 fi
 
 tips "nginx重载配置"
@@ -233,6 +257,3 @@ tips "安装完成，网站已经成功安装好"
 
 #通知前端已经执行成功执行完毕
 echo '==over==success'
-
-
-

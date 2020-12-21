@@ -6328,8 +6328,8 @@ function ssh_execute_msg($command, $show_err = false)
             }
         }
         if (empty($data)) {
-            if (time() - $time > 300) {
-                //空转超过5分钟自动结果，防止长期运行
+            if (time() - $time > 1800) {
+                //空转超过30分钟自动结果，防止长期运行
                 web_msg('超时结束==over==error');
                 break;
             }

@@ -21,90 +21,58 @@ class InstallTable {
     public $list_grid = [
       'title' => [
           'title' => '软件名称',
+          'width' => '20%',
           'can_edit' => 0
       ],
       'dev' => [
           'title' => '开发商',
+          'width' => '100px',
+          'can_edit' => 0
+      ],
+      'admin_user' => [
+          'title' => '登录账号',
+          'width' => '100px',
+          'can_edit' => 0
+      ],
+      'admin_passwd' => [
+          'title' => '登录密码',
+          'width' => '100px',
           'can_edit' => 0
       ],
       'intro' => [
           'title' => '介绍',
-          'can_edit' => 0
-      ],
-      'status' => [
-          'title' => '状态',
-          'can_edit' => 0
-      ],
-      'is_audit' => [
-          'title' => '审核状态',
-          'can_edit' => 0
-      ],
-      'is_del' => [
-          'title' => '是否已删除',
+          'width' => '60%',
           'can_edit' => 0
       ],
       'urls' => [
           'title' => '操作',
           'come_from' => 1,
+          'width' => '100px',
           'can_edit' => 0,
           'href' => [
               '0' => [
                   'title' => '编辑',
-                  'url' => '[EDIT]'
-              ],
-              '1' => [
-                  'title' => '审核通过',
-                  'url' => 'audit?id=[id]',
-                  'show_set' => [
-                      'is_audit' => [
-                          '0' => 0,
-                          '2' => 2
-                      ]
-                  ],
-                  'class' => 'ajax-get'
-              ],
-              '2' => [
-                  'title' => '审核不通过',
-                  'url' => 'audit?id=[id]&is_audit=2',
+                  'url' => '[EDIT]',
                   'show_set' => [
                       'is_audit' => [
                           '0' => 0
                       ]
-                  ],
-                  'class' => 'ajax-get'
-              ],
-              '3' => [
-                  'title' => '一键安装',
-                  'url' => 'install?id=[id]&domain=555123',
-                  'show_set' => [
-                      'status' => [
-                          '0' => 0,
-                          '1' => 1,
-                          '2' => 2
-                      ],
-                      'is_audit' => [
-                          '1' => 1
-                      ]
-                  ],
-                  'class' => 'config-set'
-              ],
-              '4' => [
-                  'title' => '卸载',
-                  'url' => 'uninstall?id=[id]',
-                  'show_set' => [
-                      'status' => [
-                          '1' => 1,
-                          '2' => 2
-                      ],
-                      'is_audit' => [
-                          '1' => 1
-                      ]
                   ]
               ],
-              '5' => [
+              '1' => [
+                  'title' => '一键安装',
+                  'url' => 'install?id=[id]&domain=555123',
+                  'show_set' => [ ],
+                  'class' => 'config-set'
+              ],
+              '2' => [
                   'title' => '删除',
                   'url' => '[DELETE]',
-                  'show_set' => [ ]
+                  'show_set' => [
+                      'is_audit' => [
+                          '0' => 0
+                      ]
+                  ]
               ]
           ]
       ]
