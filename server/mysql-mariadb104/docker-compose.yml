@@ -7,7 +7,7 @@ services:
   mysql-mariadb104:
     hostname: mysql-mariadb104
     container_name: mysql-mariadb104
-    image: mariadb:10.4
+    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/mariadb:10.4
     restart: unless-stopped
     ports:
       - 3314:3306

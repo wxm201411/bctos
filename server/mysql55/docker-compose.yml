@@ -7,7 +7,7 @@ services:
   mysql55:
     hostname: mysql55
     container_name: mysql55
-    image: mysql:5.5
+    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/mysql:5.5
     restart: unless-stopped
     ports:
       - 3355:3306

@@ -8,7 +8,7 @@ services:
   nginx:
     hostname: nginx
     container_name: nginx
-    image: nginx:1.19-alpine
+    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/nginx:1.19-alpine
     restart: unless-stopped
     ports:
       - 80:80

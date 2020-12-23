@@ -7,7 +7,7 @@ services:
   mysql56:
     hostname: mysql56
     container_name: mysql56
-    image: mysql:5.6
+    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/mysql:5.6
     restart: unless-stopped
     ports:
       - 3356:3306

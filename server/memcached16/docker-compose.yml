@@ -8,5 +8,5 @@ services:
   memcached16:
     hostname: memcached16
     container_name: memcached16
-    image: memcached:1.6-alpine
+    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/memcached:1.6-alpine
     restart: unless-stopped

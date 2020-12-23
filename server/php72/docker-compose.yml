@@ -8,7 +8,7 @@ services:
 #    build: /bctos/server/php72
     hostname: php72
     container_name: php72
-    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/php72:latest
+    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/php:7.2
     restart: unless-stopped
     volumes:
       - /bctos/wwwroot:/bctos/wwwroot

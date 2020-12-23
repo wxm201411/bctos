@@ -8,7 +8,7 @@ services:
   redis60:
     hostname: redis60
     container_name: redis60
-    image: redis:6.0-alpine
+    image: registry.cn-hangzhou.aliyuncs.com/wxm201411/redis:6.0-alpine
     restart: unless-stopped
     volumes:
       - /bctos/server/redis60/data:/data
