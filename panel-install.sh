@@ -119,21 +119,21 @@ if [[  $(which podman) ]]; then
     sudo yum -y remove podman
 fi
 
-tips "从gitee下载代码"
-if [ -d wwwroot ];then
-	git pull
-else
-	git clone https://gitee.com/bctos_cn/bctos.git ./
-	if [ $? -ne 0 ]; then
-	    tips "gitee下载失败，尝试从github下载代码"
-		git clone https://github.com/wxm201411/bctos.git ./
-	fi
-fi
-if [[ ! -d "wwwroot" ]]; then
-	    error_tips "代码下载失败，请检查服务器是否连接外网"
-	else
-		tips "代码下载成功"
-fi
+#tips "从gitee下载代码"
+#if [ -d wwwroot ];then
+#	git pull
+#else
+#	git clone https://gitee.com/bctos_cn/bctos.git ./
+#	if [ $? -ne 0 ]; then
+#	    tips "gitee下载失败，尝试从github下载代码"
+#		git clone https://github.com/wxm201411/bctos.git ./
+#	fi
+#fi
+#if [[ ! -d "wwwroot" ]]; then
+#	    error_tips "代码下载失败，请检查服务器是否连接外网"
+#	else
+#		tips "代码下载成功"
+#fi
 tips "设置防火墙，让容器可以访问外网"
 firewall-cmd --zone=public --add-masquerade --permanent
 firewall-cmd --reload
@@ -141,7 +141,7 @@ firewall-cmd --reload
 # 安装docker
 function install_docker(){
 	tips "安装docker软件"
-	sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine docker-ce-19.03.12 docker-ce-cli-19.03.12
+	sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine docker-ce docker-ce-cli
     sudo yum install -y sudo yum-utils device-mapper-persistent-data lvm2
     sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
     sudo yum install -y containerd.io-1.2.6-3.3.fc30.x86_64.rpm
