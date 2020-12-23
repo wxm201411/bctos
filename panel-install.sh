@@ -240,8 +240,9 @@ if [ ! -f "config/.ssh/id_rsa" ];then
     tips "生成SSH2需要的密钥";
 
     mkdir -p config/.ssh
+    mkdir -p /root/.ssh
     ssh-keygen -f config/.ssh/id_rsa -N bctos
-    cp config/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub
+    cp config/.ssh/id_rsa.pub /root/.ssh/
     sudo chown -R 82.82 config/.ssh
     chmod -R 755 config/.ssh
 
