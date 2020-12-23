@@ -37,7 +37,6 @@ class Servidorsocket implements MessageComponentInterface
 
     public function __construct()
     {
-
         $this->web_path = dirname(str_replace('/public/node/server/src', '', __FILE__));
         require_once($this->web_path . "/config/weiphp_define.php");
         $this->clients = new \SplObjectStorage;
@@ -144,10 +143,10 @@ class Servidorsocket implements MessageComponentInterface
                 break;
             case 'auth':
                 if ($this->connectSSH(SSH_IP, 22, 'root', SSH_PAWD, $from)) {
-//                    $from->send(mb_convert_encoding("Connected....", "UTF-8"));
-//                    while ($line = fgets($this->shell[$from->resourceId])) {
-//                        $from->send(mb_convert_encoding($line, "UTF-8"));
-//                    }
+                    $from->send(mb_convert_encoding("Connected....", "UTF-8"));
+                    while ($line = fgets($this->shell[$from->resourceId])) {
+                        $from->send(mb_convert_encoding($line, "UTF-8"));
+                    }
                 } else {
                     $from->send(mb_convert_encoding("Error, can not connect to the server. Check the credentials", "UTF-8"));
                     $from->close();
@@ -190,6 +189,9 @@ class Servidorsocket implements MessageComponentInterface
     {
         $this->connection[$from->resourceId] = ssh2_connect($server, $port);
         if (ssh2_auth_pubkey_file($this->connection[$from->resourceId], $user, SITE_PATH . '/config/.ssh/id_rsa.pub', SITE_PATH . '/config/.ssh/id_rsa', 'bctos')) {
+            $this->shell[$from->resourceId] = ssh2_shell($this->connection[$from->resourceId], 'xterm', null, self::COLS, self::ROWS, SSH2_TERM_UNIT_CHARS);
+            sleep(1);
+            $this->conectado[$from->resourceId] = true;
             return true;
         }elseif (ssh2_auth_password($this->connection[$from->resourceId], $user, $password)) {
             //$conn->send("Authentication Successful!\n");
