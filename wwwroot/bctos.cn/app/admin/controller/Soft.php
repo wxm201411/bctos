@@ -374,7 +374,6 @@ EXPOSE 443' > Dockerfile;" . 'sed -i "/80:80/a\\\\$(grep \'80:80\' docker-compos
         $this->assign('logs', $res['msg']);
 
         return $this->fetch();
-
     }
 
 

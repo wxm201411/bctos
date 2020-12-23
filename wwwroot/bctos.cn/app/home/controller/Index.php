@@ -1302,8 +1302,8 @@ server {
         error_log off;
         access_log /dev/null; 
     }
-    access_log  /bctos/logs/{$data['title']}.log;
-    error_log  /bctos/logs/{$data['title']}.error.log;    
+    access_log  /bctos/logs/{$domain}.log;
+    error_log  /bctos/logs/{$domain}.error.log;    
 }
 str;
         echo $content;

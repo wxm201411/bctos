@@ -186,7 +186,7 @@
                     <label class="layui-form-label">需解禁的函数 </label>
                     <div class="layui-input-block php-func">
                         {volist name="php_funcs" id="vo"}
-                        <input type="checkbox" name="php_func[{$vo}]" title="{$vo}">
+                        <input type="checkbox" name="php_func[{$vo}]" title="{$vo}" value="{$vo}">
                         {/volist}
                     </div>
                     <div class="layui-input-block">

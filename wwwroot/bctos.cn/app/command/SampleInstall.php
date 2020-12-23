@@ -39,7 +39,7 @@ class SampleInstall extends Command
             $db['power'] = '%';
             $database_id = M('database')->insertGetId($db);
             //自动增加定时任务
-            D('admin/Cron')->addCronAuto(0, $database_id, $db_name);
+            D('admin/Cron')->addCronAuto(0, $database_id, $db_name, $data['database']);
         }
         //自动增加定时任务
         D('admin/Cron')->addCronAuto(1, $site_id, $site['title'], $site['path']);

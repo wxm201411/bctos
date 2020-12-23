@@ -1,0 +1,184 @@
+{extend name="common@base/common" /}
+{block name="body"}
+<style>
+    .form-group select {
+        margin-left: 0;
+    }
+    .td-title{
+        background-color: #999999;
+        color: #fff;
+        width: 100px;
+    }
+</style>
+<!-- 标签页导航 -->
+<div class="page_message">
+    <section id="contents">
+        <div class="tab-content">
+            <h1>{$data.title}</h1>
+
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>基本信息</legend>
+                <div class="layui-field-box">
+                    <div class="data-table">
+                        <div class="table-striped">
+                            <table cellspacing="1" style="table-layout: fixed" border="1">
+                                <!-- 列表 -->
+                                <tbody>
+                                <tr>
+                                    <td class="td-title">登录账号</td>
+                                    <td>{$data.admin_user}</td>
+                                    <td class="td-title">登录密码</td>
+                                    <td>{$data.admin_passwd}</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-title">开发商</td>
+                                    <td>{$data.dev}</td>
+                                    <td class="td-title">下载方式</td>
+                                    <td>{$data.download_type}</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-title">下载地址</td>
+                                    <td colspan="3">{$data.download_url}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            {neq name="data.php_version" value="not"}
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>PHP配置</legend>
+                <div class="layui-field-box">
+                    <div class="data-table">
+                        <div class="table-striped">
+                            <table cellspacing="1" style="table-layout: fixed" border="1">
+                                <!-- 列表 -->
+                                <tbody>
+                                <tr>
+                                    <td class="td-title">PHP版本</td>
+                                    <td>{$data.php_version}</td>
+                                    <td class="td-title">解禁函数</td>
+                                    <td>{$data.php_func}</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-title">PHP扩展</td>
+                                    <td colspan="3">{$data.php_ext}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            {/neq}
+            {neq name="data.database" value="not"}
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>mysql配置</legend>
+                <div class="layui-field-box">
+                    <div class="data-table">
+                        <div class="table-striped">
+                            <table cellspacing="1" style="table-layout: fixed" border="1">
+                                <!-- 列表 -->
+                                <tbody>
+                                <tr>
+                                    <td class="td-title">mysql版本</td>
+                                    <td>{$data.database}</td>
+                                    <td class="td-title">字符集</td>
+                                    <td>{$data.db_set}</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-title">配置文件</td>
+                                    <td colspan="3">{$data.db_file}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            {/neq}
+            {neq name="data.redis" value="not"}
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>redis配置</legend>
+                <div class="layui-field-box">
+                    <div class="data-table">
+                        <div class="table-striped">
+                            <table cellspacing="1" style="table-layout: fixed" border="1">
+                                <!-- 列表 -->
+                                <tbody>
+                                <tr>
+                                    <td class="td-title">redis版本</td>
+                                    <td>{$data.redis}</td>
+                                    <td class="td-title">配置文件</td>
+                                    <td>{$data.redis_file}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            {/neq}
+            {neq name="data.memcached" value="not"}
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>memcached配置</legend>
+                <div class="layui-field-box">
+                    <div class="data-table">
+                        <div class="table-striped">
+                            <table cellspacing="1" style="table-layout: fixed" border="1">
+                                <!-- 列表 -->
+                                <tbody>
+                                <tr>
+                                    <td class="td-title">版本</td>
+                                    <td>{$data.memcached}</td>
+                                    <td class="td-title">配置文件</td>
+                                    <td>{$data.memcached_file}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            {/neq}
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>nginx配置</legend>
+                <div class="layui-field-box">
+                    <div class="data-table">
+                        <div class="table-striped">
+                            <table cellspacing="1" style="table-layout: fixed" border="1">
+                                <!-- 列表 -->
+                                <tbody>
+                                <tr>
+                                    <td class="td-title">运行目录</td>
+                                    <td>{$data.public_path}</td>
+                                    <td class="td-title">入口文件</td>
+                                    <td>{$data.index_file}</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-title">清空文件</td>
+                                    <td>{$data.rm_file}</td>
+                                    <td class="td-title">伪静态</td>
+                                    <td>{$data.rewrite_mod}</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-title">伪静态规则</td>
+                                    <td colspan="3">{$data.rewrite}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>介绍</legend>
+                <div class="layui-field-box">
+                    {$data.intro|raw}
+                </div>
+            </fieldset>
+        </div>
+    </section>
+</div>
+{/block}

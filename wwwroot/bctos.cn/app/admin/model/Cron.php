@@ -21,6 +21,7 @@ class Cron extends Base
         $post['title'] = $title;
         $post['path'] = $path;
         $post['site_id'] = $post['database_id'] = $site_id;
+        $post['database'] = $path . ',' . $site_id;
         $post['time_minute'] = rand(0, 59);
         $post['time_cron'] = $post['time_minute'] . ' 3 * * *';
         $post['time_type'] = 'day';

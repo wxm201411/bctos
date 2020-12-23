@@ -90,16 +90,26 @@
     }
     function setFinish(type){
         if(type==1){
-            _parent.html('已安装')
+            //_parent.html('已安装')
         }else{
             // _that.show()
-            _parent.html('安装失败')
+            //_parent.html('安装失败')
         }
     }
     $(function () {
+        $('.detail-set').click(function () {
+            var url = $(this).attr('href')
+            layer_index = layer.open({
+                type: 2,
+                title: false,
+                area: ['800px', '600px'],
+                content: url
+            });
+            return false;
+        })
         $('.config-set').click(function () {
             _that = $(this)
-            _parent = _that.parent().parent().find('td').eq(3)
+            //_parent = _that.parent().parent().find('td').eq(3)
             var jump_url = _that.attr('href')
 
             var id = getQueryVariable('id', jump_url)
@@ -107,11 +117,11 @@
             layer.prompt({
                 formType: 0,
                 title: '访问域名',
-                value:'t2.cn',
+                // value:'t2.cn',
                 placeholder: '如：www.bctos.cn'
             }, function (value, index, elem) {
                 // _that.hide()
-                _parent.html('安装中')
+                //_parent.html('安装中')
 
                 layer.close(index);
 

@@ -13,9 +13,6 @@ class Site extends Admin
 {
     function lists()
     {
-
-        $cronArr = M('cron')->where('type', 1)->column('id', 'site_id');
-
         $this->assign('page_tips', "创建站点时会自动创建相应的数据库。并自动在<a href='" . U('admin/cron/lists') . "'>[计划任务]</a>中添加定时备份网站任务，您可以自定义备份参数。更多帮助请看 <a href='https://www.bctos.cn/doc/2' target='_blank'>教程</a>");
         $model = $this->getModel();
         $list_data = $this->getModelList($model);
@@ -37,7 +34,6 @@ class Site extends Admin
     {
         //静默启动WEB全部服务
         $res = ssh_execute(SITE_PATH . '/scripts/sys/initWebDocker.sh');
-        dump($res);exit;
         if ($res['code'] == 2) {
             return $this->error('root');
         } elseif ($res['code'] == 1) {
@@ -360,7 +356,6 @@ str;
         $Model = D($model['name']);
         $data = $Model->where(wp_where($map))->find();
         $conf = $data['title'] . '.conf';
-        $db_name = str_replace('.', '_', $data['title']);
 
         $res = ssh_execute(SITE_PATH . '/scripts/sys/delSite.sh ' . $conf . ' ' . str_replace('/bctos/wwwroot/', '', $data['path']));
         if ($res['code'] == 1) {
@@ -368,8 +363,8 @@ str;
         }
 
         @unlink(SITE_PATH . '/runtime/' . $conf);
-        if ($data['database'] == 'mysql') {
-            D('Database')->delDb($data['database_id']);
+        if ($data['database'] != 'not') {
+            D('Database')->delDbByName($data['database'], $data['db_user']);
         }
 
         if ($Model->where(wp_where($map))->delete()) {
@@ -678,5 +673,43 @@ str;
             $this->assign('data', $data);
             return $this->fetch();
         }
+    }
+
+    function log()
+    {
+        $map['id'] = input('id/d');
+        $data = M('site')->where(wp_where($map))->find();
+        $conf = "/bctos/server/nginx/conf.d/{$data['title']}.conf";
+
+        $type = input('type');
+        if ($type == 'error') {
+            $res = ssh_execute("tail -n 100 $(sed -r -n '/error_log.*\.log/p' $conf|sed 's/error_log//;s/;//;s/^\s*//;s/\s*$//')");
+        } else {
+            $res = ssh_execute("tail -n 100 $(sed -r -n '/access_log.*\.log/p' $conf|sed 's/access_log//;s/;//;s/^\s*//;s/\s*$//')");
+        }
+
+        empty($res['msg']) && $res['msg'] = '暂无日志';
+        $this->assign('logs', $res['msg']);
+        $this->assign('id', $map['id']);
+        $this->assign('type', $type);
+
+        return $this->fetch();
+    }
+
+    function clear_log()
+    {
+        $map['id'] = input('id/d');
+
+        $data = M('site')->where(wp_where($map))->find();
+        $conf = "/bctos/server/nginx/conf.d/{$data['title']}.conf";
+
+        $type = input('type');
+        if ($type == 'error') {
+            ssh_execute(":> $(sed -r -n '/error_log.*\.log/p' $conf|sed 's/error_log//;s/;//;s/^\s*//;s/\s*$//')");
+        } else {
+            ssh_execute(":> $(sed -r -n '/access_log.*\.log/p' $conf|sed 's/access_log//;s/;//;s/^\s*//;s/\s*$//')");
+        }
+
+        return $this->success('清空完成');
     }
 }

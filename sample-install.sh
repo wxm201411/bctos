@@ -126,6 +126,47 @@ else
     tips "配置下载成功"
 fi
 
+tips "下载源码"
+cd /bctos/wwwroot
+
+[ -d $domain ] && rm -rf /bctos/wwwroot/$domain
+if [[ $download_type == "git" ]];then
+    git clone $download_url $domain
+fi
+if [[ $download_type == "composer" ]];then
+    docker exec panel sh -c "cd /bctos/wwwroot;composer create-project $download_url $domain"
+fi
+
+[ ! -d $domain ] && mkdir $domain
+cd $domain
+if [[ $download_type == "wget" ]];then
+    wget -O install.zip $download_url
+
+    installSoft unzip
+    unzip -q install.zip
+    rm -f install.zip
+
+    #判断如果只有一个目录，需要取消这个目录
+    if [[ $(ls|wc -l) == 1 ]];then
+        dir=$(ls|head -1)
+        mv $dir/* ./
+        rm -rf $dir
+    fi
+fi
+
+if [[ $(ls -A) == '' ]];then
+    error_tips "源码下载失败，请稍等再试"
+else
+    tips "源码下载成功"
+fi
+
+ls -l
+
+if [ -f composer.json ] && [ ! -f composer.lock ]; then
+    tips "发现composer.json，执行composer install"
+    docker exec panel sh -c "cd /bctos/wwwroot/${domain};composer install"
+fi
+
 tips "先检查所需要的容器服务是否存在，不存在的话先更新面板"
 cd /bctos/server
 server_check=1
@@ -169,26 +210,28 @@ if [[ $php != 'not' ]];then
         dockerfile=$(cat Dockerfile)
          for ext in ${array2[@]}
             do
-              if [ -z $(echo $dockerfile |grep $ext) ];then
+              if [ -z "$(echo $dockerfile |grep ' '$ext' ')" ];then
                  tips "不存在扩展，需要安装"
                  ext_install=1
                  sed -i "s/ install-php-extensions/ install-php-extensions $ext /" Dockerfile;
               fi
          done
+
          if [[ $ext_install -eq 1 ]];then
             if [ ! -z $(docker ps --format '{{.Names}}'|grep $php) ];then
                 tips "$php 容器已经在运行，通过php -m判断是否已安装"
                 for ext in ${array2[@]}
                 do
-                  if [ -z $(docker exec $php php -m |grep $ext) ];then
+                  if [ -z $(docker exec $php php -m |grep -w $ext) ];then
                     tips "在容器中执行安装扩展：$ext"
                      docker exec $php install-php-extensions $ext
                   fi
                 done
                 tips "更新镜像：$image"
                 docker commit $php $image;
+                docker-compose down
                 docker rmi $(docker images -f 'dangling=true' -q);
-                docker restart $php;
+                docker-compose up -d;
             else
                 tips "$php 容器没有在运行，判断是否有镜像，如果有则删除镜像,最后启动PHP容器"
                 docker-compose down
@@ -238,46 +281,9 @@ setUpDocker $redis
 setUpDocker $memcached
 setUpDocker $php
 sleep 2;
-tips "增加网站 下载源码"
+
+
 cd /bctos/wwwroot
-
-[ -d $domain ] && rm -rf /bctos/wwwroot/$domain
-if [[ $download_type == "git" ]];then
-    git clone $download_url $domain
-fi
-if [[ $download_type == "composer" ]];then
-    docker exec panel sh -c "cd /bctos/wwwroot;composer create-project $download_url $domain"
-fi
-
-[ ! -d $domain ] && mkdir $domain
-cd $domain
-if [[ $download_type == "wget" ]];then
-    wget -O install.zip $download_url
-
-    installSoft unzip
-    unzip -q install.zip
-    rm -f install.zip
-
-    #判断如果只有一个目录，需要取消这个目录
-    if [[ $(ls|wc -l) == 1 ]];then
-        dir=$(ls|head -1)
-        mv $dir/* ./
-        rm -rf $dir
-    fi
-fi
-
-if [[ $(ls -A) == '' ]];then
-    error_tips "源码下载失败，请稍等再试"
-else
-    tips "源码下载成功"
-fi
-
-ls -l
-if [ -f composer.json ] && [ ! -f composer.lock ]; then
-    tips "发现composer.json，执行composer install"
-    docker exec panel sh -c "cd /bctos/wwwroot/${domain};composer install"
-fi
-cd ..
 chown -R 82.82 $domain
 chmod -R 755 $domain
 cd $domain
@@ -331,7 +337,7 @@ if [ -f install.sh ];then
 fi
 
 tips "网站增加小韦云面板中，方便管理"
-docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;php think sample_install ${soft_id} ${domain} ${db_name}'"
+docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;php think sample_install ${soft_id} ${domain} ${db_pwd}'"
 
 if [[ $rm_file != '-' ]];then
     tips "清空安装文件"

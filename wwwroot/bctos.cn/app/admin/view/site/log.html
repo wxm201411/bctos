@@ -1,0 +1,27 @@
+{extend name="common@base/common" /} {block name="body"}
+<style>
+    .layui-input-block {
+        margin: 5px 10px;
+        background-color: #000;
+        color: #fff;
+        overflow: auto;
+    }
+</style>
+<div class="layui-input-block">
+    {$logs|raw|nl2br}
+</div>
+<div style="text-align: center;margin: 10px;">
+<button class="layui-btn" onclick="refresh()">刷新</button>
+    <button class="layui-btn layui-btn-primary" onclick="clearLog()">清空日志</button>
+</div>
+<script>
+    function refresh() {
+        window.location.reload();
+    }
+    function clearLog() {
+        $.post("{:U('clear_log')}",{id:"{$id}",type:"{$type}"},function () {
+            refresh();
+        })
+    }
+</script>
+{/block}

@@ -47,18 +47,9 @@ class InstallTable {
       'urls' => [
           'title' => '操作',
           'come_from' => 1,
-          'width' => '100px',
+          'width' => '110px',
           'can_edit' => 0,
           'href' => [
-              '0' => [
-                  'title' => '编辑',
-                  'url' => '[EDIT]',
-                  'show_set' => [
-                      'is_audit' => [
-                          '0' => 0
-                      ]
-                  ]
-              ],
               '1' => [
                   'title' => '一键安装',
                   'url' => 'install?id=[id]&domain=555123',
@@ -66,6 +57,12 @@ class InstallTable {
                   'class' => 'config-set'
               ],
               '2' => [
+                  'title' => '详情',
+                  'url' => 'detail?only_body=1&id=[id]',
+                  'show_set' => [ ],
+                  'class' => 'detail-set'
+              ],
+              '3' => [
                   'title' => '删除',
                   'url' => '[DELETE]',
                   'show_set' => [

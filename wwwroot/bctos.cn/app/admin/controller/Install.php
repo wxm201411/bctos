@@ -25,7 +25,7 @@ class Install extends Admin
 
         $data = M('install')->where('id', $id)->find();
         $conf = $domain . '.conf';
-        $rewrite_file = SITE_PATH . '/runtime/rewrite.conf';
+        $rewrite_file = SITE_PATH . "/runtime/{$domain}.rewrite.conf";
         if ($data['rewrite_mod'] != '') {
             file_put_contents($rewrite_file, $data['rewrite']);
         }
@@ -94,8 +94,8 @@ server {
         error_log off;
         access_log /dev/null; 
     }
-    access_log  /bctos/logs/{$data['title']}.log;
-    error_log  /bctos/logs/{$data['title']}.error.log;    
+    access_log  /bctos/logs/{$domain}.log;
+    error_log  /bctos/logs/{$domain}.error.log;    
 }
 str;
         file_put_contents(SITE_PATH . '/runtime/' . $conf, $content);
@@ -110,7 +110,7 @@ str;
             $db['power'] = '%';
             $database_id = M('database')->insertGetId($db);
             //自动增加定时任务
-            D('Cron')->addCronAuto(0, $database_id, $db_name);
+            D('Cron')->addCronAuto(0, $database_id, $db_name, $data['database']);
         }
         D('Cron')->addCronAuto(1, $site_id, $site['title'], $site['path']);
 
@@ -162,6 +162,17 @@ str;
         return $this->success('成功');
     }
 
+    function detail()
+    {
+        $id = id();
+        $data = M('install')->where('id', $id)->find();
+        $model = $this->getModel('install');
+        $dataTable = D('common/Models')->getFileInfo($model);
+        $data = $this->parseModelData($data, $dataTable);
+        $this->assign('data', $data);
+        return $this->fetch();
+    }
+
     //aaabbbccc
     function add()
     {
@@ -169,6 +180,7 @@ str;
         if (request()->isPost()) {
             // 获取模型的字段信息
             $data = input('post.');
+
             if (empty($data['title'])) {
                 return $this->error('软件名称不能为空');
             }
@@ -233,7 +245,7 @@ str;
         $list = D('Soft')->getPHPEext($docker);
         $html = '';
         foreach ($list as $k => $vo) {
-            $html .= '<input type="checkbox" name="php_ext[' . $k . ']" title="' . $k . '">';
+            $html .= '<input type="checkbox" name="php_ext[' . $k . ']" title="' . $k . '" value="' . $k . '">';
         }
         return $this->success($html);
     }

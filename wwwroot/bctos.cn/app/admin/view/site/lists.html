@@ -83,6 +83,8 @@
             <li class="layui-nav-item" url="{:U('index?only_body=1&id=555123')}"><a>默认文档</a></li>
             <li class="layui-nav-item" url="{:U('conf?only_body=1&id=555123')}"><a>配置文件</a></li>
             <li class="layui-nav-item" url="{:U('phpVersion?only_body=1&id=555123')}"><a>PHP版本</a></li>
+            <li class="layui-nav-item" url="{:U('log?type=access&only_body=1&id=555123')}"><a>访问日志</a></li>
+            <li class="layui-nav-item" url="{:U('log?type=error&only_body=1&id=555123')}"><a>错误日志</a></li>
             <li class="layui-nav-item" url="{:U('server?only_body=1&id=555123')}"><a>关闭网站</a></li>
         </ul>
     </div>
@@ -139,7 +141,7 @@
             var title = $(this).attr('title')
             var reg = new RegExp( '555123' , "g" )
             var html = $('#edit-block').html().replace(reg, edit_id)
-            html =html.replace('###', $('.layui-this', html).attr('url'))
+            html =html.replace('src=""', 'src="'+$('.layui-this', html).attr('url')+'"')
             $('#edit-block2').html(html)
 
             $('#edit-block2 li').click(function () {

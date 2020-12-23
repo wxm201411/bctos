@@ -158,7 +158,7 @@ class Database extends Base
         }
         $id = $this->insertGetId($post);
         //自动增加定时任务
-        D('Cron')->addCronAuto(0, $id, $post['db_name']);
+        D('Cron')->addCronAuto(0, $id, $post['db_name'], $post['database']);
 
         return $this->success($id);
     }
@@ -168,9 +168,9 @@ class Database extends Base
         ssh_execute("[ -z $(docker ps --format '{{.Names}}'|grep $mysql) ] && $(cd /bctos/server/$mysql; docker-compose up -d; sleep 2)");
     }
 
-    function delDb($id)
+    function delDb($id, $info = [])
     {
-        $info = $this->where('id', $id)->find();
+        empty($info) && $info = $this->where('id', $id)->find();
         if (!$info) {
             return $this->success('数据库记录不存在');
         }
@@ -190,5 +190,14 @@ class Database extends Base
         //自动删除定时任务
         D('Cron')->delCronAuto($info['id'], 0);
         return $res;
+    }
+
+    function delDbByName($database, $db_name)
+    {
+        $info = $this->where('database', $database)->where('db_name', $db_name)->find();
+        if (!$info) {
+            return $this->success('数据库记录不存在');
+        }
+        return $this->delDb($info['id'], $info);
     }
 }
