@@ -6345,7 +6345,7 @@ function web_msg($content)
     $to_uid = 1;
 
     // 推送的url地址，使用自己的服务器地址
-    $push_api_url = "http://test.cn:2121/";
+    $push_api_url = "http://" . SSH_IP . ":2121/";
     $post_data = array(
         "type" => "publish",
         "content" => str_replace("\n", "\r\n", $content),

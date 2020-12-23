@@ -151,7 +151,12 @@ str;
     function test()
     {
         $this->assign('url', '');
-        return $this->fetch('xterm_box');
+        return $this->fetch('test');
+    }
+
+    function test2()
+    {
+        dump(web_msg('rrrrtest'));
     }
 
     function audit()

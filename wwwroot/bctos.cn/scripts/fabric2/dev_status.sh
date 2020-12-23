@@ -1,9 +1,9 @@
 #!/bin/bash
 #if ! [[ $(ps aux|grep 'web-msg-sender/start.php'|grep -vc grep) -gt 0 ]]; then
-#  php /www/wwwroot/test.cn/vendor/web-msg-sender/start.php start -d
+#  php /www/wwwroot/bctos.cn/vendor/web-msg-sender/start.php start -d
 #fi
 #if ! [[ $(ps aux|grep 'web-msg-sender/start_log.php'|grep -vc grep) -gt 0 ]]; then
-#  php /www/wwwroot/test.cn/vendor/web-msg-sender/start_log.php &
+#  php /www/wwwroot/bctos.cn/vendor/web-msg-sender/start_log.php &
 #fi
 
 if ! [[ $(command -v peer) ]]; then
