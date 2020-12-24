@@ -260,7 +260,7 @@ fi
 
 sudo chown -R 82.82 ./*
 sudo chmod -R +x scripts
-sudo chmod -R +x vendor/bin/*
+sudo find vendor -type d -name bin|xargs chmod -R +x
 sudo chmod -R 755 public runtime db app
 
 
