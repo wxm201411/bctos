@@ -16,6 +16,8 @@ docker exec ${docker} sh -c "exec mysqldump --all-databases -uroot -p${root_pwd}
 echo "备份完成"
 
 showMsg "使用git下载并更新代码"
+git fetch --all
+git reset --hard origin/master
 git pull
 
 showMsg "更新数据库"
