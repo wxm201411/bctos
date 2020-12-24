@@ -196,11 +196,16 @@ chmod -R 755 $domain
 cd $domain
 tips "增加防跨站攻击配置"
 echo "open_basedir=/bctos/wwwroot/$domain/:/tmp/" > ./.user.ini
+if [[ $domain == 'default' ]];then
+    db_name='bctos_default'
+else
+    db_name=$(echo $domain|sed 's/\./_/g')
+fi
 
-db_name=$(echo $domain|sed 's/\./_/g')
 if [[ $mysql != 'not' ]];then
     tips "创建数据库和账号"
     root_pwd=$(grep 'MYSQL_ROOT_PASSWORD' /bctos/server/${mysql}/docker-compose.yml | sed -r 's/MYSQL_ROOT_PASSWORD://' | sed 's/ //g')
+    echo $root_pwd
     if [[ $mysql == 'mysql56' ]];then
         docker exec -e MYSQL_PWD=$root_pwd -i ${mysql} mysql -uroot << EOF
 CREATE DATABASE ${db_name} DEFAULT CHARACTER SET ${db_set};

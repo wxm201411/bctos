@@ -7,8 +7,8 @@ use app\common\controller\WebBase;
 //PC运营管理端的控制器
 class Docker extends WebBase
 {
-    var $canNotStop = ['panel', 'php72', 'mysql57', 'nginx'];
-    var $canNotStopIds = "docker ps -a | sed '/\(panel\|php72\|mysql57\|nginx\)/d' | awk '{print $1}'|sed '1d'";
+    var $canNotStop = ['panel', 'php74', 'mysql57', 'nginx'];
+    var $canNotStopIds = "docker ps -a | sed '/\(panel\|php74\|mysql57\|nginx\)/d' | awk '{print $1}'|sed '1d'";
 
     public function initialize()
     {
