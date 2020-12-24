@@ -71,9 +71,7 @@ class Servidorsocket implements MessageComponentInterface
                 $res = "bash -l {$this->web_path}/scripts/fabric2/execCC.sh";
                 break;
             case 'sys_update':
-                $config = require $this->web_path . '/config/database.php';
-                $config = $config['connections']['mysql'];
-                $res = "bash -l {$this->web_path}/scripts/sys/update.sh {$config['username']} {$config['password']} {$config['hostname']} {$config['hostport']} {$config['database']}";
+                $res = "bash -l {$this->web_path}/scripts/sys/update.sh";
                 break;
             case 'tail':
                 $res = "tail -f";

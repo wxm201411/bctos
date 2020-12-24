@@ -260,6 +260,7 @@ fi
 
 sudo chown -R 82.82 ./*
 sudo chmod -R +x scripts
+sudo chmod -R +x vendor/bin/*
 sudo chmod -R 755 public runtime db app
 
 

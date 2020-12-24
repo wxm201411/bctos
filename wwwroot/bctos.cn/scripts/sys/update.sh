@@ -1,5 +1,6 @@
 #!/bin/bash
 cd /bctos
+docker=panel
 
 showMsg(){
     echo "######## $1 ########"
@@ -10,8 +11,8 @@ nowTime=$(date +"%Y%m%d%H%M%S")
 tar -zcf ~/"bctos_backup_"$nowTime".tar.gz" ./ --checkpoint=1000 --checkpoint-action=dot --totals -P
 
 showMsg "开始备份数据库"
-export MYSQL_PWD=$2
-mysqldump -u$1 -h$3 -P$4 $5 > ~/"bctos_backup_"$nowTime".sql"
+root_pwd=$(grep 'MYSQL_ROOT_PASSWORD' /bctos/Dockerfile|sed "s/ENV//;s/MYSQL_ROOT_PASSWORD//;s/=//;s/ //g")
+docker exec ${docker} sh -c "exec mysqldump --all-databases -uroot -p${root_pwd}" > ~/"bctos_backup_"$nowTime".sql"
 echo "备份完成"
 
 showMsg "使用git下载并更新代码"
