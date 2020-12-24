@@ -64,12 +64,16 @@ class Images extends WebBase
 
             $falt = substr($vo['SIZE'], -2);
             $num = rtrim($vo['SIZE'], $falt);
-            if ($falt == 'MB') {
-                $size += number_format($num / 1024, 2);
-            } else {
+            $falt = strtoupper($falt);
+            if ($falt == 'GB') {
                 $size += $num;
+            } else if ($falt == 'MB') {
+                $size += number_format($num / 1024, 2);
+            } elseif ($falt == 'KB') {
+                $size += number_format($num / (1024 * 1024), 2);
+            } else {
+                $size += 0;
             }
-
             $data[] = $vo;
         }
         $list['list_data'] = $data;

@@ -7,8 +7,8 @@ use app\common\controller\WebBase;
 //PC运营管理端的控制器
 class Docker extends WebBase
 {
-    var $canNotStop = ['panel', 'php74', 'mysql57', 'nginx'];
-    var $canNotStopIds = "docker ps -a | sed '/\(panel\|php74\|mysql57\|nginx\)/d' | awk '{print $1}'|sed '1d'";
+    var $canNotStop = ['panel', 'mysql57', 'nginx'];
+    var $canNotStopIds = "docker ps -a | sed '/\(panel\|mysql57\|nginx\)/d' | awk '{print $1}'|sed '1d'";
 
     public function initialize()
     {
@@ -25,6 +25,17 @@ class Docker extends WebBase
         $nav[] = $res;
 
         $this->assign('nav', $nav);
+
+        $res = ssh_execute("cd /bctos/server/nginx/conf.d;find . -type f -name '*.conf'|xargs sed -n -r '/^\s+fastcgi_pass/p'|sed 's/fastcgi_pass//;s/:9000;//;s/ //g'");
+        if ($res['code'] == 0) {
+            $arr = wp_explode($res['msg']);
+            $this->canNotStop = array_merge($this->canNotStop, $arr);
+            $str = 'nginx\\';
+            foreach ($arr as $vo) {
+                $str .= '|' . $vo . '\\';
+            }
+            $this->canNotStopIds = str_replace('nginx\\', $str, $this->canNotStopIds);
+        }
     }
 
     function lists()
