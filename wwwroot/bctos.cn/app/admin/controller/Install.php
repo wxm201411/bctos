@@ -11,6 +11,62 @@ namespace app\admin\controller;
 
 class Install extends Admin
 {
+    function lists()
+    {
+        $model = $this->getModel();
+
+        $dataTable = D('common/Models')->getFileInfo($model);
+        if ($dataTable === false) {
+            return $this->error($model['name'] . ' 的模型文件不存在');
+        }
+        //以文件配置为最高优先级
+        if (is_array($model) && is_array($dataTable->config)) {
+            $model = array_merge($model, $dataTable->config);
+        }
+
+        $this->assign('add_button', $dataTable->config['add_button']);
+        $this->assign('del_button', $dataTable->config['del_button']);
+        $this->assign('search_button', $dataTable->config['search_button']);
+        $this->assign('check_all', $dataTable->config['check_all']);
+
+        // 解析列表规则
+        $list_data = $this->listGrid($model, $dataTable);
+        $fields = $list_data['fields'];
+
+        // 搜索条件
+        $map = $this->searchMap($model, $list_data['db_fields']);
+        $row = empty($model['list_row']) ? 20 : $model['list_row'];
+
+        // 读取模型数据列表
+        if (empty($order) && isset($_REQUEST['order'])) {
+            $order = input('order', 'id') . ' ' . input('by', 'desc');
+        }
+        if ($model['name'] != 'user') {
+            empty($fields) || in_array('id', $fields) || array_push($fields, 'id');
+            empty($order) && $order = 'id desc';
+        } else {
+            empty($fields) || in_array('uid', $fields) || array_push($fields, 'uid');
+            empty($order) && $order = 'uid desc';
+        }
+        // dump ( $order );
+        $name = $dataTable->config['name'];
+        $db_field = true;
+
+        $wp_where = wp_where($map);
+        $data = M($name)->field($db_field)->where($wp_where)->order($order)->paginate($row);
+
+        $list_data = $this->parsePageData($data, $dataTable, $list_data);
+        if (empty($list_data['list_data']) && empty($map)) {
+            $this->updateSoft(false);
+            return $this->redirect('lists');
+        }
+        $this->assign($list_data);
+
+        empty($templateFile) && $templateFile = 'lists';
+
+        return $this->fetch($templateFile);
+    }
+
     function install()
     {
         set_time_limit(0);
@@ -122,7 +178,7 @@ str;
                 $vo = '-';
             }
         }
-        $rm_file = str_replace(' ','#@#', $data['rm_file']);
+        $rm_file = str_replace(' ', '#@#', $data['rm_file']);
         $param = "{$data['database']} {$data['redis']} {$data['memcached']} {$data['php_version']} {$data['php_func']} {$data['php_ext']} ";
         $param .= "$domain {$data['download_type']} {$data['download_url']} {$data['db_file']} {$data['redis_file']} {$data['memcached_file']} {$rm_file} {$data['db_set']} {$db_pwd}";
         //dump($param);exit;
@@ -264,7 +320,7 @@ str;
         return json($list);
     }
 
-    function updateSoft()
+    function updateSoft($ajax = true)
     {
         //每天只更新一次
 //        $lock = date('Ymd');
@@ -275,7 +331,13 @@ str;
         $url = "https://www.bctos.cn/index.php?s=/home/index/getInstallList";
         $content = wp_file_get_contents($url);
         $lists = json_decode($content, true);
-        if (empty($lists)) return $this->error('没有需要更新的');
+        if (empty($lists)) {
+            if ($ajax) {
+                return $this->error('没有需要更新的');
+            } else {
+                return false;
+            }
+        }
 
         $has = M('install')->column('id', 'bctos_id');
         $add = [];
@@ -295,7 +357,11 @@ str;
         if (!empty($add)) {
             M('install')->insertAll($add);
         }
+        if ($ajax) {
+            return $this->success('更新成功');
+        } else {
+            return true;
+        }
 
-        return $this->success('更新成功');
     }
 }
