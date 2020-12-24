@@ -13,6 +13,7 @@
     uid = 1;
     // socket连接后以uid登录
     socket.on('connect', function () {
+        console.log("web-msg-sender连接成功");
         socket.emit('login', uid);
     });
     var old_msg = ''

@@ -205,7 +205,7 @@ fi
 if [[ $mysql != 'not' ]];then
     tips "创建数据库和账号"
     root_pwd=$(grep 'MYSQL_ROOT_PASSWORD' /bctos/server/${mysql}/docker-compose.yml | sed -r 's/MYSQL_ROOT_PASSWORD://' | sed 's/ //g')
-    echo $root_pwd
+#    echo $root_pwd
     if [[ $mysql == 'mysql56' ]];then
         docker exec -e MYSQL_PWD=$root_pwd -i ${mysql} mysql -uroot << EOF
 CREATE DATABASE ${db_name} DEFAULT CHARACTER SET ${db_set};

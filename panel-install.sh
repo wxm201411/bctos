@@ -138,8 +138,10 @@ fi
 #	else
 #		tips "代码下载成功"
 #fi
-tips "设置防火墙，让容器可以访问外网"
+tips "设置防火墙，让容器可以访问外网，并开放相关端口"
 firewall-cmd --zone=public --add-masquerade --permanent
+firewall-cmd --zone=public --add-port=80/tcp --add-port=666/tcp --add-port=22/tcp --add-port=2100/tcp --add-port=2120/tcp --add-port=2121/tcp --add-port=3357/tcp --permanent
+#firewall-cmd --zone=public --remove-port=80/tcp --remove-port=666/tcp --remove-port=2100/tcp --remove-port=2120/tcp --remove-port=2121/tcp --remove-port=3357/tcp --permanent
 firewall-cmd --reload
 
 # 安装docker
