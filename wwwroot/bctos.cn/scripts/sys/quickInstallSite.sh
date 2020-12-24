@@ -245,7 +245,7 @@ fi
 if [ -f install.sh ];then
     tips "发现install.sh文件，执行它"
     chmod +x install.sh
-    ./install.sh $domain $mysql
+    ./install.sh $domain $mysql $db_name
 fi
 
 if [[ $rm_file != '-' ]];then
