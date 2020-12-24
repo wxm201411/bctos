@@ -1,7 +1,6 @@
 #!/bin/bash
 LANG=en_US.UTF-8
 
-
 soft_id=$1
 function installSoft(){
     if [[  ! $(which $1) ]]; then
@@ -54,6 +53,9 @@ Get_Ip_Address(){
 
 	LOCAL_IP=$(ip addr | grep -E -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -E -v "^127\.|^255\.|^0\." | head -n 1)
 }
+if [[ ${USER} != 'root' ]];then
+    error_tips "请先切换到root账号下再执行"
+fi
 
 domain=''
 function domain_input(){
@@ -66,22 +68,23 @@ function domain_input(){
         domain_input
     fi
 }
-tips "判断默认网站是否已经安装"
-if [ -d /bctos ];then
-    default_path=$(cat /bctos/server/nginx/conf.d/default.conf |egrep ' root '| sed 's/root//g'|sed 's/ //g')
-    if [[ $default_path == "/bctos/wwwroot/default;" ]];then
-        tips "未安装，直接把当前网站设置为默认网站"
-        domain='default'
-    else
-        tips "已安装，需要用户输入域名"
-        domain_input
-    fi
-    if [[ $domain == '' ]];then
-        domain='default'
-    fi
-else
-    domain='default'
-fi
+domain_input
+#tips "判断默认网站是否已经安装"
+#if [ -d /bctos ];then
+#    default_path=$(cat /bctos/server/nginx/conf.d/default.conf |egrep ' root '| sed 's/root//g'|sed 's/ //g')
+#    if [[ $default_path == "/bctos/wwwroot/default;" ]];then
+#        tips "未安装，直接把当前网站设置为默认网站"
+#        domain='default'
+#    else
+#        tips "已安装，需要用户输入域名"
+#        domain_input
+#    fi
+#    if [[ $domain == '' ]];then
+#        domain='default'
+#    fi
+#else
+#    domain='default'
+#fi
 
 tips "您的软件准备开始安装"
 
@@ -298,7 +301,7 @@ fi
 if [[ $mysql != 'not' ]];then
     tips "创建数据库和账号"
     root_pwd=$(grep 'MYSQL_ROOT_PASSWORD' /bctos/server/${mysql}/docker-compose.yml | sed -r 's/MYSQL_ROOT_PASSWORD://' | sed 's/ //g')
-    echo $root_pwd
+#    echo $root_pwd
     if [[ $mysql == 'mysql56' ]];then
         docker exec -e MYSQL_PWD=$root_pwd -i ${mysql} mysql -uroot << EOF
 CREATE DATABASE ${db_name} DEFAULT CHARACTER SET ${db_set};
@@ -338,7 +341,7 @@ fi
 if [ -f install.sh ];then
     tips "发现install.sh文件，执行它"
     chmod +x install.sh
-    ./install.sh $domain $mysql
+    ./install.sh $domain $mysql $db_name
 fi
 
 tips "网站增加小韦云面板中，方便管理"
