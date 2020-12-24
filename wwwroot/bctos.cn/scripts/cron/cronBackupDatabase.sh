@@ -23,7 +23,7 @@ fi
 #set -x
 cd $backup
 
-root_pwd=$(grep 'MYSQL_ROOT_PASSWORD' /bctos/server/${docker}/docker-compose.yml | sed -r 's/MYSQL_ROOT_PASSWORD://' | sed 's/ //g')
+root_pwd=$(grep 'MYSQL_ROOT_PASSWORD' /bctos/server/${docker}/docker-compose.yml | sed -r 's/MYSQL_ROOT_PASSWORD://' | sed 's/\\r//;s/\\n//;s/ //g')
 if [[ $db_name == '-' ]];then
     db_name="全部数据库"
     docker exec ${docker} sh -c "exec mysqldump --all-databases -uroot -p${root_pwd}" > ${file}

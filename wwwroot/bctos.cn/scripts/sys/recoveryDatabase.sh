@@ -8,7 +8,7 @@ docker=${4:-"mysql57"}
 if [[  !($(which zip) && $(zip -v)) ]]; then
     yum -y install unzip zip > /dev/null
 fi
-root_pwd=$(grep 'MYSQL_ROOT_PASSWORD' /bctos/server/${docker}/docker-compose.yml | sed -r 's/MYSQL_ROOT_PASSWORD://' | sed 's/ //g')
+root_pwd=$(grep 'MYSQL_ROOT_PASSWORD' /bctos/server/${docker}/docker-compose.yml | sed -r 's/MYSQL_ROOT_PASSWORD://' | sed 's/\\r//;s/\\n//;s/ //g')
 cd /bctos/wwwroot/bctos.cn/public/storage/backup/$cron_id
 #set -x
 unzip -o ${file}.zip

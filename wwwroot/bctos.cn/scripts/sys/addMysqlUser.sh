@@ -7,7 +7,7 @@ host=$4
 
 cd /bctos/server/$docker
 
-root_pwd=$(sed -n "/MYSQL_ROOT_PASSWORD/p" docker-compose.yml | sed -r "s/.*://"|sed 's/ //g')
+root_pwd=$(sed -n "/MYSQL_ROOT_PASSWORD/p" docker-compose.yml | sed -r "s/.*://"|sed 's/\\r//;s/\\n//;s/ //g')
 
 #正式修改数据库中的密码
 docker exec -e MYSQL_PWD=$root_pwd -i ${docker} mysql -uroot << EOF

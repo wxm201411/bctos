@@ -5,7 +5,7 @@ name=$2
 docker=${3:-"mysql57"}
 
 cd /bctos/server/$docker
-root_pwd=$(sed -n "/MYSQL_ROOT_PASSWORD/p" docker-compose.yml | sed -r "s/MYSQL_ROOT_PASSWORD://"| sed 's/ //g')
+root_pwd=$(sed -n "/MYSQL_ROOT_PASSWORD/p" docker-compose.yml | sed -r "s/MYSQL_ROOT_PASSWORD://"| sed 's/\\r//;s/\\n//;s/ //g')
 image=$(sed -n "/image:/p" docker-compose.yml | sed -r "s/image://"| sed 's/ //g')
 
 #先判断镜像是否生成，如果还没生成则不需要修改容器
