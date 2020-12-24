@@ -122,8 +122,10 @@ str;
                 $vo = '-';
             }
         }
+        $rm_file = str_replace(' ','#@#', $data['rm_file']);
         $param = "{$data['database']} {$data['redis']} {$data['memcached']} {$data['php_version']} {$data['php_func']} {$data['php_ext']} ";
-        $param .= "$domain {$data['download_type']} {$data['download_url']} {$data['db_file']} {$data['redis_file']} {$data['memcached_file']} {$data['rm_file']} {$data['db_set']} {$db_pwd}";
+        $param .= "$domain {$data['download_type']} {$data['download_url']} {$data['db_file']} {$data['redis_file']} {$data['memcached_file']} {$rm_file} {$data['db_set']} {$db_pwd}";
+        //dump($param);exit;
         ssh_execute_msg(SITE_PATH . "/scripts/sys/quickInstallSite.sh {$param}");
 
         return $this->success('');
