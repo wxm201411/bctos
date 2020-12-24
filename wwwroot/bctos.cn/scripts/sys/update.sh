@@ -19,11 +19,11 @@ showMsg "使用git下载并更新代码"
 git fetch --all
 git reset --hard origin/master
 
+tips "初始化代码目录和权限";
 if [ ! -d "server/panel/mysql-data" ];then
 	sudo mkdir -p server/panel/mysql-data
 fi
 sudo chmod +x /bctos/server/panel/entrypoint.sh
-sudo chmod -R 777 /bctos/wwwroot/bctos.cn/public/kod/
 cd wwwroot/bctos.cn
 if [ ! -d runtime ];then
 	sudo mkdir runtime
@@ -59,7 +59,9 @@ fi
 sudo chown -R 82.82 ./*
 sudo chmod -R +x scripts
 sudo find vendor -type d -name bin|xargs chmod -R +x
-sudo chmod -R 755 public runtime db app
+sudo chmod -R 755 runtime db app
+sudo chmod -R 777 public
+
 
 showMsg "更新数据库"
 tag=$(git tag | awk 'END {print}')
