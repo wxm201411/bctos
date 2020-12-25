@@ -1,7 +1,7 @@
 # 我是谁
 小韦云面板是在linux上搭建PHP网站的服务器管理面板，基于容器能实现一键安装PHP/MYSQL/redis/memcached等常用服务。
 
-小韦云面板采用小韦云框架 + ssh2 + 容器docker + shell技术实现，全部源码在giteet和github上开源，安装地址即开源地址。
+小韦云面板采用小韦云开发框架 + ssh2 + 容器docker + shell技术实现，全部源码在giteet和github上开源，安装地址即开源地址。
 
 # 为什么要选择我
 
