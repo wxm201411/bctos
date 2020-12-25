@@ -140,7 +140,7 @@ fi
 #fi
 tips "设置防火墙，让容器可以访问外网，并开放相关端口"
 firewall-cmd --zone=public --add-masquerade --permanent
-firewall-cmd --zone=public --add-port=80/tcp --add-port=666/tcp --add-port=22/tcp --add-port=2100/tcp --add-port=2120/tcp --add-port=2121/tcp --add-port=3357/tcp --permanent
+firewall-cmd --zone=public --add-port=80/tcp --add-port=666/tcp --add-port=2100/tcp --add-port=2120/tcp --add-port=2121/tcp --add-port=3357/tcp --permanent
 #firewall-cmd --zone=public --remove-port=80/tcp --remove-port=666/tcp --remove-port=2100/tcp --remove-port=2120/tcp --remove-port=2121/tcp --remove-port=3357/tcp --permanent
 firewall-cmd --reload
 firewall-cmd --zone=public --list-ports
@@ -262,7 +262,6 @@ sudo chmod -R +x scripts
 sudo find vendor -type d -name bin|xargs chmod -R +x
 sudo chmod -R 755 runtime db app
 sudo chmod -R 777 public
-
 
 tips "替换配置文件中的密码";
 Get_Ip_Address

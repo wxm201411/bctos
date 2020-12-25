@@ -2,6 +2,23 @@
 cd /bctos
 docker=panel
 
+Get_Ip_Address(){
+	getIpAddress=""
+	getIpAddress=$(curl -sS --connect-timeout 10 -m 60 https://www.bctos.cn/ip.php)
+	if [ -z "${getIpAddress}" ] || [ "${getIpAddress}" = "0.0.0.0" ]; then
+		isHosts=$(cat /etc/hosts|grep 'www.bctos.cn')
+		if [ -z "${isHosts}" ];then
+			echo "" >> /etc/hosts
+			echo "47.106.212.16 www.bctos.cn" >> /etc/hosts
+			getIpAddress=$(curl -sS --connect-timeout 10 -m 60 https://www.bctos.cn/ip.php)
+			if [ -z "${getIpAddress}" ];then
+				sed -i "/bctos.cn/d" /etc/hosts
+			fi
+		fi
+	fi
+
+	LOCAL_IP=$(ip addr | grep -E -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -E -v "^127\.|^255\.|^0\." | head -n 1)
+}
 tips(){
 	echo '=================================================';
     echo -e "\033[32m $1 \033[0m"
@@ -63,6 +80,11 @@ sudo find vendor -type d -name bin|xargs chmod -R +x
 sudo chmod -R 755 runtime db app
 sudo chmod -R 777 public
 
+tips "替换配置文件中的密码";
+Get_Ip_Address
+sed -i "s/123456/${MYSQL_PWD}/" config/database.php
+sed -i "s/192\.168\.0\.8/${LOCAL_IP}/" config/weiphp_define.php
+#sed -i "/SSH_PAWD/{s/123/${SSH_PAWD}/}" config/weiphp_define.php
 
 tips "更新数据库"
 tag=$(git tag | awk 'END {print}')
