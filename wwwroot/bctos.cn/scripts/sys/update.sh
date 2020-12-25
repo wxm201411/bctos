@@ -13,10 +13,16 @@ docker exec ${docker} sh -c "exec mysqldump --all-databases -uroot -p${root_pwd}
 echo "备份完成"
 
 tips "使用git下载并更新代码"
+set -x
+git config core.filemode false
+git config --global user.email "panel@bctos.cn"
+git config --global user.name "panel"
+
 git stash
 git pull
 git stash pop
 git stash drop
+set +x
 
 chmod +x /bctos/server/panel/entrypoint.sh
 cd wwwroot/bctos.cn

@@ -1,30 +1,32 @@
-  <!-- 数据列表 -->
+{notempty name="_files"}
+<div class="data-table table-striped">
+  <table>
+    <thead>
+    <tr>
+      <th>冲突的文件</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="_files" id="vo"}
+    <tr>
+      <td>{$vo} </td>
+      <td><a target="_blank" href="{:U('files?file=' . urlencode(str_replace('/','#@#', $vo)))}">打开所在目录</a></td>
+    </tr>
+    {/volist}
+    </tbody>
+  </table>
+</div>
+{/notempty}
+
+<!-- 数据列表 -->
   <div class="data-table" id="data-table">
     <div style="margin: 10px;"><span>检测到有以下 {$count} 个新的版本可以升级</span>
       {if condition="$count"}
       <span style="float: right"><button class="btn btn01" onclick="do_update()">一键升级</button></span>
       {/if}
     </div>
-    {notempty name="_files"}
-    <div class="data-table table-striped">
-      <table>
-        <thead>
-        <tr>
-          <th>冲突的文件</th>
-          <th>操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        {volist name="_files" id="vo"}
-        <tr>
-          <td>{$vo} </td>
-          <td><a target="_blank" href="{:U('files?file=' . $vo)}">打开所在目录</a></td>
-        </tr>
-        {/volist}
-        </tbody>
-      </table>
-    </div>
-    {/notempty}
+
     <div class="data-table table-striped">
       <table>
         <thead>
