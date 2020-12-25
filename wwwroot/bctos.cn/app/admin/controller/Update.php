@@ -131,8 +131,17 @@ class Update extends Admin
         $token = base64_encode('admin') . '|' . md5('admin' . config('database.connections.mysql.password'));
         //dump($path);
         //exit;
-        //http://192.168.0.14:666/kod/index.php?user/login&link=http%3A%2F%2F192.168.0.14%3A666%2Fkod%2Findex.php%3Fuser%2FloginSubmit%26login_token%3DYWRtaW4%253D%257C54f9317ee2b0d69270fb27fc7e2afb9a%26link%3Dhttp%253A%252F%252F192.168.0.14%253A666%252Fkod%252F%253Fexplorer%2526path%253D%252Fmyos%252Fbctos%252Fwwwroot
         return redirect(SITE_URL . '/kod/index.php?user/loginSubmit&login_token=' . urlencode($token) . '&link=' . urlencode(SITE_URL . '/kod/?explorer&path=' . $path));
+    }
+
+    function deal()
+    {
+        $path = str_replace('#@#', '/', input('file'));
+        $ssh = ssh_execute("cd /bctos;git add $path");
+        if ($ssh['code'] != 0) {
+            $this->error($ssh['msg']);
+        }
+        return $this->success('更新成功');
     }
 
     // 下载更新包
