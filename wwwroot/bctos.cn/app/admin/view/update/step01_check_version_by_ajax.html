@@ -11,7 +11,7 @@
     {volist name="_files" id="vo"}
     <tr>
       <td>{$vo} </td>
-      <td><a target="_blank" href="{:U('files?file=' . urlencode(str_replace('/','#@#', $vo)))}">打开所在目录</a> <a target="_blank" href="{:U('deal?file=' . urlencode(str_replace('/','#@#', $vo)))}">已解决</a></td>
+      <td><a target="_blank" href="{:U('files?file=' . urlencode(str_replace('/','#@#', $vo)))}">打开所在目录</a> <a target="_blank" class="ajax-get" href="{:U('deal?file=' . urlencode(str_replace('/','#@#', $vo)))}">已解决</a></td>
     </tr>
     {/volist}
     </tbody>
