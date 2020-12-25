@@ -114,6 +114,13 @@ class Update extends Admin
         $this->assign('count', $count);
         $this->assign('_list', $list);
 
+        $ssh = ssh_execute("cd /bctos;git ls-files -u  | cut -f 2 | sort -u");
+        $files = [];
+        if ($ssh['code'] == 0) {
+            $files = wp_explode($ssh['msg']);
+        }
+        $this->assign('files', $files);
+
         return $this->fetch();
     }
 

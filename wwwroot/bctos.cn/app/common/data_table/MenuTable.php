@@ -111,7 +111,8 @@ _blank:在新窗口打开'
       'icon' => [
           'title' => '图标',
           'type' => 'icon',
-          'field' => 'varchar(50) NULL'
+          'field' => 'varchar(50) NULL',
+          'is_show' => 1
       ],
       'is_hide' => [
           'title' => '是否隐藏',

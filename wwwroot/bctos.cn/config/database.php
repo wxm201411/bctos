@@ -20,7 +20,7 @@ return [
             // 数据库名
             'database' => 'bctos_panel',
             // 用户名
-            'username' => 'root',//phinx
+            'username' => 'root',
             // 密码
             'password' => 'bctos_panel',
             // 端口
