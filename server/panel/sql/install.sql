@@ -798,7 +798,7 @@ CREATE TABLE `wp_menu`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 899 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-INSERT INTO `wp_menu` VALUES (1, '0', '开发功能', 1, '', 'admin/Apps/index', 'layui-icon layui-icon-util', 0, 99, 0, '_self', NULL);
+INSERT INTO `wp_menu` VALUES (1, '0', '开发功能', 1, '', 'admin/Apps/index', 'layui-icon layui-icon-util', 1, 99, 0, '_self', NULL);
 INSERT INTO `wp_menu` VALUES (2, '1', '应用管理', 1, '', 'admin/Apps/index', NULL, 0, 1, 0, '_self', NULL);
 INSERT INTO `wp_menu` VALUES (3, '1', '数据模型', 1, '', 'admin/Model/index', NULL, 0, 2, 0, '_self', NULL);
 INSERT INTO `wp_menu` VALUES (4, '1', '菜单管理', 1, '', 'admin/Menu/lists', NULL, 0, 3, 0, '_self', NULL);
