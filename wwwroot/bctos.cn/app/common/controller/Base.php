@@ -223,7 +223,7 @@ class Base extends BaseController
         $need_check_update = 0;
         $key = "need_check_update_" . date('Ymd');
         $lock = S($key);
-        if ($lock === false) {
+        if ($lock === false || true) {
             $need_check_update = 1;
             S($key, 1, 86400); //每天只检查一次
         }
