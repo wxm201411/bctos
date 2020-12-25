@@ -18,6 +18,6 @@ final class MenuUpdate extends AbstractMigration
     public function change()
     {
         $this->execute('update wp_menu set is_hide=0 where id=1');
-        $this->execute("update wp_menu set pid=0 icon='layui-icon layui-icon-download-circle' where id=888");
+        $this->execute("update wp_menu set pid=0,icon='layui-icon layui-icon-download-circle' where id=888");
     }
 }
