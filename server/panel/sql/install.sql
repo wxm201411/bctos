@@ -193,7 +193,7 @@ CREATE TABLE `wp_auth_group`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 196 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-INSERT INTO `wp_auth_group` VALUES (2, '超级管理员', NULL, '所有从公众号自动注册的粉丝用户都会自动加入这个用户组', 1, 0, '1,2,5,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,79,80,82,83,84,88,89,90,91,92,93,96,97,100,102,103,195', 0, NULL, 0, NULL, NULL, NULL, NULL, 0, '1,2,3,4,7,8,852,12,882,889,890,891,892,893,894,897,898');
+INSERT INTO `wp_auth_group` VALUES (2, '超级管理员', NULL, '所有从公众号自动注册的粉丝用户都会自动加入这个用户组', 1, 0, '1,2,5,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,79,80,82,83,84,88,89,90,91,92,93,96,97,100,102,103,195', 0, NULL, 0, NULL, NULL, NULL, NULL, 0, '1,2,3,4,7,8,852,12,882,889,890,891,892,893,894,897,898,888');
 
 DROP TABLE IF EXISTS `wp_auth_group_access`;
 CREATE TABLE `wp_auth_group_access`  (
@@ -798,7 +798,7 @@ CREATE TABLE `wp_menu`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 899 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-INSERT INTO `wp_menu` VALUES (1, '0', '开发功能', 1, '', 'admin/Apps/index', 'layui-icon layui-icon-util', 1, 99, 0, '_self', NULL);
+INSERT INTO `wp_menu` VALUES (1, '0', '开发功能', 1, '', 'admin/Apps/index', 'layui-icon layui-icon-util', 0, 99, 0, '_self', NULL);
 INSERT INTO `wp_menu` VALUES (2, '1', '应用管理', 1, '', 'admin/Apps/index', NULL, 0, 1, 0, '_self', NULL);
 INSERT INTO `wp_menu` VALUES (3, '1', '数据模型', 1, '', 'admin/Model/index', NULL, 0, 2, 0, '_self', NULL);
 INSERT INTO `wp_menu` VALUES (4, '1', '菜单管理', 1, '', 'admin/Menu/lists', NULL, 0, 3, 0, '_self', NULL);
@@ -807,7 +807,7 @@ INSERT INTO `wp_menu` VALUES (8, '1', '配置管理', 1, '', 'admin/Config/index
 INSERT INTO `wp_menu` VALUES (12, '1', '清除缓存', 1, '', 'admin/Update/delcache', NULL, 0, 11, 0, '_self', NULL);
 INSERT INTO `wp_menu` VALUES (852, '1', '权限配置', 1, '', 'admin/rules/index', '', 1, 8, 0, '_self', '2');
 INSERT INTO `wp_menu` VALUES (882, '0', '容器管理', 0, 'docker', '', 'layui-icon layui-icon-component', 0, 4, 0, '_self', '2');
-INSERT INTO `wp_menu` VALUES (888, '1', '在线升级', 1, '', 'admin/Update/index', '', 0, 8, 0, '_self', '2');
+INSERT INTO `wp_menu` VALUES (888, '0', '在线升级', 1, '', 'admin/Update/index', 'layui-icon layui-icon-download-circle', 0, 8, 0, '_self', '2');
 INSERT INTO `wp_menu` VALUES (889, '0', '网站', 1, '', 'admin/site/lists', 'layui-icon layui-icon-website', 0, 0, 0, '_self', '2');
 INSERT INTO `wp_menu` VALUES (890, '0', '数据库', 1, '', 'admin/database/lists', 'layui-icon layui-icon-engine', 0, 0, 0, '_self', '2');
 INSERT INTO `wp_menu` VALUES (891, '0', '文件', 1, '', 'admin/site/files', 'layui-icon layui-icon-file-b', 0, 0, 0, '_blank', '2');
@@ -1056,10 +1056,10 @@ CREATE TABLE `wp_public_config`  (
   `pvalue` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '配置值',
   `mtime` int(10) NULL DEFAULT 0 COMMENT '设置时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 131 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 133 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-INSERT INTO `wp_public_config` VALUES (131, 0, 'remote_tag', '0.0.2', 1607499457);
-INSERT INTO `wp_public_config` VALUES (132, 0, 'local_tag', '0.0.2', 1607499458);
+INSERT INTO `wp_public_config` VALUES (131, 0, 'remote_tag', '0.0.3', 1608892458);
+INSERT INTO `wp_public_config` VALUES (132, 0, 'local_tag', '0.0.3', 1608892496);
 
 DROP TABLE IF EXISTS `wp_public_follow`;
 CREATE TABLE `wp_public_follow`  (
