@@ -27,8 +27,9 @@ echo "open_basedir=$old_path/:/tmp/" > $path/.user.ini
 cp $conf /bctos/server/${docker}/conf.d/
 
 #创建伪静态文件
-touch /bctos/server/${docker}/rewrite/$(basename $conf)
-chmod 777 /bctos/server/${docker}/rewrite/$(basename $conf)
+rewrite_file=$(basename $conf|sed 's/\.conf/.rewrite.conf/')
+touch /bctos/server/${docker}/rewrite/${rewrite_file}
+chmod 777 /bctos/server/${docker}/rewrite/${rewrite_file}
 
 #重启nginx
 docker restart ${docker}
