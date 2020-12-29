@@ -10,18 +10,38 @@ LANG=en_US.UTF-8
 function installSoft(){
     if [[  ! $(which $1) ]]; then
         echo "============Install $1 begin================================="
-        sudo yum -y install $1
+        yum -y install $1
         echo "============Install $1 end, return status: $?==================="
     fi
 }
+start_time=$(date +"%s.%N")
+diff_time=0
+function timediff() {
+    end_time=$(date +"%s.%N")
+
+    start_s=${start_time%.*}
+    start_nanos=${start_time#*.}
+    end_s=${end_time%.*}
+    end_nanos=${end_time#*.}
+
+    if [ "$end_nanos" -lt "$start_nanos" ];then
+        end_s=$(( 10#$end_s - 1 ))
+        end_nanos=$(( 10#$end_nanos + 10**9 ))
+    fi
+
+    diff_time=$(( 10#$end_s - 10#$start_s )).`printf "%03d\n" $(( (10#$end_nanos - 10#$start_nanos)/10**6 ))`
+    start_time=${end_time}
+}
 error_tips(){
-	echo '=================================================';
+    timediff
+	echo -e "==============\033[32m 耗时：${diff_time} 秒 \033[0m==============";
 	echo -e  "\033[31m $1  \033[0m";
 	GetSysInfo
 	exit 1
 }
 tips(){
-	echo '=================================================';
+    timediff
+	echo -e "==============\033[32m 耗时：${diff_time} 秒 \033[0m==============";
     echo -e "\033[32m $1 \033[0m"
 }
 
@@ -31,7 +51,7 @@ fi
 
 tips "
 +----------------------------------------------------------------------
-| 小韦云面板支持 CentOS/Ubuntu/Debian 系统
+| 小韦云面板支持 CentOS 系统
 +----------------------------------------------------------------------
 | Copyright © 2020-2099 小韦云科技(https://www.bctos.cn) All rights reserved.
 +----------------------------------------------------------------------
@@ -105,14 +125,14 @@ fi
 #fi
 
 if [ ! -d "/bctos" ]; then
-	sudo mkdir /bctos
+	mkdir /bctos
 fi
 cd /bctos
 
 which -v
 if [ $? -ne 0 ]; then
     tips "安装which"
-	sudo yum -y install which
+	yum -y install which
 fi
 installSoft wget
 installSoft curl
@@ -120,7 +140,7 @@ installSoft git
 
 if [[  $(which podman) ]]; then
     tips "移除podman"
-    sudo yum -y remove podman
+    yum -y remove podman
 fi
 
 #tips "从gitee下载代码"
@@ -148,20 +168,20 @@ firewall-cmd --zone=public --list-ports
 # 安装docker
 function install_docker(){
 	tips "安装docker软件"
-	sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine docker-ce docker-ce-cli
-    sudo yum install -y sudo yum-utils device-mapper-persistent-data lvm2
-    sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-    sudo yum install -y containerd.io-1.2.6-3.3.fc30.x86_64.rpm
-    sudo yum install -y docker-ce-19.03.12 docker-ce-cli-19.03.12
+	yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine docker-ce docker-ce-cli
+    yum install -y yum-utils device-mapper-persistent-data lvm2
+    yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+    yum install -y containerd.io-1.2.6-3.3.fc30.x86_64.rpm
+    yum install -y docker-ce-19.03.12 docker-ce-cli-19.03.12
 
-	sudo mkdir -p /etc/docker
-    sudo tee /etc/docker/daemon.json <<-'EOF'
+	mkdir -p /etc/docker
+    tee /etc/docker/daemon.json <<-'EOF'
 {
   "registry-mirrors": ["https://u1fynok0.mirror.aliyuncs.com"]
 }
 EOF
-    sudo systemctl enable docker
-	sudo systemctl start docker
+    systemctl enable docker
+	systemctl start docker
 }
 if [[ ! ($(which docker) && $(docker --version)) ]]; then
     install_docker
@@ -184,7 +204,7 @@ fi
 function install_compose() {
     tips "安装docker-compose"
     curl -L https://get.daocloud.io/docker/compose/releases/download/1.27.0-rc3/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
     [ -f /usr/bin/docker-compose ] || ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
     docker-compose version
 }
@@ -209,8 +229,8 @@ fi
 docker ps -a
 if [ $? -ne 0 ]; then
     tips "启动docker服务";
-	sudo systemctl enable docker
-	sudo systemctl start docker
+	systemctl enable docker
+	systemctl start docker
 fi
 
 if [ ! -d libssh2-1.9.0 ];then
@@ -222,24 +242,24 @@ if [ ! -d libssh2-1.9.0 ];then
 fi
 tips "初始化代码目录和权限";
 if [ ! -d "server/panel/mysql-data" ];then
-	sudo mkdir -p server/panel/mysql-data
+	mkdir -p server/panel/mysql-data
 fi
-sudo chmod +x /bctos/server/panel/entrypoint.sh
+chmod +x /bctos/server/panel/entrypoint.sh
 cd wwwroot/bctos.cn
 if [ ! -d runtime ];then
-	sudo mkdir runtime
+	mkdir runtime
 fi
 if [ ! -d "db/migrations" ];then
-	sudo mkdir -p db/migrations
+	mkdir -p db/migrations
 fi
 if [ ! -d "public/storage" ];then
-	sudo mkdir -p public/storage
+	mkdir -p public/storage
 fi
 #在容器中82表示www-data用户
 if [ -z $(cat /etc/passwd|grep www-data) ];then
     tips "增加www-data用户";
-    sudo groupadd -g 82 www-data
-    sudo useradd -u 82 -g 82  www-data
+    groupadd -g 82 www-data
+    useradd -u 82 -g 82  www-data
 fi
 
 if [ ! -f "config/.ssh/id_rsa" ];then
@@ -249,7 +269,7 @@ if [ ! -f "config/.ssh/id_rsa" ];then
     mkdir -p /root/.ssh
     ssh-keygen -f config/.ssh/id_rsa -N bctos
     cp config/.ssh/id_rsa.pub /root/.ssh/
-    sudo chown -R 82.82 config/.ssh
+    chown -R 82.82 config/.ssh
     chmod -R 755 config/.ssh
 
     cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
@@ -257,11 +277,11 @@ if [ ! -f "config/.ssh/id_rsa" ];then
     chmod 700 /root/.ssh
 fi
 
-sudo chown -R 82.82 ./*
-sudo chmod -R +x scripts
-sudo find vendor -type d -name bin|xargs chmod -R +x
-sudo chmod -R 755 runtime db app
-sudo chmod -R 777 public
+chown -R 82.82 ./*
+chmod -R +x scripts
+find vendor -type d -name bin|xargs chmod -R +x
+chmod -R 755 runtime db app
+chmod -R 777 public
 
 tips "替换配置文件中的密码";
 Get_Ip_Address
@@ -274,7 +294,7 @@ tips "代码准备完毕，目录如下：";
 ls -l
 
 tips "下载面板镜像，使用docker-compose启动面板容器";
-sudo docker-compose up -d
+docker-compose up -d
 if [ $? -ne 0 ]; then
     error_tips "镜像下载成功失败，请先手工下载试试：docker pull registry.cn-hangzhou.aliyuncs.com/wxm201411/panel"
 else

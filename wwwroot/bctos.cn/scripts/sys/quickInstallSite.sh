@@ -23,14 +23,34 @@ function installSoft(){
         echo "============Install $1 end, return status: $?==================="
     fi
 }
+start_time=$(date +"%s.%N")
+diff_time=0
+function timediff() {
+    end_time=$(date +"%s.%N")
+
+    start_s=${start_time%.*}
+    start_nanos=${start_time#*.}
+    end_s=${end_time%.*}
+    end_nanos=${end_time#*.}
+
+    if [ "$end_nanos" -lt "$start_nanos" ];then
+        end_s=$(( 10#$end_s - 1 ))
+        end_nanos=$(( 10#$end_nanos + 10**9 ))
+    fi
+
+    diff_time=$(( 10#$end_s - 10#$start_s )).`printf "%03d\n" $(( (10#$end_nanos - 10#$start_nanos)/10**6 ))`
+    start_time=${end_time}
+}
 error_tips(){
-	echo '=================================================';
+    timediff
+	echo -e "==============\033[32m 耗时：${diff_time} 秒 \033[0m==============";
 	echo -e  "\033[31m $1  \033[0m";
 	echo '==over==error'
 	exit 1
 }
 tips(){
-	echo '=================================================';
+    timediff
+	echo -e "==============\033[32m 耗时：${diff_time} 秒 \033[0m==============";
     echo -e "\033[32m $1 \033[0m"
 }
 
@@ -40,18 +60,18 @@ installSoft git
 tips "下载源码"
 cd /bctos/wwwroot
 
-[ -d $domain ] && rm -rf /bctos/wwwroot/$domain
-if [[ $download_type == "git" ]];then
-    git clone $download_url $domain
+[ -d ${domain} ] && rm -rf /bctos/wwwroot/${domain}
+if [[ ${download_type} == "git" ]];then
+    git clone ${download_url} ${domain}
 fi
-if [[ $download_type == "composer" ]];then
-    docker exec panel sh -c "cd /bctos/wwwroot;composer create-project $download_url $domain"
+if [[ ${download_type} == "composer" ]];then
+    docker exec panel sh -c "cd /bctos/wwwroot;composer create-project ${download_url} ${domain}"
 fi
 
-[ ! -d $domain ] && mkdir $domain
-cd $domain
-if [[ $download_type == "wget" ]];then
-    wget -O install.zip $download_url
+[ ! -d ${domain} ] && mkdir ${domain}
+cd ${domain}
+if [[ ${download_type} == "wget" ]];then
+    wget -O install.zip ${download_url}
 
     installSoft unzip
     unzip -q install.zip
@@ -81,13 +101,13 @@ fi
 tips "先检查所需要的容器服务是否存在，不存在的话先更新面板"
 cd /bctos/server
 server_check=1
-[[ server_check -eq 1 ]] && [[ $mysql != 'not' ]] && [ -z $(find . -type d -name $mysql) ] && server_check=0
-[[ server_check -eq 1 ]] && [[ $redis != 'not' ]] && [ -z $(find . -type d -name $redis) ] && server_check=0
-[[ server_check -eq 1 ]] && [[ $memcached != 'not' ]] && [ -z $(find . -type d -name $memcached) ] && server_check=0
-[[ server_check -eq 1 ]] && [[ $php != 'not' ]] && [ -z $(find . -type d -name $php) ] && server_check=0
+[[ ${server_check} -eq 1 ]] && [[ $mysql != 'not' ]] && [ -z $(find . -type d -name $mysql) ] && server_check=0
+[[ ${server_check} -eq 1 ]] && [[ $redis != 'not' ]] && [ -z $(find . -type d -name $redis) ] && server_check=0
+[[ ${server_check} -eq 1 ]] && [[ $memcached != 'not' ]] && [ -z $(find . -type d -name $memcached) ] && server_check=0
+[[ ${server_check} -eq 1 ]] && [[ $php != 'not' ]] && [ -z $(find . -type d -name $php) ] && server_check=0
 
 
-if [[ server_check -eq 0 ]];then
+if [[ ${server_check} -eq 0 ]];then
     tips "有不存在的容器，先更新面板"
     /bctos/wwwroot/bctos.cn/scripts/sys/updatePanel.sh
 else
@@ -111,8 +131,8 @@ if [[ $php != 'not' ]];then
         #去掉函数前后都加逗号
         sed -i -r -e '/^[ ]*disable_functions/{s/,$//;s/=[ ]*,/= /}' php.ini
     fi
-    if [[ $php_ext != '-' ]];then
-        tips "设置PHP扩展：$php_ext"
+    if [[ ${php_ext} != '-' ]];then
+        tips "设置PHP扩展：${php_ext}"
         image=$(sed -n -r '/^[ ]+image:[ ]+/p' docker-compose.yml |sed 's/image://'|sed 's/ //g')
         array2=(${php_ext//,/ })
 
@@ -128,7 +148,7 @@ if [[ $php != 'not' ]];then
               fi
          done
 
-         if [[ $ext_install -eq 1 ]];then
+         if [[ ${ext_install} -eq 1 ]];then
             if [ ! -z $(docker ps --format '{{.Names}}'|grep $php) ];then
                 tips "$php 容器已经在运行，通过php -m判断是否已安装"
                 for ext in ${array2[@]}
@@ -165,12 +185,12 @@ if [ ! -d rewrite ];then
     mkdir rewrite
     chmod 777 rewrite
 fi
-if [ -f /bctos/wwwroot/bctos.cn/runtime/$domain".rewrite.conf" ];then
-    mv /bctos/wwwroot/bctos.cn/runtime/$domain".rewrite.conf" ./rewrite/$domain".rewrite.conf"
+if [ -f /bctos/wwwroot/bctos.cn/runtime/${domain}".rewrite.conf" ];then
+    mv /bctos/wwwroot/bctos.cn/runtime/${domain}".rewrite.conf" ./rewrite/${domain}".rewrite.conf"
 else
-    echo '' > ./rewrite/$domain".rewrite.conf"
+    echo '' > ./rewrite/${domain}".rewrite.conf"
 fi
-mv /bctos/wwwroot/bctos.cn/runtime/$domain".conf" ./conf.d/$domain".conf"
+mv /bctos/wwwroot/bctos.cn/runtime/${domain}".conf" ./conf.d/${domain}".conf"
 chmod -R 777 rewrite
 chmod -R 777 conf.d
 
@@ -191,15 +211,15 @@ sleep 2;
 
 
 cd /bctos/wwwroot
-chown -R 82.82 $domain
-chmod -R 755 $domain
-cd $domain
+chown -R 82.82 ${domain}
+chmod -R 755 ${domain}
+cd ${domain}
 tips "增加防跨站攻击配置"
-echo "open_basedir=/bctos/wwwroot/$domain/:/tmp/" > ./.user.ini
-if [[ $domain == 'default' ]];then
+echo "open_basedir=/bctos/wwwroot/${domain}/:/tmp/" > ./.user.ini
+if [[ ${domain} == 'default' ]];then
     db_name='bctos_default'
 else
-    db_name=$(echo $domain|sed 's/\./_/g')
+    db_name=$(echo ${domain}|sed 's/\./_/g')
 fi
 
 if [[ $mysql != 'not' ]];then
@@ -226,29 +246,37 @@ fi
 
 if [[ $mysql != 'not' ]] && [ -f install.sql ];then
     tips "发现install.sql，执行数据库导入,时间可能较长，请耐心等待"
+docker exec -e MYSQL_PWD=$root_pwd -i ${mysql} mysql -uroot << EOF
+set global innodb_flush_log_at_trx_commit = 2;
+set global sync_binlog = 2000;
+EOF
     docker exec -i  ${mysql} sh -c "exec mysql -uroot -p${root_pwd} ${db_name}" < ./install.sql
+docker exec -e MYSQL_PWD=$root_pwd -i ${mysql} mysql -uroot << EOF
+set global innodb_flush_log_at_trx_commit = 1;
+set global sync_binlog = 1;
+EOF
     tips "导入数据库完成"
 fi
 
-if [[ $mysql != 'not' ]] && [[ $db_file != '-' ]];then
+if [[ $mysql != 'not' ]] && [[ ${db_file} != '-' ]];then
     tips "替换数据库配置文件的连接信息"
-    sed -i -e "s/BCTOS_DB_HOST/$mysql/g" -e "s/BCTOS_DB_NAME/$db_name/g" -e "s/BCTOS_DB_USER/${db_name}/g" -e "s/BCTOS_DB_PWD/${db_pwd}/g" $db_file
+    sed -i -e "s/BCTOS_DB_HOST/$mysql/g" -e "s/BCTOS_DB_NAME/$db_name/g" -e "s/BCTOS_DB_USER/${db_name}/g" -e "s/BCTOS_DB_PWD/${db_pwd}/g" ${db_file}
 fi
-if [[ $redis != 'not' ]] && [[ $redis_file != '-' ]];then
+if [[ $redis != 'not' ]] && [[ ${redis_file} != '-' ]];then
     tips "替换redis配置文件的连接信息"
-    sed -i -e "s/BCTOS_REDIS_HOST/$redis/g" -e "s/BCTOS_REDIS_PORT/6379/g" -e "s/BCTOS_REDIS_PWD//g" $redis_file
+    sed -i -e "s/BCTOS_REDIS_HOST/$redis/g" -e "s/BCTOS_REDIS_PORT/6379/g" -e "s/BCTOS_REDIS_PWD//g" ${redis_file}
 fi
-if [[ $memcached != 'not' ]] && [[ $memcached_file != '-' ]];then
+if [[ $memcached != 'not' ]] && [[ ${memcached_file} != '-' ]];then
     tips "替换memcached配置文件的连接信息"
-    sed -i -e "s/BCTOS_MEMCACHED_HOST/$memcached/g" -e "s/BCTOS_MEMCACHED_PORT/11211/g" -e "s/BCTOS_MEMCACHED_PWD//g" $memcached_file
+    sed -i -e "s/BCTOS_MEMCACHED_HOST/$memcached/g" -e "s/BCTOS_MEMCACHED_PORT/11211/g" -e "s/BCTOS_MEMCACHED_PWD//g" ${memcached_file}
 fi
 if [ -f install.sh ];then
     tips "发现install.sh文件，执行它"
     chmod +x install.sh
-    ./install.sh $domain $mysql $db_name
+    ./install.sh ${domain} $mysql $db_name
 fi
 
-if [[ $rm_file != '-' ]];then
+if [[ ${rm_file} != '-' ]];then
     tips "清空安装文件"
     array=(${rm_file//#@#/ })
     for var in ${array[@]}

@@ -2,6 +2,7 @@
 LANG=en_US.UTF-8
 
 soft_id=$1
+
 function installSoft(){
     if [[  ! $(which $1) ]]; then
         echo "============Install $1 begin================================="
@@ -9,16 +10,40 @@ function installSoft(){
         echo "============Install $1 end, return status: $?==================="
     fi
 }
+start_time=$(date +"%s.%N")
+diff_time=0
+function timediff() {
+    end_time=$(date +"%s.%N")
+
+    start_s=${start_time%.*}
+    start_nanos=${start_time#*.}
+    end_s=${end_time%.*}
+    end_nanos=${end_time#*.}
+
+    if [ "$end_nanos" -lt "$start_nanos" ];then
+        end_s=$(( 10#$end_s - 1 ))
+        end_nanos=$(( 10#$end_nanos + 10**9 ))
+    fi
+
+    diff_time=$(( 10#$end_s - 10#$start_s )).`printf "%03d\n" $(( (10#$end_nanos - 10#$start_nanos)/10**6 ))`
+    start_time=${end_time}
+}
 error_tips(){
-	echo '=================================================';
+    timediff
+	echo -e "==============\033[32m 耗时：${diff_time} 秒 \033[0m==============";
 	echo -e  "\033[31m $1  \033[0m";
 	GetSysInfo
 	exit 1
 }
 tips(){
-	echo '=================================================';
+    timediff
+	echo -e "==============\033[32m 耗时：${diff_time} 秒 \033[0m==============";
     echo -e "\033[32m $1 \033[0m"
 }
+
+if [[ ${USER} != 'root' ]];then
+    error_tips "请先切换到root账号下再执行"
+fi
 GetSysInfo(){
 	if [ -s "/etc/redhat-release" ];then
 		SYS_VERSION=$(cat /etc/redhat-release)
@@ -53,9 +78,7 @@ Get_Ip_Address(){
 
 	LOCAL_IP=$(ip addr | grep -E -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -E -v "^127\.|^255\.|^0\." | head -n 1)
 }
-if [[ ${USER} != 'root' ]];then
-    error_tips "请先切换到root账号下再执行"
-fi
+
 
 domain=''
 function domain_input(){
@@ -133,17 +156,17 @@ tips "下载源码"
 cd /bctos/wwwroot
 
 [ -d $domain ] && rm -rf /bctos/wwwroot/$domain
-if [[ $download_type == "git" ]];then
-    git clone $download_url $domain
+if [[ ${download_type} == "git" ]];then
+    git clone ${download_url} $domain
 fi
-if [[ $download_type == "composer" ]];then
-    docker exec panel sh -c "cd /bctos/wwwroot;composer create-project $download_url $domain"
+if [[ ${download_type} == "composer" ]];then
+    docker exec panel sh -c "cd /bctos/wwwroot;composer create-project ${download_url} $domain"
 fi
 
 [ ! -d $domain ] && mkdir $domain
 cd $domain
-if [[ $download_type == "wget" ]];then
-    wget -O install.zip $download_url
+if [[ ${download_type} == "wget" ]];then
+    wget -O install.zip ${download_url}
 
     installSoft unzip
     unzip -q install.zip
@@ -191,8 +214,8 @@ if [[ $php != 'not' ]];then
     tips "设置PHP禁用函数，设置PHP扩展，重新运行PHP容器"
     cd /bctos/server/$php
 
-    if [[ $php_func != '-' ]];then
-        tips "解禁PHP函数：$php_func"
+    if [[ ${php_func} != '-' ]];then
+        tips "解禁PHP函数：${php_func}"
         #给函数前后都加逗号，这样可以加上逗号一起替换，防止有些函数名存在歧义，如exec和pcntl_exec，如果要开启exec，前后没有逗号的话也能匹配到pcntl_exec
         sed -i -r -e '/^[ ]*disable_functions/{s/$/,/;s/=[ ]*/=,/}' php.ini
         array=(${php_func//,/ })
@@ -203,8 +226,8 @@ if [[ $php != 'not' ]];then
         #去掉函数前后都加逗号
         sed -i -r -e '/^[ ]*disable_functions/{s/,$//;s/=[ ]*,/= /}' php.ini
     fi
-    if [[ $php_ext != '-' ]];then
-        tips "设置PHP扩展：$php_ext"
+    if [[ ${php_ext} != '-' ]];then
+        tips "设置PHP扩展：${php_ext}"
         image=$(sed -n -r '/^[ ]+image:[ ]+/p' docker-compose.yml |sed 's/image://'|sed 's/ //g')
         array2=(${php_ext//,/ })
 
@@ -322,21 +345,29 @@ fi
 
 if [[ $mysql != 'not' ]] && [ -f install.sql ];then
     tips "发现install.sql，执行数据库导入,时间可能较长，请耐心等待"
+docker exec -e MYSQL_PWD=$root_pwd -i ${mysql} mysql -uroot << EOF
+set global innodb_flush_log_at_trx_commit = 2;
+set global sync_binlog = 2000;
+EOF
     docker exec -i  ${mysql} sh -c "exec mysql -uroot -p${root_pwd} ${db_name}" < ./install.sql
+docker exec -e MYSQL_PWD=$root_pwd -i ${mysql} mysql -uroot << EOF
+set global innodb_flush_log_at_trx_commit = 1;
+set global sync_binlog = 1;
+EOF
     tips "导入数据库完成"
 fi
 
-if [[ $mysql != 'not' ]] && [[ $db_file != '-' ]];then
+if [[ $mysql != 'not' ]] && [[ ${db_file} != '-' ]];then
     tips "替换数据库配置文件的连接信息"
-    sed -i -e "s/BCTOS_DB_HOST/$mysql/g" -e "s/BCTOS_DB_NAME/$db_name/g" -e "s/BCTOS_DB_USER/${db_name}/g" -e "s/BCTOS_DB_PWD/${db_pwd}/g" $db_file
+    sed -i -e "s/BCTOS_DB_HOST/$mysql/g" -e "s/BCTOS_DB_NAME/$db_name/g" -e "s/BCTOS_DB_USER/${db_name}/g" -e "s/BCTOS_DB_PWD/${db_pwd}/g" ${db_file}
 fi
-if [[ $redis != 'not' ]] && [[ $redis_file != '-' ]];then
+if [[ $redis != 'not' ]] && [[ ${redis_file} != '-' ]];then
     tips "替换redis配置文件的连接信息"
-    sed -i -e "s/BCTOS_REDIS_HOST/$redis/g" -e "s/BCTOS_REDIS_PORT/6379/g" -e "s/BCTOS_REDIS_PWD//g" $redis_file
+    sed -i -e "s/BCTOS_REDIS_HOST/$redis/g" -e "s/BCTOS_REDIS_PORT/6379/g" -e "s/BCTOS_REDIS_PWD//g" ${redis_file}
 fi
-if [[ $memcached != 'not' ]] && [[ $memcached_file != '-' ]];then
+if [[ $memcached != 'not' ]] && [[ ${memcached_file} != '-' ]];then
     tips "替换memcached配置文件的连接信息"
-    sed -i -e "s/BCTOS_MEMCACHED_HOST/$memcached/g" -e "s/BCTOS_MEMCACHED_PORT/11211/g" -e "s/BCTOS_MEMCACHED_PWD//g" $memcached_file
+    sed -i -e "s/BCTOS_MEMCACHED_HOST/$memcached/g" -e "s/BCTOS_MEMCACHED_PORT/11211/g" -e "s/BCTOS_MEMCACHED_PWD//g" ${memcached_file}
 fi
 if [ -f install.sh ];then
     tips "发现install.sh文件，执行它"
@@ -347,7 +378,7 @@ fi
 tips "网站增加小韦云面板中，方便管理"
 docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;php think sample_install ${soft_id} ${domain} ${db_pwd}'"
 
-if [[ $rm_file != '-' ]];then
+if [[ ${rm_file} != '-' ]];then
     tips "清空安装文件"
     array=(${rm_file//#@#/ })
     for var in ${array[@]}

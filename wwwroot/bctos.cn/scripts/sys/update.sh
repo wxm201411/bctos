@@ -44,7 +44,16 @@ if [ -f update_${tag}.sh ];then
 fi
 if [ -f update_${tag}.sql ];then
     tips "发现update_${tag}.sql，执行数据库导入,时间可能较长，请耐心等待"
+docker exec -e MYSQL_PWD=$root_pwd -i ${docker} mysql -uroot << EOF
+set global innodb_flush_log_at_trx_commit = 2;
+set global sync_binlog = 2000;
+EOF
     docker exec -i ${docker} sh -c "exec mysql -uroot -p${root_pwd} bctos_panel" < ./update_${tag}.sql
+docker exec -e MYSQL_PWD=$root_pwd -i ${docker} mysql -uroot << EOF
+set global innodb_flush_log_at_trx_commit = 1;
+set global sync_binlog = 1;
+EOF
+
     tips "导入数据库完成"
 fi
 

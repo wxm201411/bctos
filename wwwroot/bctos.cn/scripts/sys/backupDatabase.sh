@@ -14,7 +14,16 @@ if [ ! -d "/bctos/wwwroot/bctos.cn/public/storage/backup" ]; then
     chown -R 82.82 /bctos/wwwroot/bctos.cn/public/storage/backup
 fi
 cd /bctos/wwwroot/bctos.cn/public/storage/backup/
-docker exec ${docker} sh -c "exec mysqldump -uroot -p${root_pwd} ${db_name}" > ${file}
+docker exec -e MYSQL_PWD=$root_pwd -i ${docker} mysql -uroot << EOF
+set global innodb_flush_log_at_trx_commit = 2;
+set global sync_binlog = 2000;
+EOF
+    docker exec ${docker} sh -c "exec mysqldump -uroot -p${root_pwd} ${db_name}" > ${file}
+docker exec -e MYSQL_PWD=$root_pwd -i ${docker} mysql -uroot << EOF
+set global innodb_flush_log_at_trx_commit = 1;
+set global sync_binlog = 1;
+EOF
+
 zip ${file}.zip ${file} > /dev/null
 rm -f ${file}
 chmod -R 777 ./*
