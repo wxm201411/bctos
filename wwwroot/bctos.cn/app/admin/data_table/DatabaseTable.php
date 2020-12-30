@@ -131,24 +131,20 @@ big5:big5',
           'type' => 'select',
           'field' => 'char(50) NULL',
           'extra' => '%:所有人(%)
-localhost:本地(localhost)
 ip:IP',
           'value' => 'utf8mb4',
           'is_show' => 1,
           'extra_array' => [
               '%' => '所有人(%)',
-              'localhost' => '本地(localhost)',
               'ip' => '指定IP'
           ],
           'extra_array_id' => [
               '0' => '%',
-              '1' => 'localhost',
-              '2' => 'ip'
+              '1' => 'ip'
           ],
           'extra_array_title' => [
               '0' => '所有人(不安全)',
-              '1' => '本地服务器',
-              '2' => '指定IP'
+              '1' => '指定IP'
           ]
       ],
       'ip' => [

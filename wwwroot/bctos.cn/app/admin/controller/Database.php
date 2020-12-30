@@ -82,19 +82,6 @@ class Database extends Admin
         }
     }
 
-    private function getRootPwd($docker = '')
-    {
-        $res = ssh_execute("cat /bctos/server/{$docker}/docker-compose.yml");
-        $yml = yaml_parse($res['msg']);
-
-        $pwd = '';
-        if (isset($yml['services'][$docker]['environment']['MYSQL_ROOT_PASSWORD'])) {
-            $pwd = $yml['services'][$docker]['environment']['MYSQL_ROOT_PASSWORD'];
-        }
-
-        return $pwd;
-    }
-
     function power()
     {
         $id = input('id');
@@ -103,7 +90,6 @@ class Database extends Admin
             $power = input('power');
             $ip_input = input('ip');
             $ip_input = trim(trim(str_replace('，', ',', $ip_input), ','));
-            $root_pwd = $this->getRootPwd();
             if ($power == 'ip') {
                 if ($data['power'] == $power && $data['ip'] == $ip_input) {
                     return $this->success('修改成功');
@@ -133,7 +119,7 @@ class Database extends Admin
                 if (!empty($has)) {
                     //需要删除多余账号
                     foreach ($has as $ip => $v) {
-                        $res = ssh_execute(SITE_PATH . "/scripts/sys/delMysqlUser.sh {$root_pwd} {$data['db_user']} {$ip}");
+                        $res = ssh_execute(SITE_PATH . "/scripts/sys/delMysqlUser.sh {$data['db_user']} {$ip} {$data['database']}");
                         if ($res['code'] == 1) {
                             return $this->error($res['msg']);
                         }
@@ -147,7 +133,7 @@ class Database extends Admin
                 $list = M()::query("SELECT `Host` FROM mysql.`user` where `User`='{$data['db_user']}' and `Host`='$power'");
                 if (count($list) == 0) {
                     //数据库已经存在，只需要修改本地数据库即可,只有数据库没有该权限的账号，才需要下面的更新操作
-                    $res = ssh_execute(SITE_PATH . "/scripts/sys/editMysqlPower.sh {$root_pwd} {$data['power']} {$power} {$data['db_user']}");
+                    $res = ssh_execute(SITE_PATH . "/scripts/sys/editMysqlPower.sh {$data['power']} {$power} {$data['db_user']} {$data['database']}");
                     if ($res['code'] == 1) {
                         return $this->error($res['msg']);
                     }
