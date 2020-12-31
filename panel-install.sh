@@ -308,9 +308,9 @@ names=$(docker ps -a --format '{{.Names}}')
 [ -z $(echo $names|grep 'mysql'|sed 's/ //g') ] && docker-compose -f mysql57/docker-compose.yml up -d
 [ -z $(echo $names|grep 'nginx'|sed 's/ //g') ] && docker-compose -f nginx/docker-compose.yml up -d
 
-cd /bctos
-tag=$(git tag | awk 'END {print}')
-docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;vendor/bin/phinx migrate;php think update ${tag}'"
+#cd /bctos
+#tag=$(git tag | awk 'END {print}')
+#docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;vendor/bin/phinx migrate;php think update ${tag}'"
 
 tips "==================================================================
 恭喜! 小韦云面板安装成功了!
