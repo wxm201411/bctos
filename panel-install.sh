@@ -293,24 +293,24 @@ cd ../..
 tips "代码准备完毕，目录如下：";
 ls -l
 
+tips "启用常用的nginx+php+mysql这三个容器";
+cd /bctos/server
+names=$(docker ps -a --format '{{.Names}}')
+[ -z $(echo $names|grep 'mysql'|sed 's/ //g') ] && docker-compose -f mysql57/docker-compose.yml up -d
+[ -z $(echo $names|grep 'php'|sed 's/ //g') ] && docker-compose -f php74/docker-compose.yml up -d
+[ -z $(echo $names|grep 'nginx'|sed 's/ //g') ] && docker-compose -f nginx/docker-compose.yml up -d
+
 tips "下载面板镜像，使用docker-compose启动面板容器";
+cd /bctos
 docker-compose up -d
 if [ $? -ne 0 ]; then
     error_tips "镜像下载成功失败，请先手工下载试试：docker pull registry.cn-hangzhou.aliyuncs.com/wxm201411/panel"
 else
     tips "服务启动成功";
 fi
-
-tips "启用常用的nginx+php+mysql这三个容器";
-cd /bctos/server
-names=$(docker ps -a --format '{{.Names}}')
-[ -z $(echo $names|grep 'php'|sed 's/ //g') ] && docker-compose -f php74/docker-compose.yml up -d
-[ -z $(echo $names|grep 'mysql'|sed 's/ //g') ] && docker-compose -f mysql57/docker-compose.yml up -d
-[ -z $(echo $names|grep 'nginx'|sed 's/ //g') ] && docker-compose -f nginx/docker-compose.yml up -d
-
-#cd /bctos
-#tag=$(git tag | awk 'END {print}')
-#docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;vendor/bin/phinx migrate;php think update ${tag}'"
+sleep 10
+tag=$(git tag | awk 'END {print}')
+docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;vendor/bin/phinx migrate;php think update ${tag}'"
 
 tips "==================================================================
 恭喜! 小韦云面板安装成功了!

@@ -14,5 +14,7 @@ services:
     volumes:
       - /bctos/server/mysql57/mysql-data:/var/lib/mysql
       - /bctos/server/mysql57/my.cnf:/etc/mysql/conf.d/my.cnf
+      - /bctos/server/mysql57/sql:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: bctos_panel
+      MYSQL_DATABASE: bctos_panel
