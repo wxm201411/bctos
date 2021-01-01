@@ -305,10 +305,28 @@ cd /bctos
 docker-compose up -d
 if [ $? -ne 0 ]; then
     error_tips "镜像下载成功失败，请先手工下载试试：docker pull registry.cn-hangzhou.aliyuncs.com/wxm201411/panel"
-else
-    tips "服务启动成功";
 fi
-sleep 10
+
+tips "等待数据库启动";
+function checkMysql(){
+    docker exec -e MYSQL_PWD=bctos_panel -i mysql57 mysql -uroot << EOF
+use bctos_panel;
+select count(*) as num FROM wp_user;
+EOF
+}
+
+while true
+do
+    checkMysql > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+         break
+    else
+        sleep 1
+    fi
+done
+sleep 3
+tips "数据库启动完成";
+
 tag=$(git tag | awk 'END {print}')
 docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;vendor/bin/phinx migrate;php think update ${tag}'"
 
