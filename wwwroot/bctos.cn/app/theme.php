@@ -1,6 +1,6 @@
 <?php
 
-// weiphp主题函数库（基库）
+// bctos主题函数库（基库）
 
 function db_query($sql)
 {

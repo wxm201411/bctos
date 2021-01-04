@@ -366,7 +366,7 @@ function path_list($dir, $listFile = true, $checkChildren = false)
     $dir = rtrim($dir, '/') . '/';
     $res = ssh_execute("ls -lh --full-time {$dir} | sed -r \"s/\.[0-9]+ / /g\" | awk 'NR>1{print $1\"|||\"$5\"|||\"$6$7\"|||\"$9}'");
     //dump($res);
-    if ($res['code'] == 1) {
+    if ($res['code'] != 0) {
         return array('folderList' => array(), 'fileList' => array());
     }
     $folderList = array();

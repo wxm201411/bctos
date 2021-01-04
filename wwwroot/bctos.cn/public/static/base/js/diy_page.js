@@ -265,7 +265,7 @@ var app = angular.module('app', []).controller('commonCtrl', ["$scope", function
 
 	//添加商品
 	$scope.addGoodsDialog = function(dataUrl){
-		$.WeiPHP.openSelectGoods(dataUrl,function(goodsList){
+		$.bctos.openSelectGoods(dataUrl,function(goodsList){
 			if(goodsList.length>0){
 				if($scope.activeItem.params.hasTestData==1){
 						$scope.activeItem.params.goods_list = new Array();
@@ -300,8 +300,8 @@ var app = angular.module('app', []).controller('commonCtrl', ["$scope", function
 	$scope.addBannerPic = function(obj){
 		console.log('--------------');
 		console.log($scope.activeItem.params);
-		$.WeiPHP.uploadImgDialog(obj);
-		// $.WeiPHP.uploadImgDialog(1,function(data){
+		$.bctos.uploadImgDialog(obj);
+		// $.bctos.uploadImgDialog(1,function(data){
 		// 	obj.pic = data[0].src;
 		// 	obj.picId = data[0].id;
 		// 	$('.temp_click').click();
@@ -326,7 +326,7 @@ var app = angular.module('app', []).controller('commonCtrl', ["$scope", function
 			});
 				$('.banner').each(function(index,ele){
 					var conId = $(ele).attr('id');
-					$.WeiPHP.initBanner('#'+conId,false,5000,2);
+					$.bctos.initBanner('#'+conId,false,5000,2);
 				})
 			//if(initFinish==0){
 				//多图滑动
@@ -334,12 +334,12 @@ var app = angular.module('app', []).controller('commonCtrl', ["$scope", function
 						var conId = $(ele).attr('id');
 						//$(ele).data('col');
 						var col = $(ele).attr('data-col')
-						$.WeiPHP.initMutipicBanner('#'+conId,false,5000,col);
+						$.bctos.initMutipicBanner('#'+conId,false,5000,col);
 					})
 				$('.mutipic_goods').each(function(index,ele){
 					var conId = $(ele).attr('id');
 					var col = $(ele).attr('data-colGoods')
-					$.WeiPHP.initMutipicBanner('#'+conId,false,5000,col);
+					$.bctos.initMutipicBanner('#'+conId,false,5000,col);
 				})	
 			//}
 			initFinish = 1;
@@ -360,8 +360,8 @@ var app = angular.module('app', []).controller('commonCtrl', ["$scope", function
 		$scope.activeItem.params.pic_list.push(obj);
 	}
 	$scope.addPicListPic = function(obj){
-		$.WeiPHP.uploadImgDialog(obj);
-//		$.WeiPHP.uploadImgDialog(1,function(data){
+		$.bctos.uploadImgDialog(obj);
+//		$.bctos.uploadImgDialog(1,function(data){
 //			obj.pic = data[0].src;
 //			obj.picId = data[0].id;
 //			$('.temp_click').click();
@@ -393,8 +393,8 @@ var app = angular.module('app', []).controller('commonCtrl', ["$scope", function
 		$scope.activeItem.params.pic_nav_list.push(obj);
 	}
 	$scope.addPicNavPic = function(obj){
-		$.WeiPHP.uploadImgDialog(obj);
-//		$.WeiPHP.uploadImgDialog(1,function(data){
+		$.bctos.uploadImgDialog(obj);
+//		$.bctos.uploadImgDialog(1,function(data){
 //			obj.pic = data[0].src;
 //			obj.picId = data[0].id;
 //			$('.temp_click').click();
@@ -408,8 +408,8 @@ var app = angular.module('app', []).controller('commonCtrl', ["$scope", function
 	$scope.addCasePic = function(obj){
 		var str = RandomString(10);
 		obj.rel="case_"+str;
-		$.WeiPHP.uploadImgDialog(obj);
-//		$.WeiPHP.uploadImgDialog(1,function(data){
+		$.bctos.uploadImgDialog(obj);
+//		$.bctos.uploadImgDialog(1,function(data){
 //			console.log('=====addCasePic======')
 //			console.log(data)
 //			obj.pic = data[0].src;
@@ -423,13 +423,13 @@ var app = angular.module('app', []).controller('commonCtrl', ["$scope", function
 		var conId = 'mutipic_banner_'+$scope.activeItem.index;
 	    var col = $(obj.target).val();
 	    // console.log(col);
-		$.WeiPHP.initMutipicBanner('#'+conId,false,5000,col);
+		$.bctos.initMutipicBanner('#'+conId,false,5000,col);
 	}
 	$scope.changeColGood = function(obj){
 		var conId = 'mutipic_goods'+$scope.activeItem.index;
 	    var col = $(obj.target).val();
 	    // console.log(col);
-		$.WeiPHP.initMutipicBanner('#'+conId,false,5000,col);
+		$.bctos.initMutipicBanner('#'+conId,false,5000,col);
 	}
 	$scope.addMutiBanner = function(){
 		//console.log('aaa')
@@ -443,13 +443,13 @@ var app = angular.module('app', []).controller('commonCtrl', ["$scope", function
 		$scope.activeItem.params.banner_list.push(obj);
 		//var conId = 'mutipic_banner_'+$scope.activeItem.index;
 	    //var col = $scope.activeItem.params.col;
-		//$.WeiPHP.initMutipicBanner('#'+conId,false,5000,col);
+		//$.bctos.initMutipicBanner('#'+conId,false,5000,col);
 	}
 	$scope.deleteMutiBanner = function(obj){
 		var conId = 'mutipic_banner_'+$scope.activeItem.index;
 	    var col = $scope.activeItem.params.col;
 		$scope.activeItem.params.banner_list.remove(obj);
-		$.WeiPHP.initMutipicBanner('#'+conId,false,5000,col);
+		$.bctos.initMutipicBanner('#'+conId,false,5000,col);
 	}
 	
 }])

@@ -126,7 +126,7 @@ class Cron extends Base
         $log = "/bctos/logs/cron_{$id}.log 2>&1";
         $comand = "sed -i '/^[  ]*$/d' /var/spool/cron/root;echo \"\n{$post['time_cron']}  /bctos/wwwroot/bctos.cn/scripts/cron/{$comand} $id >> {$log}\" >> /var/spool/cron/root";
         $res = ssh_execute($comand);
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
 
@@ -148,7 +148,7 @@ class Cron extends Base
         if (empty($id)) return $this->error('非法操作!');
 
         $res = ssh_execute(SITE_PATH . "/scripts/cron/cronDel.sh $id");
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
         if (false !== M('cron')->where('id', $id)->delete()) {

@@ -41,7 +41,7 @@ function web_msg($content, $log)
     // 指明给谁推送，为空表示向所有在线用户推送
     $to_uid = 1;
     $this->web_path = dirname(str_replace('/vendor/web-msg-sender', '', __FILE__));
-    require_once($this->web_path . "/config/weiphp_define.php");
+    require_once($this->web_path . "/config/bctos_define.php");
     // 推送的url地址，使用自己的服务器地址
     $push_api_url = "http://".SSH_IP.":2121/";
     $post_data = array(

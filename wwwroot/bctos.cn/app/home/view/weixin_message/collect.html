@@ -275,7 +275,7 @@ function set_material(id,type,set_sucai){
 	});
 }
 function selectText(){
-	$.WeiPHP.openSelectLists("{:U('material/Material/text_lists')}",1,'选择素材',function(data){
+	$.bctos.openSelectLists("{:U('material/Material/text_lists')}",1,'选择素材',function(data){
 		if(data && data.length>0){
 			for(var i=0;i<data.length;i++){
 				var id=data[i]['id'];

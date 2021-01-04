@@ -1,7 +1,7 @@
 <div id="news_{$name}"></div>
 <div class="appmsg_area" id="appmsg_area_{$name}">
     <input type="hidden" name="{$name}" value="{$value}"/>
-    <a class="select_appmsg" href="javascript:;" onClick="$.WeiPHP.openSelectAppMsg('{:U('material/Material/material_data')}',selectAppMsgCallback)">选择图文</a>
+    <a class="select_appmsg" href="javascript:;" onClick="$.bctos.openSelectAppMsg('{:U('material/Material/material_data')}',selectAppMsgCallback)">选择图文</a>
     <div class="appmsg_wrap">
       {if condition="$count==1"}
         <!-- 单图文 -->

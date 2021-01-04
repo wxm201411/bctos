@@ -29,7 +29,7 @@ abstract class InfoBase
      * 'title'=>'编辑器',
      * 'description'=>'用于增强整站长文本的输入和显示',
      * 'status'=>1,
-     * 'author'=>'weiphp',
+     * 'author'=>'bctos',
      * 'version'=>'0.1'
      * )
      */

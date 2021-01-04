@@ -38,7 +38,7 @@ class Servidorsocket implements MessageComponentInterface
     public function __construct()
     {
         $this->web_path = dirname(str_replace('/public/node/server/src', '', __FILE__));
-        require_once($this->web_path . "/config/weiphp_define.php");
+        require_once($this->web_path . "/config/bctos_define.php");
         $this->clients = new \SplObjectStorage;
     }
 

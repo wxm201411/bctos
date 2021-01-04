@@ -411,12 +411,12 @@
     //初始化复制按钮
     $('.list_copy_link').each(function (index, element) {
         var id = $(element).attr('id');
-        $.WeiPHP.initCopyBtn(id);
+        $.bctos.initCopyBtn(id);
     });
     //初始化复制按钮
     $('.list_copy_public_link').each(function (index, element) {
         var id = $(element).attr('id');
-        $.WeiPHP.initDoCopy(id);
+        $.bctos.initDoCopy(id);
     });
 
 
@@ -1184,10 +1184,10 @@ function simpleColorPicker(_this, callback) {
 
     //选择单用户
     function selectSingleUser(dataUrl, name, _this) {
-        $.WeiPHP.openSelectUsers(dataUrl, 1, function (data) {
+        $.bctos.openSelectUsers(dataUrl, 1, function (data) {
             if (data && data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
-                    var $html = $('<div class="item" onClick="$.WeiPHP.selectSingleUser(\'' + dataUrl + '\',\'' + name + '\')">' +
+                    var $html = $('<div class="item" onClick="$.bctos.selectSingleUser(\'' + dataUrl + '\',\'' + name + '\')">' +
                         '<img src="' + data[i].img + '"/>' +
                         '<span class="name">' + data[i].nickname + '</span>' +
                         '<input type="hidden" name="' + name + '" value="' + data[i].id + '"/>' +
@@ -1201,10 +1201,10 @@ function simpleColorPicker(_this, callback) {
 
     //选择单用户
     function selectMutiUser(dataUrl, count, name, _this) {
-        $.WeiPHP.openSelectUsers(dataUrl, count, function (data) {
+        $.bctos.openSelectUsers(dataUrl, count, function (data) {
             if (data && data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
-                    var $html = $('<div class="item" onClick="$.WeiPHP.selectSingleUser(' + dataUrl + ',' + name + ')">' +
+                    var $html = $('<div class="item" onClick="$.bctos.selectSingleUser(' + dataUrl + ',' + name + ')">' +
                         '<img src="' + data[i].img + '"/>' +
                         '<input type="hidden" name="' + name + '[]" value="' + data[i].id + '"/>' +
                         '<em class="del" onClick="$(this).parent().remove();">X</em>' +
@@ -1405,7 +1405,7 @@ function simpleColorPicker(_this, callback) {
         })
     }
 
-    var WeiPHP = {
+    var bctos = {
         chooseWishTemplateDialog: chooseWishTemplateDialog,
         chooseWishContentDialog: chooseWishContentDialog,
         openSelectAppMsg: openSelectAppMsg,
@@ -1426,7 +1426,7 @@ function simpleColorPicker(_this, callback) {
         initDanmu: initDanmu
 
     }
-    $.extend({WeiPHP: WeiPHP});
+    $.extend({bctos: bctos});
 })();
 /* base */
 Array.prototype.remove = function () {

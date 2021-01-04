@@ -93,7 +93,7 @@ class Cron extends Admin
     {
         $post = input('post.');
         $res = D('Cron')->addCron($post);
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
         return $this->success($res['msg']);
@@ -103,7 +103,7 @@ class Cron extends Admin
     {
         $id = I('id/d');
         $res = D('Cron')->del($id);
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
         return $this->success($res['msg']);
@@ -115,7 +115,7 @@ class Cron extends Admin
         if (empty($id)) return $this->error('非法操作!');
 
         $res = ssh_execute(":>/bctos/logs/cron_{$id}.log");
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
         return $this->success('日志清空成功');
@@ -127,7 +127,7 @@ class Cron extends Admin
         if (empty($id)) return $this->error('非法操作!');
 
         $res = ssh_execute(SITE_PATH . "/scripts/cron/cronExecNow.sh $id");
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
         return $this->success('执行成功');

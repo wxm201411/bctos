@@ -169,7 +169,7 @@
             <div class="userList common_add_list fl">
                 {notempty name="data[$field['name']]"}
                 <div class="item"
-                     onClick="$.WeiPHP.selectSingleUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}','{$field.name}', this);">
+                     onClick="$.bctos.selectSingleUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}','{$field.name}', this);">
                     {php}
                     $userInfo = getUserInfo($data[$field['name']]);
 
@@ -180,7 +180,7 @@
                 </div>
                 {else/}
                 <a href="javascript:;" class="common_add_btn fl"
-                   onClick="$.WeiPHP.selectSingleUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}','{$field.name}',this);"></a>
+                   onClick="$.bctos.selectSingleUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}','{$field.name}',this);"></a>
                 {/notempty}
             </div>
         </div>
@@ -198,7 +198,7 @@
 
                 {/php}
                 <div class="item"
-                     onClick="$.WeiPHP.selectSingleUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}','{$field.name}', this);">
+                     onClick="$.bctos.selectSingleUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}','{$field.name}', this);">
                     {php}
                     $userInfo = getUserInfo($data[$field['name']]);
 
@@ -210,7 +210,7 @@
                 {/volist}
                 {/notempty}
                 <a href="javascript:;" class="common_add_btn fl"
-                   onClick="$.WeiPHP.selectMutiUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}',9,'{$field.name}', this);"></a>
+                   onClick="$.bctos.selectMutiUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}',9,'{$field.name}', this);"></a>
             </div>
         </div>
         {/case}

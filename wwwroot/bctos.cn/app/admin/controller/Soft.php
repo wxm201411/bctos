@@ -67,7 +67,7 @@ EOF;
     {
         $this->assign('page_tips', "建议按需开启mysql数据库，同时开启多个版本的数据库可能导致服务器内存不足；安装服务时可能要下载镜像，需耐心等待");
         $res = ssh_execute("docker images --format '{{.Repository}}|||{{.Tag}}';docker ps -a --format '{{.Image}}|||{{.Status}}|||{{.Names}}'");
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
         $rows = wp_explode($res['msg'], "\n");
@@ -178,7 +178,7 @@ EOF;
 
             //删除旧镜像，生成新镜像，容器重启
             $res = ssh_execute("\cp -f {$file} {$conf};docker rmi $image;cd /bctos/server/$name;docker-compose down;docker-compose up -d;");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             @unlink($file);
@@ -213,7 +213,7 @@ EOF;
 
             //docker-compose 重启，注必须要先down再up,不能使用restart,因为它不会加载新的docker-compose相关文件的新的改动
             $res = ssh_execute("\cp -f {$file} {$conf};cd /bctos/server/$name;docker-compose down;docker-compose up -d");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             @unlink($file);
@@ -308,7 +308,7 @@ EXPOSE 443' > Dockerfile;" . 'sed -i "/80:80/a\\\\$(grep \'80:80\' docker-compos
             file_put_contents($file, $index);
 
             $res = ssh_execute("\cp -f {$file} {$conf};docker exec -i {$info['docker']} nginx -s reload");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             @unlink($file);
@@ -356,7 +356,7 @@ EXPOSE 443' > Dockerfile;" . 'sed -i "/80:80/a\\\\$(grep \'80:80\' docker-compos
             //dump($command);
             //exit;
             $res = ssh_execute("{$command} docker exec -i {$info['docker']} nginx -s reload");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             return $this->success('保存成功');
@@ -414,7 +414,7 @@ EXPOSE 443' > Dockerfile;" . 'sed -i "/80:80/a\\\\$(grep \'80:80\' docker-compos
             file_put_contents($file, $index);
 
             $res = ssh_execute("\cp -f {$file} {$conf};docker restart {$info['docker']}");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             @unlink($file);
@@ -439,7 +439,7 @@ EXPOSE 443' > Dockerfile;" . 'sed -i "/80:80/a\\\\$(grep \'80:80\' docker-compos
                 return $this->success('修改成功');
             }
             $res = ssh_execute(SITE_PATH . "/scripts/sys/editUserPwd.sh {$pwd} root {$info['docker']}");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             return $this->success('修改密码成功');
@@ -507,7 +507,7 @@ EXPOSE 443' > Dockerfile;" . 'sed -i "/80:80/a\\\\$(grep \'80:80\' docker-compos
             file_put_contents($file, $index);
 
             $res = ssh_execute("\cp -f {$file} {$conf};docker restart " . $info['docker']);
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             @unlink($file);
@@ -574,7 +574,7 @@ EXPOSE 443' > Dockerfile;" . 'sed -i "/80:80/a\\\\$(grep \'80:80\' docker-compos
             $command .= "docker commit {$info['docker']} {$info['image']};docker rmi $(docker images -f 'dangling=true' -q);";
 
             $res = ssh_execute("{$command} docker restart {$info['docker']};");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             return $this->success('保存成功');

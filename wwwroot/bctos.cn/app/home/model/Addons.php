@@ -39,6 +39,7 @@ class Addons extends Base
         }
 
         $isAll || $wpid_status = D('common/AddonStatus')->getList($is_admin);
+        $addons = [];
         foreach ($list as $addon) {
             if (!$isAll && isset($wpid_status[$addon['name']]) && $wpid_status[$addon['name']] < 1) {
                 continue;

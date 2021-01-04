@@ -37,7 +37,7 @@ class Database extends Base
     function getTablesFromDocker()
     {
         $ssh = ssh_execute("docker ps --format '{{.Names}}'|grep mysql");
-        if ($ssh['code'] == 1 || empty($ssh['msg'])) {
+        if ($res['code'] != 0 || empty($ssh['msg'])) {
             $this->error('无法找到运行的mysql容器');
         }
 

@@ -11,7 +11,7 @@
 // +----------------------------------------------------------------------
 use think\facade\Db;
 
-//weiphp主题函数库
+//bctos主题函数库
 require_once('theme.php');
 // 应用公共文件
 
@@ -1070,7 +1070,7 @@ function action_log($action = null, $model = null, $record_id = null, $user_id =
 
     // 查询行为,判断是否执行
     $action_info = M('Action')->getByName($action);
-    if ($action_info['status'] != 1) {
+    if (!$action_info || $action_info['status'] != 1) {
         return '该行为被禁用或删除';
     }
 
@@ -1623,7 +1623,7 @@ function get_stemma($pids, &$model, $field = 'id')
 /**
  * 判断关键词是否唯一
  *
- * @author weiphp
+ * @author bctos
  */
 function keyword_unique($keyword)
 {
@@ -1637,7 +1637,7 @@ function keyword_unique($keyword)
 }
 
 // 分析枚举类型配置值 格式 a:名称1,b:名称2
-// weiphp 该函数是从admin的function的文件里提取这到里
+// bctos 该函数是从admin的function的文件里提取这到里
 function parse_field_attr($string)
 {
     $array = array_filter(preg_split('/[\s;\r\n]+/', trim($string, ",;\s
@@ -2008,17 +2008,17 @@ function OAuthWeixin($callback, $pbid = '', $is_return = false, $notLeYao = true
     }
     $param['appid'] = $info['appid'];
     $_GET['state'] = I('state', '');
-    if (!isset($_GET['state']) || $_GET['state'] != 'weiphp') {
+    if (!isset($_GET['state']) || $_GET['state'] != 'bctos') {
         $param['redirect_uri'] = $callback;
         $param['response_type'] = 'code';
         $param['scope'] = 'snsapi_base';
-        $param['state'] = 'weiphp';
+        $param['state'] = 'bctos';
         $info['is_bind'] && $param['component_appid'] = config('app.COMPONENT_APPID');
         $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?' . http_build_query($param) . '#wechat_redirect';
         // return redirect($url);
         header('Location: ' . $url);
         exit();
-    } elseif (isset($_GET['state']) && $_GET['state'] == 'weiphp') {
+    } elseif (isset($_GET['state']) && $_GET['state'] == 'bctos') {
         if (empty($_GET['code'])) {
             exit('code获取失败');
         }
@@ -2516,7 +2516,7 @@ function condition_tips($addon_condition)
 // 商业代码解密
 function code_decode($text)
 {
-    $key = substr(config('app.WEIPHP_STORE_LICENSE'), 0, 5);
+    $key = substr(config('app.BCTOS_STORE_LICENSE'), 0, 5);
     return think_decrypt($text, $key);
 }
 
@@ -2569,7 +2569,7 @@ function get_lecturer_name($lecturer_id)
     return $_lecturer_name[$lecturer_id];
 }
 
-// weiphp专用分割函数，同时支持常见的按空格、逗号、分号、换行进行分割
+// bctos专用分割函数，同时支持常见的按空格、逗号、分号、换行进行分割
 function wp_explode($string, $delimiter = "\s,;\r\n")
 {
     if (empty($string)) {
@@ -3539,7 +3539,7 @@ function parseComment($comment, $file = 'lzwg', $width = '40')
  *            要加密的字符串
  * @return string
  */
-function think_weiphp_md5($str, $key = '')
+function think_bctos_md5($str, $key = '')
 {
     if (empty($key)) {
         $key = config('database.data_auth_key');
@@ -4415,7 +4415,7 @@ function uploadimg($path)
     }
     $filePath = '';
     if (!file_exists($path)) {
-        $filePath = './storage/' . think_weiphp_md5($path) . '.jpg';
+        $filePath = './storage/' . think_bctos_md5($path) . '.jpg';
         getImg($path, $filePath);
         $path = $filePath;
     }
@@ -4824,8 +4824,8 @@ function mk_rule_image($imgurl, $w, $h)
         $filename = basename($url_info['path']);
         $filename_ex = explode('.', $filename);
         $dirname = './storage/picture';
-        $dirname_new = $dirname . '/' . think_weiphp_md5($filename_ex[0] . $url_info['query']) . "_$w" . "X$h." . 'jpg'; // $filename_ex[1];
-        $imgurl = SITE_URL . '/storage/picture/' . think_weiphp_md5($filename_ex[0] . $url_info['query']) . "_$w" . "X$h." . 'jpg';
+        $dirname_new = $dirname . '/' . think_bctos_md5($filename_ex[0] . $url_info['query']) . "_$w" . "X$h." . 'jpg'; // $filename_ex[1];
+        $imgurl = SITE_URL . '/storage/picture/' . think_bctos_md5($filename_ex[0] . $url_info['query']) . "_$w" . "X$h." . 'jpg';
         if (file_exists($dirname_new)) {
             return $imgurl;
         }
@@ -5246,7 +5246,7 @@ function findNum($str = '')
 function mk_appid($social_id)
 {
     $str = $social_id;
-    return think_weiphp_md5($str);
+    return think_bctos_md5($str);
 }
 
 /*
@@ -5255,7 +5255,7 @@ function mk_appid($social_id)
 function mk_secret($social_id)
 {
     $str = $social_id . time();
-    return think_weiphp_md5($str);
+    return think_bctos_md5($str);
 }
 
 function curl_file_get_contents($url)
@@ -6233,7 +6233,7 @@ function get_app_config_file($app, $controller = '')
 function ssh2($command, $return_err = false, $show_err = false)
 {
     $res = ssh_execute($command, $show_err);
-    if ($res['code'] == 1) {
+    if ($res['code'] != 0) {
         if ($return_err) return $res['msg'];
         if ($show_err) {
             dump($command);
@@ -6248,6 +6248,7 @@ function ssh2($command, $return_err = false, $show_err = false)
 
 function ssh_execute($command, $show_err = false, $ssh_pawd = null)
 {
+    if (!function_exists('ssh2_connect')) return ['code' => 3, 'msg' => 'PHP的ssh2扩展没安装'];
     set_time_limit(0);
 
     static $conn;
@@ -6297,6 +6298,10 @@ function ssh_execute($command, $show_err = false, $ssh_pawd = null)
 
 function ssh_execute_msg($command, $show_err = false)
 {
+    if (!function_exists('ssh2_connect')) {
+        web_msg('PHP的ssh2扩展没安装==over==error');
+        return ['code' => 3, 'msg' => 'PHP的ssh2扩展没安装'];
+    }
     set_time_limit(0);
 
     static $conn;

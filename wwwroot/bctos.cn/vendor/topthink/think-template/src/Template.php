@@ -1236,10 +1236,10 @@ class Template
                 $template = str_replace(['/', ':'], $this->config['view_depr'], substr($template, 1));
             }
 
-            //20190626 weiphp的凡星改造，让模板中的include标签支持跨应用调用
+            //20190626 bctos的凡星改造，让模板中的include标签支持跨应用调用
             $path = isset($app) ? SITE_PATH . '/app/' . $app . DIRECTORY_SEPARATOR . basename($this->config['view_dir_name']) . DIRECTORY_SEPARATOR : $this->config['view_path'];
 
-            //20191021 weiphp的凡星改造，让模板中的include和extend标签支持多主题调用
+            //20191021 bctos的凡星改造，让模板中的include和extend标签支持多主题调用
             $theme_path = '';
             if (!is_file($path)) {
                 empty($app) && $app = MODULE_NAME;

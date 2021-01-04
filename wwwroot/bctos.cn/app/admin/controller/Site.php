@@ -36,7 +36,7 @@ class Site extends Admin
         $res = ssh_execute(SITE_PATH . '/scripts/sys/initWebDocker.sh');
         if ($res['code'] == 2) {
             return $this->error('root');
-        } elseif ($res['code'] == 1) {
+        } elseif ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
         return $this->success('启动成功');
@@ -50,10 +50,10 @@ class Site extends Admin
         }
 
         //尝试修改文件
-        $res = ssh_execute("cd /bctos/wwwroot/bctos.cn/config;sed -i -r \"/SSH_PAWD/{s/,.*/, '{$pwd}');/}\" weiphp_define.php", false, $pwd);
+        $res = ssh_execute("cd /bctos/wwwroot/bctos.cn/config;sed -i -r \"/SSH_PAWD/{s/,.*/, '{$pwd}');/}\" bctos_define.php", false, $pwd);
         if ($res['code'] == 2) {
             return $this->error('密码不正确，请重试');
-        } elseif ($res['code'] == 1) {
+        } elseif ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
 
@@ -163,14 +163,14 @@ str;
                     $data['db_name'] = $db_name;
                     $data['power'] = 'localhost';
                     $res = D('Database')->addDb($data);
-                    if ($res['code'] == 1) {
+                    if ($res['code'] != 0) {
                         throw new \think\Exception('db:' . $res['msg'], 13);
                     } else {
                         $database_id = $res['msg'];
                     }
                 }
                 $res = ssh_execute(SITE_PATH . '/scripts/sys/createSite.sh ' . SITE_PATH . '/runtime/' . $conf . ' ' . $data['path']);
-                if ($res['code'] == 1) {
+                if ($res['code'] != 0) {
                     throw new \think\Exception($res['msg'], 13);
                 }
             } catch (\Exception $e) {
@@ -227,7 +227,7 @@ str;
     function delCron($id)
     {
         $res = ssh_execute(SITE_PATH . "/scripts/cron/cronDel.sh $id");
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
         if (false !== M('cron')->where('id', $id)->delete()) {
@@ -274,7 +274,7 @@ str;
             $conf = $data['title'] . '.conf';
             //增加nginx配置文件
             $res = ssh_execute(SITE_PATH . '/scripts/sys/addDomain.sh ' . $conf . ' ' . $domain[1]);
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             // dump($data);exit;
@@ -299,7 +299,7 @@ str;
                         $over_time = time_format($ssl[$t]['over_time']);
                     } else {
                         $res = ssh_execute("openssl x509 -in /bctos/server/nginx/conf.d/cert/$t/ssl.pem -noout -dates");
-                        if ($res['code'] == 1) {
+                        if ($res['code'] != 0) {
                             $over_time = '-';
                         } else {
                             $ssl = json_decode($data['ssl'], true);
@@ -340,7 +340,7 @@ str;
         $conf = $data['title'] . '.conf';
         //增加nginx配置文件
         $res = ssh_execute(SITE_PATH . '/scripts/sys/delDomain.sh ' . $conf . ' ' . $domain);
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
 
@@ -358,7 +358,7 @@ str;
         $conf = $data['title'] . '.conf';
 
         $res = ssh_execute(SITE_PATH . '/scripts/sys/delSite.sh ' . $conf . ' ' . str_replace('/bctos/wwwroot/', '', $data['path']));
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
 
@@ -428,7 +428,7 @@ str;
 
             $conf = $data['title'] . '.conf';
             $res = ssh_execute(SITE_PATH . '/scripts/sys/setSiteDir.sh ' . $conf . ' ' . $root . ' ' . $basedir . ' ' . $log);
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
 
@@ -458,7 +458,7 @@ str;
             file_put_contents($file, $rewrite);
 
             $res = ssh_execute("\cp -f {$file} /bctos/server/nginx/rewrite/{$conf};docker exec -i nginx nginx -s reload");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             @unlink($file);
@@ -489,7 +489,7 @@ str;
             $index = implode(' ', wp_explode($index));
 
             $res = ssh_execute("sed -i -r 's/ index[ \\t].*;/ index {$index};/' /bctos/server/nginx/conf.d/{$conf};docker exec -i nginx nginx -s reload");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             return $this->success('保存成功');
@@ -516,7 +516,7 @@ str;
             file_put_contents($file, $index);
 
             $res = ssh_execute("\cp -f {$file} /bctos/server/nginx/conf.d/{$conf};docker exec -i nginx nginx -s reload");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             @unlink($file);
@@ -562,7 +562,7 @@ str;
             $key = str_replace(SITE_URL, SITE_PATH . '/public', get_file_url($post['key']));
 
             $res = ssh_execute(SITE_PATH . "/scripts/sys/setSiteDir.sh $d $key $pem");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             } else {
                 $ssl[$d]['over_time'] = strtotime($res['msg']);
@@ -585,7 +585,7 @@ str;
         $checked = input('checked/d', 0);
 
         $res = ssh_execute(SITE_PATH . "/scripts/sys/closeSiteSSL.sh {$data['title']} $checked");
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
 
@@ -601,7 +601,7 @@ str;
         $checked = input('checked');
 
         $res = ssh_execute(SITE_PATH . "/scripts/sys/forceSiteSSL.sh {$data['title']} $checked");
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
 
@@ -620,7 +620,7 @@ str;
             }
 
             $res = ssh_execute(SITE_PATH . "/scripts/sys/phpVersion.sh {$data['title']} $php_version");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
 

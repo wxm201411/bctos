@@ -4,7 +4,7 @@
 */
 var RESULT_SUCCESS = 'success';
 var RESULT_FAIL = 'fail';
-var WeiPHP_RAND_COLOR = ["#ff6600","#ff9900","#99cc00","#33cc00","#0099cc","#3399ff","#9933ff","#cc3366","#333333","#339999","#ff6600","#ff9900","#99cc00","#33cc00","#0099cc","#3399ff","#9933ff","#cc3366","#333333","#339999","#ff6600","#ff9900","#99cc00","#33cc00","#0099cc","#3399ff","#9933ff","#cc3366","#333333","#339999"];
+var bctos_RAND_COLOR = ["#ff6600","#ff9900","#99cc00","#33cc00","#0099cc","#3399ff","#9933ff","#cc3366","#333333","#339999","#ff6600","#ff9900","#99cc00","#33cc00","#0099cc","#3399ff","#9933ff","#cc3366","#333333","#339999","#ff6600","#ff9900","#99cc00","#33cc00","#0099cc","#3399ff","#9933ff","#cc3366","#333333","#339999"];
 
 /***/
 (function(){
@@ -184,7 +184,7 @@ var WeiPHP_RAND_COLOR = ["#ff6600","#ff9900","#99cc00","#33cc00","#0099cc","#339
 	//随机颜色
 	function setRandomColor(selector){
 		$(selector).each(function(index, element) {
-			$(this).css('background-color',WeiPHP_RAND_COLOR[index]);
+			$(this).css('background-color',bctos_RAND_COLOR[index]);
 		});;
 	}
 	//显示分享提示
@@ -376,7 +376,7 @@ var WeiPHP_RAND_COLOR = ["#ff6600","#ff9900","#99cc00","#33cc00","#0099cc","#339
 	}
 	//下拉刷新只需要在页面上配置
 	//内容列表配置 id="pullContainer"
-	//页码使用WeiPHP服务器返回的页码  在page中打开 
+	//页码使用bctos服务器返回的页码  在page中打开 
 	//如：<div class="page" data-pullload="true"> {$_page|default=''} </div>
 	function initLoadMorePage(){
 		if($('.page').data('pullload')==true){
@@ -526,7 +526,7 @@ var WeiPHP_RAND_COLOR = ["#ff6600","#ff9900","#99cc00","#33cc00","#0099cc","#339
         });
 		return minId;
 	}
-	var WeiPHP = {
+	var bctos = {
 		doAjaxSubmit:doAjaxSubmit,
 		setRandomColor:setRandomColor,
 		initBanner:banner,
@@ -586,7 +586,7 @@ var WeiPHP_RAND_COLOR = ["#ff6600","#ff9900","#99cc00","#33cc00","#0099cc","#339
 		
 	};
 	$.extend($,{
-		WeiPHP: WeiPHP
+		bctos: bctos
 	});
 })();
 
@@ -595,7 +595,7 @@ var WeiPHP_RAND_COLOR = ["#ff6600","#ff9900","#99cc00","#33cc00","#0099cc","#339
 $(function(){
 	//初始化微信js api
 	if(PUBLIC_TYPE<2){
-        $.WeiPHP.initWxApi();
+        $.bctos.initWxApi();
 	}
 
 	//页面总是撑满屏幕

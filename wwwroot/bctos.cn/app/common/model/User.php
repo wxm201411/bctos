@@ -52,7 +52,7 @@ class User extends Base
         $data = array(
             'nickname' => $username,
             'login_name' => $mobile,
-            'password' => think_weiphp_md5($password),
+            'password' => think_bctos_md5($password),
             'email' => $email,
             'mobile' => $mobile,
             'truename' => $truename,
@@ -73,7 +73,7 @@ class User extends Base
      */
     public function setPasswordAttr($password)
     {
-        return think_weiphp_md5($password);
+        return think_bctos_md5($password);
     }
 
     public function addUser($data)
@@ -124,8 +124,8 @@ class User extends Base
 
         if (intval($user['status']) > 0) {
             /* 验证用户密码 */
-            //dump(think_weiphp_md5($password));dump($user['password']);exit;
-            if (think_weiphp_md5($password) === $user['password']) {
+            //dump(think_bctos_md5($password));dump($user['password']);exit;
+            if (think_bctos_md5($password) === $user['password']) {
                 // 记录行为
                 action_log($from, 'user', $user['uid'], $user['uid']);
 
@@ -344,7 +344,7 @@ class User extends Base
             return false;
         }
         if (isset($data['password'])) {
-            $data['password'] = think_weiphp_md5($data['password']);
+            $data['password'] = think_bctos_md5($data['password']);
         }
 
         // 更新用户信息
@@ -371,7 +371,7 @@ class User extends Base
         // $password = $this->getFieldById ( $uid, 'password' );
         $map['uid'] = $uid;
         $password = $this->where(wp_where($map))->value('password');
-        if (think_weiphp_md5($password_in) === $password) {
+        if (think_bctos_md5($password_in) === $password) {
             return true;
         }
         return false;

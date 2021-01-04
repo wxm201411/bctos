@@ -14,7 +14,7 @@ class AdSpace extends base
 			'title' => '广告位官方版',
 			'description' => '广告位 - 官方版',
 			'status' => 1,
-			'author' => 'weiphp',
+			'author' => 'bctos',
 			'version' => '1.0' 
 	);
 

@@ -118,7 +118,7 @@ class User extends Admin {
 		$map ['nickname'] = I ( 'post.old_nickname' );
 		$User = D('common/User' );
 		$user = $User->where ( wp_where( $map ) )->find ();
-		if (think_weiphp_md5 ( $password ) !== $user ['password']) {
+		if (think_bctos_md5 ( $password ) !== $user ['password']) {
 			return $this->error ( '密码不正确' );
 		}
 

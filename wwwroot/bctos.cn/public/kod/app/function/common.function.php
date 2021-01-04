@@ -1152,7 +1152,7 @@ function ssh_execute($command, $show_err = false)
     set_time_limit(0);
     static $conn;
     if (!$conn) {
-        require_once "../../config/weiphp_define.php";
+        require_once "../../config/bctos_define.php";
         $conn = ssh2_connect(SSH_IP, '22');   //初始化连接
         //ssh2_auth_password($conn, 'root', SSH_PAWD);
         if (!ssh2_auth_pubkey_file($conn, 'root', SITE_PATH . '/config/.ssh/id_rsa.pub', SITE_PATH . '/config/.ssh/id_rsa', 'bctos')) {
@@ -1246,7 +1246,7 @@ function bctos_rename($oldname, $newname)
     return $res['code'] == 0;
 }
 
-// weiphp专用分割函数，同时支持常见的按空格、逗号、分号、换行进行分割
+// bctos专用分割函数，同时支持常见的按空格、逗号、分号、换行进行分割
 function wp_explode($string, $delimiter = "\s,;\r\n")
 {
     if (empty($string)) {

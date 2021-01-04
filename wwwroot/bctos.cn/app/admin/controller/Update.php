@@ -569,7 +569,7 @@ class Update extends Admin
     // 更新本地的授权信息
     function save_store_license()
     {
-        $config_map ['name'] = 'WEIPHP_STORE_LICENSE';
+        $config_map ['name'] = 'BCTOS_STORE_LICENSE';
         $res = M('config')->where(wp_where($config_map))->update(['value' => I('license')]);
     }
 

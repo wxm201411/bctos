@@ -997,7 +997,7 @@ class Base extends BaseController
 //                        }
 //                    }
 
-                    // 增加跳转方式处理 weiphp
+                    // 增加跳转方式处理 bctos
                     $target = '_self';
                     if (preg_match('/target=(\w+)/', $href, $matches)) {
                         $target = $matches[1];

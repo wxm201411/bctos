@@ -79,7 +79,7 @@ class SiteBackup extends Admin
             $path = M('site')->where('id', $data['site_id'])->value('path');
             $res = ssh_execute(SITE_PATH . "/scripts/sys/recoverySite.sh $file {$path}");
         }
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         } else {
             if (function_exists('opcache_reset')) opcache_reset();
@@ -105,7 +105,7 @@ class SiteBackup extends Admin
             $data = M($db)->where('id', $site_id)->find();
             $recode['title'] = $data['title'] . '.zip';
             $res = ssh_execute(SITE_PATH . "/scripts/cron/cronBackupSite.sh {$data['path']} {$recode['title']} {$max} '\*/node_modules/\* \*/runtime/\* \*.log' {$cron_id}");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             $recode['type'] = 1;
@@ -115,7 +115,7 @@ class SiteBackup extends Admin
 
             $file = $data['db_name'] . '.sql';
             $res = ssh_execute(SITE_PATH . "/scripts/cron/cronBackupDatabase.sh {$data['db_name']} {$file} {$max} {$data['database']} {$cron_id}");
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
             $recode['type'] = 0;

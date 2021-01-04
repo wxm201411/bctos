@@ -14,7 +14,7 @@ namespace app\home\controller;
  */
 class Tool extends Home {
 	var $db2 = '`w3`'; // 要更新的数据库
-	var $db1 = '`weiphp3.0`'; // 源数据库
+	var $db1 = '`bctos3.0`'; // 源数据库
 	function index() {
 		$tables = array (
 				'wp_auth_rule' => 'name',
@@ -229,7 +229,7 @@ class Tool extends Home {
 		
 		$tables = "'wp_user','wp_menu','wp_auth_group','wp_credit_config','wp_auth_group_access'";
 		
-		$sql = "SELECT TABLE_NAME as t,COLUMN_NAME as f FROM information_schema.`COLUMNS` WHERE TABLE_SCHEMA='weiphp3.0' AND COLUMN_NAME in ('uid','manager_id','wpid') AND TABLE_NAME not in ($tables)";
+		$sql = "SELECT TABLE_NAME as t,COLUMN_NAME as f FROM information_schema.`COLUMNS` WHERE TABLE_SCHEMA='bctos3.0' AND COLUMN_NAME in ('uid','manager_id','wpid') AND TABLE_NAME not in ($tables)";
 		$list = M()::query ( $sql );
 		foreach ( $list as $vo ) {
 			$res = M()::execute ( 'DELETE FROM ' . $vo ['t'] );

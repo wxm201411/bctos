@@ -25,7 +25,7 @@ if (version_compare ( PHP_VERSION, '7.1.0', '<' ))
  * 微信接入验证
  * 在入口进行验证而不是放到框架里验证，主要是解决验证URL超时的问题
  */
-define('SYSTEM_TOKEN', 'weiphp');
+define('SYSTEM_TOKEN', 'bctos');
 
 define('WORKERMAN_URL', 'localhost');
 
@@ -47,7 +47,7 @@ if (!empty($_GET['echostr']) && !empty($_GET["signature"]) && !empty($_GET["nonc
     }
     exit();
 }
-//判断是否安装过weiphp
+//判断是否安装过bctos
 //if (!is_file(__DIR__.'/storage/install.lock')) {
     //header('Location: ./install.php');
     //exit ();

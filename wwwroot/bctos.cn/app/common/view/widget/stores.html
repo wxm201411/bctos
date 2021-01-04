@@ -70,7 +70,7 @@ function is_all_store(){
 function choose_shops(){
 	var dataUrl = "{:U ( 'shop/stores/lists', array('only_body'=>1))}";
 
-	$.WeiPHP.openSelectShops(dataUrl,function(shopsList){
+	$.bctos.openSelectShops(dataUrl,function(shopsList){
 				if(shopsList.length>0){
 					//获取已经存在的门店
 					var arr = [];

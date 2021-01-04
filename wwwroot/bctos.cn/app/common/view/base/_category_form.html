@@ -170,7 +170,7 @@
         <div>
             <div id="userList" class="common_add_list fl">
                 {notempty name="data[$field['name']]"}
-                <div class="item" onClick="$.WeiPHP.selectSingleUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}','{$field.name}');">
+                <div class="item" onClick="$.bctos.selectSingleUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}','{$field.name}');">
                     {php}
                     $userInfo = getUserInfo($data[$field['name']]);
 
@@ -180,7 +180,7 @@
                     <span class="name">{$userInfo['nickname']}</span>
                 </div>
                 {else/}
-                <a href="javascript:;" class="common_add_btn fl" onClick="$.WeiPHP.selectSingleUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}','{$field.name}');"></a>
+                <a href="javascript:;" class="common_add_btn fl" onClick="$.bctos.selectSingleUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}','{$field.name}');"></a>
                 {/notempty}
             </div>
         </div>
@@ -197,7 +197,7 @@
                 $userInfo = getUserInfo($uid);
 
                 {/php}
-                <div class="item" onClick="$.WeiPHP.selectSingleUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}','{$field.name}');">
+                <div class="item" onClick="$.bctos.selectSingleUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}','{$field.name}');">
                     {php}
                     $userInfo = getUserInfo($data[$field['name']]);
 
@@ -208,7 +208,7 @@
                 </div>
                 {/volist}
                 {/notempty}
-                <a href="javascript:;" class="common_add_btn fl" onClick="$.WeiPHP.selectMutiUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}',9,'{$field.name}');"></a>
+                <a href="javascript:;" class="common_add_btn fl" onClick="$.bctos.selectMutiUser('{:U ( 'weixin/UserCenter/lists_choose',array('only_body'=>1))}',9,'{$field.name}');"></a>
             </div>
         </div>
         {/case}

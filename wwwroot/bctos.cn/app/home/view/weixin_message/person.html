@@ -54,7 +54,7 @@
                              	<textarea name="content" placeholder="请输入要发送的文本" id='message_text'></textarea>
                                 <div style="display:none" class="appmsg_area" id="appmsg_area">
                                 	<input type="hidden" name="appmsg_id" value="0"/>
-                                    <a class="select_appmsg" href="javascript:;" onClick="$.WeiPHP.openSelectAppMsg('{:U('material/Material/material_data')}',selectAppMsgCallback)">选择图文</a>
+                                    <a class="select_appmsg" href="javascript:;" onClick="$.bctos.openSelectAppMsg('{:U('material/Material/material_data')}',selectAppMsgCallback)">选择图文</a>
                                     <div class="appmsg_wrap"></div>
                                     <a class="delete" href="javascript:;" style="left: 310px;">删除</a>
                                 </div>
@@ -68,20 +68,20 @@
                         </div>
                         <div class='image_material' id='image_material'>
                             <input type="hidden" name="image_material" id="cover_id_image" value="0"/>
-                            <a class="select_image" href="javascript:;"  onClick="$.WeiPHP.openSelectAppMsg('{:U('material/Material/picture_data')}',selectImageCallback,'选择图片素材')">从素材库选择图片</a>
+                            <a class="select_image" href="javascript:;"  onClick="$.bctos.openSelectAppMsg('{:U('material/Material/picture_data')}',selectImageCallback,'选择图片素材')">从素材库选择图片</a>
                             <div class="image_wrap"></div>
                             <a class="delete" href="javascript:;" style="left: 15px;">删除</a>
                          </div>
                     </div>
                     <div style="display:none" class="appmsg_area" id="voice_area">
                         <input type="hidden" name="voice_id" value="0"/>
-                        <a class="select_appmsg" href="javascript:;" onClick="$.WeiPHP.openSelectAppMsg('{:U('material/Material/voice_data')}',selectVoiceCallback,'选择语音素材')">选择语音素材</a>
+                        <a class="select_appmsg" href="javascript:;" onClick="$.bctos.openSelectAppMsg('{:U('material/Material/voice_data')}',selectVoiceCallback,'选择语音素材')">选择语音素材</a>
                         <div class="voice_wrap"></div>
                         <a class="delete" href="javascript:;" style="left: 310px;display: inline;">删除</a>
                     </div>
                       <div style="display:none" class="appmsg_area" id="video_area">
                         <input type="hidden" name="video_id" value="0"/>
-                        <a class="select_appmsg select_video" href="javascript:;" onClick="$.WeiPHP.openSelectAppMsg('{:U('material/Material/video_data')}',selectVideoCallback,'选择视频素材')">选择视频素材</a>
+                        <a class="select_appmsg select_video" href="javascript:;" onClick="$.bctos.openSelectAppMsg('{:U('material/Material/video_data')}',selectVideoCallback,'选择视频素材')">选择视频素材</a>
                         <div class="video_wrap"></div>
                         <a class="delete" href="javascript:;" style="left: 310px;">删除</a>
                     </div>
@@ -369,7 +369,7 @@ function set_material(id,type,set_sucai){
 	});
 }
 function selectText(){
-	$.WeiPHP.openSelectLists("{:U('material/Material/text_lists')}",1,'选择素材',function(data){
+	$.bctos.openSelectLists("{:U('material/Material/text_lists')}",1,'选择素材',function(data){
 		if(data && data.length>0){
 			for(var i=0;i<data.length;i++){
 				var id=data[i]['id'];

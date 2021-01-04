@@ -41,16 +41,16 @@ class User extends Home
         $callback = U('wap_scan', array(
             'key' => $key
         ));
-        if ($_GET['state'] != 'weiphp') {
+        if ($_GET['state'] != 'bctos') {
             $param['redirect_uri'] = $callback;
             $param['response_type'] = 'code';
             $param['scope'] = 'snsapi_userinfo';
-            $param['state'] = 'weiphp';
+            $param['state'] = 'bctos';
             $info['is_bind'] && $param['component_appid'] = config('app.COMPONENT_APPID');
             $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?' . http_build_query($param) . '#wechat_redirect';
             header('Location: ' . $url);
             exit();
-        } elseif ($_GET['state'] == 'weiphp') {
+        } elseif ($_GET['state'] == 'bctos') {
             if (empty($_GET['code'])) {
                 exit('code获取失败');
             }
@@ -93,7 +93,7 @@ class User extends Home
         $myinfo = getUserInfo($this->mid);
         if (request()->isPost()) {
             /* 检测密码 */
-            if ($myinfo['password'] != think_weiphp_md5(input('password'))) {
+            if ($myinfo['password'] != think_bctos_md5(input('password'))) {
                 return $this->error('密码输入错误！');
             }
             /* 检测验证码 */

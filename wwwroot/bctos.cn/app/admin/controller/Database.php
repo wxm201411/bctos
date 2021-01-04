@@ -66,7 +66,7 @@ class Database extends Admin
             } else {
                 $res = ssh_execute(SITE_PATH . "/scripts/sys/editUserPwd.sh {$pwd} {$data['db_user']} {$data['database']}");
             }
-            if ($res['code'] == 1) {
+            if ($res['code'] != 0) {
                 return $this->error($res['msg']);
             }
 
@@ -109,7 +109,7 @@ class Database extends Admin
                     } else {
                         //需要新增加账号
                         $res = ssh_execute(SITE_PATH . "/scripts/sys/addMysqlUser.sh {$data['database']} {$data['db_passwd']} {$data['db_user']} {$ip}");
-                        if ($res['code'] == 1) {
+                        if ($res['code'] != 0) {
                             return $this->error($res['msg']);
                         } else {
                             unset($has[$ip]);
@@ -120,7 +120,7 @@ class Database extends Admin
                     //需要删除多余账号
                     foreach ($has as $ip => $v) {
                         $res = ssh_execute(SITE_PATH . "/scripts/sys/delMysqlUser.sh {$data['db_user']} {$ip} {$data['database']}");
-                        if ($res['code'] == 1) {
+                        if ($res['code'] != 0) {
                             return $this->error($res['msg']);
                         }
                     }
@@ -134,7 +134,7 @@ class Database extends Admin
                 if (count($list) == 0) {
                     //数据库已经存在，只需要修改本地数据库即可,只有数据库没有该权限的账号，才需要下面的更新操作
                     $res = ssh_execute(SITE_PATH . "/scripts/sys/editMysqlPower.sh {$data['power']} {$power} {$data['db_user']} {$data['database']}");
-                    if ($res['code'] == 1) {
+                    if ($res['code'] != 0) {
                         return $this->error($res['msg']);
                     }
                 }
@@ -218,7 +218,7 @@ class Database extends Admin
     function sycServer()
     {
         $res = D('Database')->getTablesFromDocker();
-        if ($res['code'] == 1) {
+        if ($res['code'] != 0) {
             return $this->error($res['msg']);
         }
         return $this->success($res['msg']);
