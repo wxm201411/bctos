@@ -307,12 +307,10 @@ if [ $? -ne 0 ]; then
     error_tips "镜像下载成功失败，请先手工下载试试：docker pull registry.cn-hangzhou.aliyuncs.com/wxm201411/panel"
 fi
 
-tips "等待数据库启动";
+tips "等待数据库启动并更新最新版本号";
+tag=$(git tag | awk 'END {print}')
 function checkMysql(){
-    docker exec -e MYSQL_PWD=bctos_panel -i mysql57 mysql -uroot << EOF
-use bctos_panel;
-select count(*) as num FROM wp_user;
-EOF
+    docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;vendor/bin/phinx migrate;php think update ${tag}'"
 }
 
 while true
@@ -324,11 +322,6 @@ do
         sleep 1
     fi
 done
-sleep 3
-tips "数据库启动完成";
-
-tag=$(git tag | awk 'END {print}')
-docker exec panel sh -c "su - www-data -c 'cd /bctos/wwwroot/bctos.cn;vendor/bin/phinx migrate;php think update ${tag}'"
 
 tips "==================================================================
 恭喜! 小韦云面板安装成功了!
