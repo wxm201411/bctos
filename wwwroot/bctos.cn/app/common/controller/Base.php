@@ -1131,6 +1131,7 @@ class Base extends BaseController
             throw new \think\Exception('数据模型获取失败', 10006);
         }
         //把动态显示需要的判断字段也加入到查询字段中
+        $fields = [];
         foreach ($obj->list_grid as $f => $h) {
             $fields[] = $f;
             if (isset($h['href']) && !empty($h['href'])) {
