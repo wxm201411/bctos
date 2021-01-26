@@ -6246,7 +6246,7 @@ function ssh2($command, $return_err = false, $show_err = false)
     return $res['msg'];
 }
 
-function ssh_execute($command, $show_err = false, $ssh_pawd = null)
+function ssh_execute($command, $show_err = false)
 {
     if (!function_exists('ssh2_connect')) return ['code' => 3, 'msg' => 'PHP的ssh2扩展没安装'];
     set_time_limit(0);
@@ -6255,8 +6255,6 @@ function ssh_execute($command, $show_err = false, $ssh_pawd = null)
     if (!$conn) {
         try {
             $conn = ssh2_connect(SSH_IP, '22', ['hostkey' => 'ssh-rsa']);   //初始化连接
-            //$ssh_pawd = $ssh_pawd == null ? SSH_PAWD : $ssh_pawd;
-            //ssh2_auth_password($conn, 'root', $ssh_pawd);
             if (!ssh2_auth_pubkey_file($conn, 'root', SITE_PATH . '/config/.ssh/id_rsa.pub', SITE_PATH . '/config/.ssh/id_rsa', 'bctos')) {
                 return ['code' => 2, 'msg' => 'Public Key Authentication Failed'];
             }
@@ -6266,7 +6264,6 @@ function ssh_execute($command, $show_err = false, $ssh_pawd = null)
     }
 
     //把docker目录换成宿主机的目录 TODO 固定的目录
-    //$command = str_replace('/bctos/wwwroot', '/bctos/wwwroot', $command);
     file_log($command, 'ssh_execute');
     $stream = ssh2_exec($conn, $command);
 
@@ -6307,7 +6304,6 @@ function ssh_execute_msg($command, $show_err = false)
     static $conn;
     if (!$conn) {
         $conn = ssh2_connect(SSH_IP, '22');   //初始化连接
-//        ssh2_auth_password($conn, 'root', SSH_PAWD);
         if (!ssh2_auth_pubkey_file($conn, 'root', SITE_PATH . '/config/.ssh/id_rsa.pub', SITE_PATH . '/config/.ssh/id_rsa', 'bctos')) {
             return ['code' => 2, 'msg' => 'Public Key Authentication Failed'];
         }
@@ -6334,7 +6330,7 @@ function ssh_execute_msg($command, $show_err = false)
         }
         if (empty($data)) {
             if (time() - $time > 1800) {
-                //空转超过30分钟自动结果，防止长期运行
+                //空转超过30分钟自动结束，防止长期运行
                 web_msg('超时结束==over==error');
                 break;
             }
