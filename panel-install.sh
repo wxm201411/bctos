@@ -58,6 +58,11 @@ tips "
 | 小韦云面板安装成功后可通过 http://你的服务器IP:666 进行访问.
 +----------------------------------------------------------------------
 "
+
+yum -y update
+yum install -y epel-release 
+yum clean all
+
 #SSH_PAWD=''
 #function inputPwd(){
 #    tips "面板需要使用服务器的root账号来部署网站或文件管理"
