@@ -174,8 +174,13 @@ firewall-cmd --zone=public --list-ports
 function install_docker(){
 	tips "安装docker软件"
 	yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine docker-ce docker-ce-cli
-    yum install -y yum-utils device-mapper-persistent-data lvm2
     yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+    system_info = $(cat /etc/redhat-release |cut -c1-7)
+    if [ system_info == 'Alibaba' ];then
+    	sed -i 's/$releasever/7/g' /etc/yum.repos.d/docker-ce.repo
+    fi
+    
+    yum install -y yum-utils device-mapper-persistent-data lvm2
     yum install -y containerd.io-1.2.6-3.3.fc30.x86_64.rpm
     yum install -y docker-ce-19.03.12 docker-ce-cli-19.03.12
 
