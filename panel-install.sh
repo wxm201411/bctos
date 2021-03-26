@@ -297,7 +297,7 @@ chmod -R 777 public
 tips "替换配置文件中的密码";
 Get_Ip_Address
 #sed -i "s/123456/${MYSQL_PWD}/" config/database.php
-sed -i "s/192\.168\.0\.8/${LOCAL_IP}/" config/bctos_define.php
+sed -i "s/192\.168\.0\.8/${getIpAddress}/" config/bctos_define.php
 #sed -i "/SSH_PAWD/{s/123/${SSH_PAWD}/}" config/bctos_define.php
 cd ../..
 

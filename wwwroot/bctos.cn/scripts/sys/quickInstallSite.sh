@@ -186,9 +186,9 @@ if [ ! -d rewrite ];then
     chmod 777 rewrite
 fi
 if [ -f /bctos/wwwroot/bctos.cn/runtime/${domain}".rewrite.conf" ];then
-    mv /bctos/wwwroot/bctos.cn/runtime/${domain}".rewrite.conf" ./rewrite/${domain}".rewrite.conf"
+    mv /bctos/wwwroot/bctos.cn/runtime/${domain}".rewrite.conf" ./rewrite/${domain}".conf"
 else
-    echo '' > ./rewrite/${domain}".rewrite.conf"
+    echo '' > ./rewrite/${domain}".conf"
 fi
 mv /bctos/wwwroot/bctos.cn/runtime/${domain}".conf" ./conf.d/${domain}".conf"
 chmod -R 777 rewrite

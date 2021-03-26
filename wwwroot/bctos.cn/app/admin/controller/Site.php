@@ -130,7 +130,7 @@ server {
     index  index.html index.php;
 
     #伪静态规则
-    include /etc/nginx/rewrite/{$data['title']}.rewrite.conf;
+    include /etc/nginx/rewrite/{$data['title']}.conf;
     
 {$phpConf}
 

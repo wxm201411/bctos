@@ -128,7 +128,7 @@ server {
     index  {$index};
 
     #伪静态规则
-    include /etc/nginx/rewrite/{$domain}.rewrite.conf;
+    include /etc/nginx/rewrite/{$domain}.conf;
     
 {$phpConf}
 

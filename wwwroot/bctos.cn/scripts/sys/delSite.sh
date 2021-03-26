@@ -19,8 +19,7 @@ rm -rf $(sed -r -n '/error_log.*\.log/p' $conf_file|sed 's/error_log//;s/;//;s/^
 
 #删除nginx配置
 rm -rf $conf_file
-rewrite_file=$(echo $conf|sed 's/conf$/rewrite.conf/')
-rm -rf /bctos/server/${docker}/rewrite/$rewrite_file
+rm -rf /bctos/server/${docker}/rewrite/$conf
 
 #重启nginx
 docker restart ${docker}

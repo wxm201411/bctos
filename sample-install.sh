@@ -281,9 +281,9 @@ if [ ! -d rewrite ];then
     chmod 777 rewrite
 fi
 if [ -f /bctos/wwwroot/bctos.cn/runtime/$domain".rewrite.conf" ];then
-    mv /bctos/wwwroot/bctos.cn/runtime/$domain".rewrite.conf" ./rewrite/$domain".rewrite.conf"
+    mv /bctos/wwwroot/bctos.cn/runtime/$domain".rewrite.conf" ./rewrite/$domain".conf"
 else
-    curl -sS --connect-timeout 10 -m 60 https://www.bctos.cn/index.php?s=/home/index/rewrite/id/${soft_id} > ./rewrite/$domain".rewrite.conf"
+    curl -sS --connect-timeout 10 -m 60 https://www.bctos.cn/index.php?s=/home/index/rewrite/id/${soft_id} > ./rewrite/$domain".conf"
 fi
 if [ -f /bctos/wwwroot/bctos.cn/runtime/$domain".conf" ];then
     mv /bctos/wwwroot/bctos.cn/runtime/$domain".conf" ./conf.d/$domain".conf"
