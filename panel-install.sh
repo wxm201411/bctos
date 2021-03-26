@@ -175,8 +175,8 @@ function install_docker(){
 	tips "安装docker软件"
 	yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine docker-ce docker-ce-cli
     yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-    system_info = $(cat /etc/redhat-release |cut -c1-7)
-    if [ system_info == 'Alibaba' ];then
+    system_info=$(cat /etc/redhat-release |cut -c1-7)
+    if [ $system_info == 'Alibaba' ];then
     	sed -i 's/$releasever/7/g' /etc/yum.repos.d/docker-ce.repo
     fi
     
