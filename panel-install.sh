@@ -245,6 +245,7 @@ fi
 
 if [ ! -d libssh2-1.9.0 ];then
     tips "安装libssh2";
+    yum -y install openssl-devel 
 	tar zxf libssh2-1.9.0.tar.gz
 	cd libssh2-1.9.0
 	./configure && make && make install
@@ -296,8 +297,8 @@ chmod -R 777 public
 tips "替换配置文件中的密码";
 Get_Ip_Address
 #sed -i "s/123456/${MYSQL_PWD}/" config/database.php
-sed -i "s/192\.168\.0\.8/${LOCAL_IP}/" config/weiphp_define.php
-#sed -i "/SSH_PAWD/{s/123/${SSH_PAWD}/}" config/weiphp_define.php
+sed -i "s/192\.168\.0\.8/${LOCAL_IP}/" config/bctos_define.php
+#sed -i "/SSH_PAWD/{s/123/${SSH_PAWD}/}" config/bctos_define.php
 cd ../..
 
 tips "代码准备完毕，目录如下：";
